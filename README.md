@@ -9,3 +9,5 @@ git config --global commit.template .gitmessage.txt
 ```shell
 git commit
 ```
+
+명령어 이후 i키(insert 모드) 입력 후 커밋 작성
