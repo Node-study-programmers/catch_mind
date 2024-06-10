@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { User } from '../types';
+import { create } from "zustand";
+import { User } from "../types";
 
 interface Store {
   //스토어 타입들
@@ -8,6 +8,6 @@ interface Store {
 }
 
 export const userStore = create<Store>(set => ({
-  user: { userId: '유저 아이디', nickName: '유저 닉넴', imgUrl: 'testetset' },
+  user: { userId: null, nickName: null, imgUrl: null },
   setUser: (user: User) => set({ user }),
 }));
