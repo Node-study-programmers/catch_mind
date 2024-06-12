@@ -5,12 +5,17 @@ import InGame from "./pages/InGame";
 import MyPage from "./pages/MyPage";
 import Rank from "./pages/Rank";
 import NotFound from "./pages/NotFound";
+import Layout from "./components/layout/Layout";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: (
+        <Layout>
+          <Home />
+        </Layout>
+      ),
       errorElement: <NotFound />,
     },
     {
@@ -24,11 +29,19 @@ function App() {
     },
     {
       path: "/mypage",
-      element: <MyPage />,
+      element: (
+        <Layout>
+          <MyPage />
+        </Layout>
+      ),
     },
     {
       path: "/rank",
-      element: <Rank />,
+      element: (
+        <Layout>
+          <Rank />
+        </Layout>
+      ),
     },
   ]);
   return (
