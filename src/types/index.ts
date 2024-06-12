@@ -5,3 +5,5 @@ export interface User {
   nickName: string | null;
   imgUrl: string | null;
 }
+
+export type InputType = "chat" | "normal" | "password";
