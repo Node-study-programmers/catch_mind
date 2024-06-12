@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        "main-bg": "url('/assets/img/mainBackground.png')",
+      },
       colors: {
         mainText: "#333333",
         subText: "#666666",

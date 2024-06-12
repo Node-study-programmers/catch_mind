@@ -44,7 +44,7 @@ const Button = ({
           active
             ? "text-activeText border-activeText"
             : "text-notActiveText border-notActiveText"
-        } border-2 w-[230px] h-[50px] rounded-r-full flex justify-start items-center cursor-pointer tracking-widest text-md hover:opacity-80 font-titleW pl-3`}
+        } border-2 w-[230px] h-[50px] rounded-full lg:rounded-l-none flex justify-start items-center cursor-pointer tracking-widest text-md hover:opacity-80 font-titleW pl-3`}
         onClick={onClick}
         type={type}>
         {children}
