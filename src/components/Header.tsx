@@ -20,7 +20,7 @@ const Header = () => {
         onClick={() => navigate("/")}>
         Catch Mind
       </div>
-      <div className="font-titleFont font-titleW text-2xl tracking-widest relative">
+      <div className="font-titleFont font-titleW text-2xl tracking-widest relative p-2 rounded-full ">
         <FaPowerOff
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}

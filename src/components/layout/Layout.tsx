@@ -16,7 +16,7 @@ const Layout = ({ children }: LayoutProps) => {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${mainBg})`, opacity: 0.5 }}></div>
 
-      <div className="relative z-10 flex flex-col py-10 gap-20 h-full">
+      <div className="relative z-10 flex flex-col py-10 gap-10 h-full">
         <Header />
         <div className="flex flex-col gap-5 px-10 lg:px-0 lg:flex-row lg:gap-48 h-full">
           <Sidebar />
