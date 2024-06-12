@@ -25,7 +25,7 @@ const Sidebar = () => {
     navigate(link);
   };
   return (
-    <div className="flex lg:flex-col justify-center lg:justify-start gap-5 lg:mt-36">
+    <div className="flex lg:flex-col justify-center items-center lg:justify-start gap-5 pt-10">
       {PAGES.map((page) => (
         <Button
           key={page.name}

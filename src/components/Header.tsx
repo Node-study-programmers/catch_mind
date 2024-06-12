@@ -14,9 +14,9 @@ const Header = () => {
     setIsHovered(false);
   };
   return (
-    <div className="flex justify-between items-center h-[10%] ">
+    <div className="flex justify-between items-center w-full px-10">
       <div
-        className="font-titleFont font-titleW text-5xl tracking-[20px] mx-20 cursor-pointer"
+        className="font-titleFont font-titleW text-5xl tracking-[20px] cursor-pointer"
         onClick={() => navigate("/")}>
         Catch Mind
       </div>
@@ -26,7 +26,7 @@ const Header = () => {
           onMouseLeave={handleMouseLeave}
         />
         {isHovered && (
-          <div className="absolute top-full mt-2 bg-white p-2 border rounded shadow font-mainFont text-sm">
+          <div className="absolute top-full right-0 mt-2 bg-white p-2 border rounded shadow font-mainFont text-sm">
             Logout
           </div>
         )}

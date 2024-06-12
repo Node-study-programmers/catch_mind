@@ -10,13 +10,15 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="relative w-screen h-screen">
+    <div className="relative w-full my-0 mx-auto h-screen max-h-screen max-w-screen">
+      {/* 배경화면 */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${mainBg})`, opacity: 0.5 }}></div>
-      <div className="relative z-10 flex flex-col h-full mr-24 flex-shrink-0">
+
+      <div className="relative z-10 flex flex-col py-10 gap-20 h-full">
         <Header />
-        <div className="flex flex-col lg:flex-row h-[90%] lg:gap-56 ml-24 lg:ml-0">
+        <div className="flex flex-col gap-5 px-10 lg:px-0 lg:flex-row lg:gap-48 h-full">
           <Sidebar />
           <MainContainer>{children}</MainContainer>
         </div>
