@@ -8,19 +8,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   active?: boolean;
 }
 
-const Button = ({
-  children,
-  onClick,
-  type = "button",
-  buttonStyle,
-  active,
-}: ButtonProps) => {
+const Button = ({ children, onClick, type = "button", buttonStyle, active }: ButtonProps) => {
   if (buttonStyle === "kakao") {
     return (
       <button
         onClick={onClick}
         type={type}
-        className="bg-kakao w-[280px] h-[65px] flex justify-center items-center cursor-pointer tracking-widest text-xl hover:opacity-80 rounded-md gap-8">
+        className="bg-kakao w-[250px] h-[55px] flex justify-center items-center cursor-pointer tracking-widest text-lg hover:opacity-80 rounded-md gap-8"
+      >
         <FaComment />
         Login With KaKao
       </button>
@@ -29,9 +24,10 @@ const Button = ({
   if (buttonStyle === "auth") {
     return (
       <button
-        className="bg-loginBtnBg text-loginBtnText w-[230px] h-[56px] rounded-full flex justify-center items-center cursor-pointer tracking-widest text-lg hover:opacity-80"
+        className="bg-loginBtnBg text-loginBtnText w-[230px] h-[46px] rounded-full flex justify-center items-center cursor-pointer tracking-widest text-sm hover:opacity-80"
         onClick={onClick}
-        type={type}>
+        type={type}
+      >
         {children}
       </button>
     );
@@ -41,12 +37,11 @@ const Button = ({
     return (
       <button
         className={`bg-white ${
-          active
-            ? "text-activeText border-activeText"
-            : "text-notActiveText border-notActiveText"
+          active ? "text-activeText border-activeText" : "text-notActiveText border-notActiveText"
         } border-2 w-[230px] h-[50px] rounded-r-full flex justify-start items-center cursor-pointer tracking-widest text-md hover:opacity-80 font-titleW pl-3`}
         onClick={onClick}
-        type={type}>
+        type={type}
+      >
         {children}
       </button>
     );

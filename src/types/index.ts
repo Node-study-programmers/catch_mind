@@ -1,4 +1,3 @@
-
 export type buttonTypes = "auth" | "kakao" | "side";
 
 export interface User {
@@ -7,3 +6,4 @@ export interface User {
   imgUrl: string | null;
 }
 
+export type InputType = "chat" | "normal" | "password";

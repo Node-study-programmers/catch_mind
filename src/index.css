@@ -4,4 +4,9 @@
 
 :root {
   box-sizing: border-box;
+  @layer base {
+    body {
+      @apply font-mainFont;
+    }
+  }
 }
