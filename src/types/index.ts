@@ -1,4 +1,3 @@
-
 export type buttonTypes = "auth" | "kakao" | "side";
 
 export interface User {
@@ -6,4 +5,3 @@ export interface User {
   nickName: string | null;
   imgUrl: string | null;
 }
-
