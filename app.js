@@ -1,26 +1,42 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const passport = require("passport");
-const bodyParser = require('body-parser');
-const connectMongoDB = require('./models/index');
+const cors = require('cors');
 
-const app = express();
+const dotenv = require("dotenv");
 dotenv.config();
 
-app.listen(process.env.PORT)
+const express = require("express");
+const passport = require("./passport/kakaoStrategy");
+const connectMongoDB = require('./models/index');
+const app = express();
+const fs = require('fs');
+const multer = require('multer');
+const path = require('path');
 
 connectMongoDB();
 
+app.use(cors());
+app.use(passport.initialize());
+
+// Image 폴더가 없으면 생성
+const imageFolder = path.join(__dirname, 'profileImages');
+if (!fs.existsSync(imageFolder)) {
+  fs.mkdirSync(imageFolder);
+}
+
 const authRouter = require('./routes/auth');
+const mypageRouter = require('./routes/mypage');
+const rankRouter = require('./routes/rank');
 // const gameRouter = require('./routes/game');
 // const homeRouter = require('./routes/home');
-// const mypageRouter = require('./routes/mypage');
-// const rankRouter = require('./routes/rank');
 // const roomRouter = require('./routes/room');
 
 app.use('/auth', authRouter);
+app.use('/mypage', mypageRouter);
+app.use('/rank', rankRouter);
 // app.use('/game', gameRouter);
 // app.use('/', homeRouter);
-// app.use('/mypage', mypageRouter);
-// app.use('/rank', rankRouter);
 // app.use('/room', roomRouter);
+
+const PORT = process.env.PORT || 9999; // 포트 설정을 이 줄로 이동
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});

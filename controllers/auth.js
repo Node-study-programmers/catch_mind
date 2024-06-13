@@ -5,13 +5,28 @@ const User = require('../models/user');
 
 const join = async (req,res) => {
     const { email, password, nickname } = req.body;
-
     if (!email || !nickname || !password ) { 
         return res.status(StatusCodes.BAD_REQUEST).json({
             message: "공백 채워"
         })};
     
     try {
+        // 이메일 중복 확인
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: '이메일이 이미 사용 중입니다.'
+            });
+        }
+
+        // 닉네임 중복 확인
+        user = await User.findOne({ nickname });
+        if (user) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: '닉네임이 이미 사용 중입니다.'
+            });
+        }
+
         const salt = crypto.randomBytes(10).toString('base64');
         const hashPassword = crypto.pbkdf2Sync(password, salt, 10000, 10, 'sha512').toString('base64');
         
@@ -24,15 +39,15 @@ const join = async (req,res) => {
 
         await newUser.save();
         return res.status(StatusCodes.OK).json({
-            message: "수혁님 만세!"
+            message: "회원가입 완료!"
         });
 
     } catch (err) {
-        if (err.name == "MongoServerError") {
-            return res.status(StatusCodes.BAD_REQUEST).json({
-                message: '중복'
-            })}
-    }
+        console.error(err);
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: '서버 오류'
+        })
+    } 
 }
 
 const login = async (req,res) => {
@@ -51,9 +66,15 @@ const login = async (req,res) => {
             })
         }
 
+        if (user.kakaoLogin) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "소셜 로그인입니다."
+            })
+        }
+
         const hashPassword = crypto.pbkdf2Sync(password, user.salt, 10000, 10, 'sha512').toString('base64');
         if (hashPassword!== user.password) {
-            return res.status(StatusCodes.BAD_REQUEST).json({
+            return res.status(StatusCodes.UNAUTHORIZED).json({
                 message: "비밀번호가 틀렸습니다."
             })
         }
@@ -75,9 +96,9 @@ const login = async (req,res) => {
 }
 
 const logout = async (req,res) => {
-    req.logout(() => {
-        res.redirect('/');
-    });
+    return res.status(StatusCodes.OK).json({
+        message: "로그아웃 성공"
+    })
 }
 
 module.exports = {

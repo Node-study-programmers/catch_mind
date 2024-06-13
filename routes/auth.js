@@ -1,21 +1,23 @@
 const express = require('express');
 const passport = require('passport');
 
-const {isLoggedIn, isNotLoggedIn} = require('../middlewares/index');
 const { join, login, logout } = require('../controllers/auth');
 
 const router = express.Router();
 
 router.use(express.json());
 
-router.post('/join',isNotLoggedIn, join);
-router.post('/login',isNotLoggedIn, login);
-router.get('/logout',isLoggedIn, logout);
+router.post('/join', join);
+router.post('/login', login);
+router.get('/logout', logout);
 router.get('/kakao', passport.authenticate('kakao'));
-router.get('/kakao/callback', passport.authenticate('kakao', {
-    failureRedirect: '/?loginError=카카오로그인 실패',
+router.get('/kakao/callback', passport.authenticate('kakao', { 
+    session: false,
+    failureRedirect: '/?loginError=카카오로그인 실패'
 }), (req, res) => {
-    res.redirect('/'); // 성공 시 홈페이지로 이동
-})
+    const { token } = req.user;
+    res.cookie('token', token, { httpOnly: true });
+    res.redirect('/');
+});
 
 module.exports = router;
