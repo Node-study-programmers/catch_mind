@@ -16,11 +16,11 @@ const Header = () => {
   return (
     <div className="flex justify-between items-center w-full px-10">
       <div
-        className="font-titleFont font-titleW text-5xl tracking-[20px] cursor-pointer"
+        className="font-titleFont font-titleW text-3xl tracking-[20px] cursor-pointer"
         onClick={() => navigate("/")}>
         Catch Mind
       </div>
-      <div className="font-titleFont font-titleW text-2xl tracking-widest relative p-2 rounded-full ">
+      <div className="font-titleFont font-titleW text-2xl tracking-widest relative">
         <FaPowerOff
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}

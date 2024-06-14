@@ -36,6 +36,16 @@ const Button = ({
       </button>
     );
   }
+  if (buttonStyle === "submit") {
+    return (
+      <button
+        className="bg-loginBtnBg text-loginBtnText w-[150px] rounded-lg flex justify-center items-center cursor-pointer tracking-widest text-sm hover:opacity-80"
+        onClick={onClick}
+        type={type}>
+        {children}
+      </button>
+    );
+  }
 
   if (buttonStyle === "side") {
     return (
