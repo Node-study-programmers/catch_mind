@@ -3,6 +3,7 @@ import Header from "../Header";
 import Sidebar from "../Sidebar";
 import MainContainer from "../MainContainer";
 import mainBg from "../../asset/img/mainBackground.png";
+import { useLocation } from "react-router-dom";
 
 interface LayoutProps {
   children: React.ReactNode;
