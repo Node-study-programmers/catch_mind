@@ -39,7 +39,7 @@ const Button = ({
   if (buttonStyle === "submit") {
     return (
       <button
-        className="bg-loginBtnBg text-loginBtnText w-[150px] rounded-lg flex justify-center items-center cursor-pointer tracking-widest text-sm hover:opacity-80"
+        className="bg-loginBtnBg text-loginBtnText w-[150px] rounded-lg flex justify-center items-center cursor-pointer tracking-widest text-sm hover:opacity-80 text-nowrap"
         onClick={onClick}
         type={type}>
         {children}

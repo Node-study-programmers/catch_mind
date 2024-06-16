@@ -16,7 +16,7 @@ const MyPage = () => {
   return (
     <div className="w-full h-full flex flex-col p-10">
       <div className="text-5xl font-titleW">MY INFO</div>
-      <div className="flex w-full h-full items-center gap-16">
+      <div className="flex w-full h-full items-center gap-16 ">
         {/* 아바타 */}
         <div className="w-1/3 h-2/3">
           <h2 className="text-lg">Profile</h2>
@@ -28,7 +28,7 @@ const MyPage = () => {
             <img
               src={userData[0].profileUrl}
               alt="user"
-              className="w-[200px] h-[200px] rounded-full"
+              className="w-[150px] h-[150px] lg:w-[200px] lg:h-[200px] rounded-full"
             />
             <button className="text-blue-500">replace</button>
           </div>
