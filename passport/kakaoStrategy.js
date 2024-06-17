@@ -1,6 +1,6 @@
 const passport = require('passport');
 const KakaoStrategy = require('passport-kakao').Strategy;
-const User = require('../models/User');
+const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config(); // 환경 변수 로드
