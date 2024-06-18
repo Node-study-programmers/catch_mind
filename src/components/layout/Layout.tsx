@@ -18,7 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
 
       <div className="relative z-10 flex flex-col py-10 gap-10 h-full">
         <Header />
-        <div className="flex flex-col gap-5 px-10 lg:px-0 lg:flex-row lg:gap-48 h-full overflow-y-hidden min-w-[720px]">
+        <div className="flex flex-col gap-5 px-10 lg:px-0 lg:flex-row lg:gap-48 h-full overflow-y-hidden min-w-[720px] ">
           <Sidebar />
           <MainContainer>{children}</MainContainer>
         </div>
