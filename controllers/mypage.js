@@ -5,32 +5,17 @@ const User = require('../models/user');
 const fs = require('fs');
 const path = require('path');
 
-const renderMypage = async (req,res) => {
-    const user = await User.findOne({ id: req.user._id });
-    return res.status(StatusCodes.OK).json({
-        nickname: user.nickname,
-        profileImage: user.profileImage,
-        score: user.score
-    })
-}
-
 const passwordReset = async (req,res) => {
-    const { password1, password2 } = req.body;
+    const { password } = req.body;
 
-    if (!password1 ||!password2) {
+    if (!password) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "공백 채워"
-        })
-    }
-
-    if (password1!== password2) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "비밀번호 불일치"
+            message: "공백이 있습니다."
         })
     }
 
     const salt = crypto.randomBytes(10).toString('base64');
-    const hashPassword = crypto.pbkdf2Sync(password1, salt, 10000, 10,'sha512').toString('base64');
+    const hashPassword = crypto.pbkdf2Sync(password, salt, 10000, 10,'sha512').toString('base64');
 
     const user = await User.findOne({ id: req.user._id });
     user.salt = salt;
@@ -38,7 +23,7 @@ const passwordReset = async (req,res) => {
     await user.save();
 
     return res.status(StatusCodes.OK).json({
-        message: "비밀번호 변경 성공~~~~~~~~"
+        message: "비밀번호 변경 성공"
     })
 
 }
@@ -57,7 +42,7 @@ const changeImage = async (req,res) => {
         }
         user.profileImage = imageFilename;
         await user.save();
-        res.status(StatusCodes.OK).json({ message: '이미지 변경 성공' });
+        res.status(StatusCodes.OK).json({ profileImage: user.profileImage });
     } catch (err) {
         console.error(err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -71,7 +56,7 @@ const changeNickname = async (req,res) => {
 
     if (!nickname) {
         return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "공백 채워"
+            message: "공백이 있습니다."
         })
     }
 
@@ -80,7 +65,7 @@ const changeNickname = async (req,res) => {
     await user.save();
 
     return res.status(StatusCodes.OK).json({
-        message: "닉네임 변경 성공~~~~~~~~"
+        nickname: user.nickname
     })
 }
 
@@ -90,12 +75,12 @@ const userDelete = async (req,res) => {
 
         if (result.deletedCount === 0) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-                message: "회원탈퇴 실패~~~~~~~~"
+                message: "회원탈퇴 실패"
             })
         }
 
         return res.status(StatusCodes.OK).json({
-            message: "회원탈퇴 성공~~~~~~~~"
+            message: "회원탈퇴 성공"
         })
     } catch (err) {
         console.error(err);
@@ -106,7 +91,6 @@ const userDelete = async (req,res) => {
 }
 
 module.exports = {
-    renderMypage,
     passwordReset,
     changeImage,
     changeNickname,

@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(express.json());
 router.use(ensureAuthorization);
 
-const { renderMypage, passwordReset, changeImage, changeNickname, userDelete } = require('../controllers/mypage');
+const { passwordReset, changeImage, changeNickname, userDelete } = require('../controllers/mypage');
 
 // Multer 설정
 const storage = multer.diskStorage({
@@ -22,8 +22,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
-router.get('/', renderMypage);
 router.put('/passwordReset', passwordReset);
 router.put('/changeImage', upload.single('file'), changeImage);    
 router.put('/changeNickname', changeNickname);

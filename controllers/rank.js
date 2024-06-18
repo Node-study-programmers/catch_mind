@@ -6,7 +6,7 @@ const User = require('../models/user');
 
 const renderRank = async (req,res) => {
     try {
-        const users = await User.find().sort({ score: -1 }).limit(10);
+        const users = await User.find().sort({ score: -1 }).limit(20);
         const rankking = users.map(user => ({
            nickname: user.nickname,
            score: user.score,

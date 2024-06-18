@@ -7,7 +7,7 @@ const join = async (req,res) => {
     const { email, password, nickname } = req.body;
     if (!email || !nickname || !password ) { 
         return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "공백 채워"
+            message: "공백이 있습니다."
         })};
     
     try {
@@ -55,7 +55,7 @@ const login = async (req,res) => {
 
     if (!email || !password ) { 
         return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "공백 채워"
+            message: "공백이 있습니다."
         })};
         
     try {
@@ -80,7 +80,10 @@ const login = async (req,res) => {
         res.cookie("token", token, { httpOnly : true });
 
         return res.status(StatusCodes.OK).json({
-            user,
+            nickname: user.nickname,
+            email: user.email,
+            profileImage: user.profileImage,
+            score: user.score,
             token
         });
        
