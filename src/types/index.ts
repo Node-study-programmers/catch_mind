@@ -9,3 +9,11 @@ export interface User {
   nickName: string | null;
   imgUrl: string | null;
 }
+
+export interface LoginOk {
+  email: string;
+  nickname: string;
+  profileImage: string;
+  score: number;
+  token: string;
+}
