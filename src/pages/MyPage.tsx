@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import mascot from "../asset/img/mascot.png";
+import ImageModal from "../components/modal/ImageModal";
 
 const userData = [
   {
@@ -14,15 +15,17 @@ const userData = [
 ];
 
 const MyPage = () => {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   return (
-    <div className="w-full h-full flex flex-col p-10 justify-center">
+    <div className="w-full h-full flex flex-col p-10">
       <div className="text-5xl font-titleW flex justify-between">
         MY INFO
-        <img src={mascot} alt="mascot-img" className="w-[150px] h-[150px]" />
+        <img src={mascot} alt="mascot-img" className="w-32 h-32" />
       </div>
-      <div className="grid grid-cols-3 w-[100%] h-full items-center gap-16">
+      <div className="grid grid-cols-3 w-full h-full gap-16 items-center">
         {/* 아바타 */}
-        <div className="h-2/3 min-w-[180px]">
+        <div className="h-2/3">
           <h2 className="text-lg">Profile</h2>
           <div
             style={{
@@ -32,9 +35,14 @@ const MyPage = () => {
             <img
               src={userData[0].profileUrl}
               alt="user"
-              className="w-[150px] h-[150px] lg:w-[200px] lg:h-[200px] rounded-full"
+              className="w-28 h-28 lg:w-48 lg:h-48 rounded-full"
             />
-            <button className="text-blue-500">replace</button>
+            <button
+              className="text-blue-500"
+              onClick={() => setModalOpen(true)}>
+              replace
+            </button>
+            <ImageModal open={modalOpen} onClose={() => setModalOpen(false)} />
           </div>
         </div>
         {/* 이메일, 비밀번호, 닉네임 */}
@@ -53,14 +61,14 @@ const MyPage = () => {
           <div>
             <h2 className="text-lg">PassWord</h2>
             <div className="flex">
-              <Input type="shadow" value="*******" disabled />
+              <Input type="shadow" value="****" disabled />
               <Button buttonStyle="submit">수정하기</Button>
             </div>
           </div>
         </div>
         <div className="flex justify-center items-center">
           <div
-            className="flex justify-center items-center flex-col p-5 rounded-3xl w-[200px] h-[200px]"
+            className="flex justify-center items-center flex-col p-5 rounded-3xl w-48 h-48"
             style={{
               boxShadow: "8px 8px 16px #a1a1a1, -8px -8px 16px #ffffff",
             }}>
