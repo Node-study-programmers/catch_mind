@@ -3,13 +3,41 @@ import RankContainer from "../components/Rank/RankContainer";
 
 //임시 데이터
 const rankData = [
-  { profileUrl: "https://picsum.photos/500/500", nickname: "골목대장", totalScore: 129 },
-  { profileUrl: "https://picsum.photos/500/500", nickname: "쫄다구", totalScore: 80 },
-  { profileUrl: "https://picsum.photos/500/500", nickname: "캐치마인드 신", totalScore: 54 },
-  { profileUrl: "https://picsum.photos/500/500", nickname: "다 드루와", totalScore: 44 },
-  { profileUrl: "https://picsum.photos/500/500", nickname: "그림쟁이", totalScore: 40 },
-  { profileUrl: "https://picsum.photos/500/500", nickname: "몰라", totalScore: 21 },
-  { profileUrl: "https://picsum.photos/500/500", nickname: "몰라2", totalScore: 20 },
+  {
+    profileUrl: "https://picsum.photos/500/500",
+    nickname: "골목대장",
+    totalScore: 129,
+  },
+  {
+    profileUrl: "https://picsum.photos/500/500",
+    nickname: "쫄다구",
+    totalScore: 80,
+  },
+  {
+    profileUrl: "https://picsum.photos/500/500",
+    nickname: "캐치마인드 신",
+    totalScore: 54,
+  },
+  {
+    profileUrl: "https://picsum.photos/500/500",
+    nickname: "다 드루와",
+    totalScore: 44,
+  },
+  {
+    profileUrl: "https://picsum.photos/500/500",
+    nickname: "그림쟁이",
+    totalScore: 40,
+  },
+  {
+    profileUrl: "https://picsum.photos/500/500",
+    nickname: "몰라",
+    totalScore: 21,
+  },
+  {
+    profileUrl: "https://picsum.photos/500/500",
+    nickname: "몰라2",
+    totalScore: 20,
+  },
 ];
 
 const Rank = () => {

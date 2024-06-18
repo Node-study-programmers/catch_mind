@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import rankImg from "../asset/img/ranking.png";
 
@@ -28,9 +28,9 @@ const MainContainer = ({ children }: MainContainer) => {
         <div
           className={`flex justify-start items-center w-full gap-4 pl-10 h-[10%] font-titleW ${
             path === "/rank" && "text-rankText"
-          }`}
-        >
-          {printPageText()} {path === "/rank" && <img src={rankImg} className="h-full"></img>}
+          }`}>
+          {printPageText()}
+          {path === "/rank" && <img src={rankImg} className="h-full"></img>}
         </div>
       )}
       <div
@@ -38,8 +38,7 @@ const MainContainer = ({ children }: MainContainer) => {
         style={{
           borderRadius: "20px",
           boxShadow: `inset 12px 12px 20px #adadad, inset -12px -12px 20px #ffffff`,
-        }}
-      >
+        }}>
         {children}
       </div>
     </div>
