@@ -5,9 +5,10 @@ export type InputType = "chat" | "normal" | "password" | "shadow";
 
 // data types
 export interface User {
-  userId: string | null;
-  nickName: string | null;
-  imgUrl: string | null;
+  email: string | null;
+  nickname: string | null;
+  profileImage: string | null;
+  score: number | null;
 }
 
 export interface LoginOk {

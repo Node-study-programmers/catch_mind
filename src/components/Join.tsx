@@ -2,16 +2,10 @@ import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import { signUp } from "./api/auth.api";
+import { useAuth } from "../hooks/useAuth";
 
 const Join = () => {
-  const handleSignUp = () => {
-    signUp({ email: "zxc1@zxc.com", password: "aaaa", nickname: "테스트" })
-      .then(() => alert("성공"))
-      .catch(e => {
-        console.log(e);
-        alert("초비상");
-      });
-  };
+  const { setEmail, setNickname, setPassword, email, nickname, password, handleSignUp } = useAuth();
   return (
     <>
       <div className="flex flex-[2] flex-col items-center justify-around w-full pl-5 pr-5">
@@ -19,9 +13,9 @@ const Join = () => {
           <div className="text-xl font-titleW">sign up</div>
           <div className="text-sm">Let's play catch mind!</div>
         </div>
-        <Input type="normal" text="Email address" />
-        <Input type="password" text="Password" />
-        <Input type="normal" text="Your nick name" />
+        <Input type="normal" text="Email address" value={email} onChange={e => setEmail(e.target.value)} />
+        <Input type="password" text="Password" value={password} onChange={e => setPassword(e.target.value)} />
+        <Input type="normal" text="Your nick name" value={nickname} onChange={e => setNickname(e.target.value)} />
         <Button buttonStyle="auth" onClick={handleSignUp}>
           Let's go!
         </Button>

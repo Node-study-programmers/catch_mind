@@ -21,7 +21,7 @@ const MyPage = () => {
     <div className="w-full h-full flex flex-col p-10">
       <div className="text-5xl font-titleW flex justify-between">
         MY INFO
-        <img src={mascot} alt="mascot-img" className="w-32 h-32" />
+        <img src={mascot} alt="mascot-img" className="w-[10%] h-full" />
       </div>
       <div className="grid grid-cols-3 w-full h-full gap-16 items-center">
         {/* 아바타 */}
@@ -31,15 +31,10 @@ const MyPage = () => {
             style={{
               boxShadow: "8px 8px 16px #a1a1a1, -8px -8px 16px #ffffff",
             }}
-            className="flex flex-col items-center h-full justify-around bg-[#e0e0e0] rounded-2xl">
-            <img
-              src={userData[0].profileUrl}
-              alt="user"
-              className="w-28 h-28 lg:w-48 lg:h-48 rounded-full"
-            />
-            <button
-              className="text-blue-500"
-              onClick={() => setModalOpen(true)}>
+            className="flex flex-col items-center h-full justify-around bg-[#e0e0e0] rounded-2xl"
+          >
+            <img src={userData[0].profileUrl} alt="user" className="w-[50%] aspect-square rounded-full" />
+            <button className="text-blue-500" onClick={() => setModalOpen(true)}>
               replace
             </button>
             <ImageModal open={modalOpen} onClose={() => setModalOpen(false)} />
@@ -71,11 +66,10 @@ const MyPage = () => {
             className="flex justify-center items-center flex-col p-5 rounded-3xl w-48 h-48"
             style={{
               boxShadow: "8px 8px 16px #a1a1a1, -8px -8px 16px #ffffff",
-            }}>
+            }}
+          >
             <h2 className="text-3xl">Total Score</h2>
-            <p className="text-5xl font-titleW p-3 underline">
-              {userData[0].totalScore}
-            </p>
+            <p className="text-5xl font-titleW p-3 underline">{userData[0].totalScore}</p>
           </div>
         </div>
       </div>

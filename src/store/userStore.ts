@@ -16,6 +16,6 @@ export const removeToken = () => {
 };
 
 export const userStore = create<Store>(set => ({
-  user: { userId: null, nickName: null, imgUrl: null },
+  user: { email: null, nickname: null, profileImage: null, score: null },
   setUser: (user: User) => set({ user }),
 }));
