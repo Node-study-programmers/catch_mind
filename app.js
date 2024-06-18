@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const express = require("express");
-const passport = require("./passport/kakaoStrategy");
 const connectMongoDB = require('./models/index');
 const app = express();
 const fs = require('fs');
@@ -12,9 +11,7 @@ const multer = require('multer');
 const path = require('path');
 
 connectMongoDB();
-
 app.use(cors());
-app.use(passport.initialize());
 
 // Image 폴더가 없으면 생성
 const imageFolder = path.join(__dirname, 'profileImages');

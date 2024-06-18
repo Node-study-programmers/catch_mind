@@ -66,12 +66,6 @@ const login = async (req,res) => {
             })
         }
 
-        if (user.kakaoLogin) {
-            return res.status(StatusCodes.BAD_REQUEST).json({
-                message: "소셜 로그인입니다."
-            })
-        }
-
         const hashPassword = crypto.pbkdf2Sync(password, user.salt, 10000, 10, 'sha512').toString('base64');
         if (hashPassword!== user.password) {
             return res.status(StatusCodes.UNAUTHORIZED).json({

@@ -16,11 +16,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: false
   },
-  kakaoLogin: {
-    type: Boolean,
-    unique: false,
-    default: false
-  },
   profileImage: {
     type: String,
     unique: false,
