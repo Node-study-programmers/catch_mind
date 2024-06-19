@@ -16,3 +16,17 @@
   box-sizing: border-box;
   scroll-behavior: smooth;
 }
+
+/* 웹킷 브라우저 (크롬, 사파리)용 */
+::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤바 트랙 배경색 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: white; /* 진한 파란색 */
+  border-radius: 10px; /* 둥근 모서리 */
+}

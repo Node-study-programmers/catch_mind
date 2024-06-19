@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import MainContainer from "../MainContainer";
-import mainBg from "../../asset/img/mainBackground.png";
 
 interface LayoutProps {
   children: React.ReactNode;
