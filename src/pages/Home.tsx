@@ -1,4 +1,3 @@
-import React from "react";
 import Room from "../components/Room";
 
 //임시 데이터
