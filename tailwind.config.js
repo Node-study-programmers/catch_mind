@@ -43,6 +43,9 @@ export default {
         mainW: 400,
         titleW: 700,
       },
+      screens: {
+        max_950px: { max: "1020px" }, // Custom breakpoint
+      },
     },
   },
   plugins: [],

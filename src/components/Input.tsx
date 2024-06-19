@@ -33,9 +33,9 @@ const Input = ({
   if (type === "shadow") {
     return (
       <div
-        className="flex flex-col w-full rounded-2xl"
+        className="flex flex-col rounded-2xl w-[300px]"
         style={{
-          boxShadow: "4px 4px 8px #a1a1a1, -4px -4px 8px #ffffff",
+          boxShadow: "5px 5px 10px #99afcb,-5px -5px 10px #e5ffff",
         }}>
         <div className="text-subText">{text}</div>
         <input
