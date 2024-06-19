@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import React, { useState } from "react";
 import Input from "../Input";
+import Button from "../Button";
+import { Button as MButton } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -28,7 +29,9 @@ const CreateRoomModal = () => {
 
   return (
     <>
-      <Button onClick={handleOpen}>방 생성</Button>
+      <Button buttonStyle="shadow" onClick={handleOpen}>
+        방 생성
+      </Button>
       <Modal
         sx={{ borderRadius: "" }}
         open={open}
@@ -47,7 +50,7 @@ const CreateRoomModal = () => {
             제목
             <Input type="normal" />
           </Typography>
-          <Button onClick={() => {}}>방 생성</Button>
+          <MButton onClick={() => {}}>방 생성</MButton>
         </Box>
       </Modal>
     </>

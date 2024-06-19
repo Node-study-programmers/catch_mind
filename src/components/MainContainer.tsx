@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import rankImg from "../asset/img/ranking.png";
+import Input from "./Input";
+import { IoSearch } from "react-icons/io5";
 
 interface MainContainer {
   children: React.ReactNode;
@@ -44,11 +46,21 @@ const MainContainer = ({ children }: MainContainer) => {
       ">
       {pageText && (
         <div
-          className={`flex justify-start items-end w-full h-[15%] gap-4 pl-10 pb-5 font-titleW text-xl bg-blue-100 ${
+          className={`flex justify-between items-end w-full h-[15%] gap-4 px-10 pb-5 font-titleW text-xl bg-blue-100 ${
             path === "/rank" && "text-rankText"
           }`}>
-          {pageText}
-          {path === "/rank" && <img src={rankImg} className="w-12 h-12"></img>}
+          <div className="flex items-end">
+            {pageText}
+            {path === "/rank" && (
+              <img src={rankImg} className="w-12 h-12"></img>
+            )}
+          </div>
+          <div className="flex items-center gap-5">
+            <Input type="normal" placeholder="방 이름을 입력해주세요." />
+            <div className="rounded-xl border-blue-300 border-2 bg-blue-300 p-2 cursor-pointer">
+              <IoSearch className="text-3xl text-white" />
+            </div>
+          </div>
         </div>
       )}
       <div
