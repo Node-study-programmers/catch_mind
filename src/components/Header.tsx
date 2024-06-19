@@ -1,35 +1,23 @@
-import React, { useState } from "react";
-import { FaPowerOff } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { FiMenu } from "react-icons/fi";
 
-const Header = () => {
-  const navigate = useNavigate();
-  const [isHovered, setIsHovered] = useState(false);
+interface HeaderProps {
+  isOpen: boolean;
+  setSideOpen: (isOpen: boolean) => void;
+}
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
+const Header = ({ isOpen, setSideOpen }: HeaderProps) => {
   return (
-    <div className="flex justify-between items-center w-full px-10">
-      <div
-        className="font-titleFont font-titleW text-3xl tracking-[20px] cursor-pointer"
-        onClick={() => navigate("/")}>
-        Catch Mind
-      </div>
-      <div className="font-titleFont font-titleW text-2xl tracking-widest relative">
-        <FaPowerOff
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+    <div className="w-full h-[80px] flex items-center bg-blue-100 px-7 justify-between">
+      <div className="invisible max_950px:visible max_950px:basis-[5%] max_950px:mt-[8px] max_950px:mr-[10px]">
+        <FiMenu
+          onClick={() => setSideOpen(!isOpen)}
+          className="text-2xl cursor-pointer"
         />
-        {isHovered && (
-          <div className="absolute top-full right-0 mt-2 bg-white p-2 border rounded shadow font-mainFont text-sm">
-            Logout
-          </div>
-        )}
+      </div>
+      <div
+        className="font-titleFont font-titleW 
+        text-xl tracking-widest flex gap-3 cursor-pointer p-2 hover:bg-blue-300 transition-all">
+        LOGOUT
       </div>
     </div>
   );

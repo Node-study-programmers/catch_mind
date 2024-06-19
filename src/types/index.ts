@@ -18,3 +18,8 @@ export interface LoginOk {
   score: number;
   token: string;
 }
+
+export interface InputErr {
+  notValidType: "email" | "password" | "nickname";
+  message: string;
+}
