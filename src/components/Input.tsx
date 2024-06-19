@@ -6,15 +6,17 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
   type: InputType;
   inputErr?: InputErr | null;
+  onBlur?: () => void;
 }
 
-const Input = ({ text, onChange, placeholder, type, disabled, value, inputErr }: Props) => {
+const Input = ({ text, onChange, placeholder, type, disabled, value, inputErr, onBlur }: Props) => {
   if (type === "normal") {
     return (
       <div className="flex flex-col w-full">
         <div className="text-subText">{text}</div>
         <input
           placeholder={placeholder}
+          onBlur={onBlur}
           className={`${
             inputErr?.notValidType === "email" ? "border-red-100" : ""
           } border-2 rounded-lg focus:outline-none focus:border-yellow-300 p-3`}
@@ -37,6 +39,7 @@ const Input = ({ text, onChange, placeholder, type, disabled, value, inputErr }:
         <div className="text-subText">{text}</div>
         <input
           placeholder={placeholder}
+          onBlur={onBlur}
           className="border-2 rounded-lg focus:outline-none focus:border-yellow-300 p-3"
           onChange={onChange}
           disabled={disabled}
@@ -52,6 +55,7 @@ const Input = ({ text, onChange, placeholder, type, disabled, value, inputErr }:
         <div className="text-subText">{text}</div>
         <input
           placeholder={placeholder}
+          onBlur={onBlur}
           type="password"
           className="border-2 rounded-lg focus:outline-none focus:border-yellow-300 p-3"
           onChange={onChange}
@@ -67,6 +71,7 @@ const Input = ({ text, onChange, placeholder, type, disabled, value, inputErr }:
         <div className="text-subText">{text}</div>
         <input
           placeholder={placeholder}
+          onBlur={onBlur}
           className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3"
           onChange={onChange}
         />
