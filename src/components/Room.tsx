@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import Button from "./Button";
+import { useNavigate } from "react-router-dom";
+import AlertModal from "./modal/AlertModal";
 
 interface Props {
   roomId: string;
@@ -19,8 +22,19 @@ const Room = ({
   maxUser,
   started,
 }: Props) => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+
+  const handleInGame = () => {
+    if (started) {
+      return setOpen(true);
+    }
+    navigate(`/ingame/${roomId}`);
+  };
   return (
     <div className="flex w-full h-full rounded-xl border bg-white">
+      <AlertModal open={open} handleClose={handleClose} />
       <div className="w-3/4 h-full">
         <img
           src={profileUrl}
@@ -41,6 +55,9 @@ const Room = ({
             <p>{roomMaster}</p>
             {currentUser} / {maxUser}
           </div>
+          <Button buttonStyle="ingame" onClick={handleInGame}>
+            방 참가하기
+          </Button>
         </div>
       </div>
     </div>
