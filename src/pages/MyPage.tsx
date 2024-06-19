@@ -41,7 +41,7 @@ const MyPage = () => {
           </div>
         </div>
 
-        <div className="p-5 rounded-3xl flex justify-center items-center flex-col">
+        <div className="p-5 rounded-3xl flex justify-center items-center flex-col max_950px:my-5">
           <h2 className="text-3xl">Total Score</h2>
           <p className="text-5xl font-titleW p-3 underline">
             {userData[0].totalScore}
@@ -49,19 +49,19 @@ const MyPage = () => {
         </div>
       </div>
       {/* 이메일, 비밀번호, 닉네임 */}
-      <div className="flex flex-col gap-7 justify-center items-start max_950px:px-auto">
-        <div className=" max_950px:flex mx-auto max_950px:justify-between gap-5">
+      <div className="flex flex-col gap-7 justify-center items-start max_950px:px-auto max_950px:items-start max_950px:mx-auto">
+        <div className=" max_950px:flex max_950px:justify-between gap-5">
           <h2 className="text-lg">NickName</h2>
           <div className="flex">
             <Input type="shadow" value={userData[0].nickname} disabled />
             <Button buttonStyle="submit">수정하기</Button>
           </div>
         </div>
-        <div className="max_950px:flex mx-auto max_950px:justify-between gap-5">
+        <div className="max_950px:flex max_950px:justify-between gap-5">
           <h2 className="text-lg">Email</h2>
           <Input type="shadow" disabled value={userData[0].email} />
         </div>
-        <div className="max_950px:flex mx-auto max_950px:justify-between gap-5 max_950px:pb-20">
+        <div className="max_950px:flex max_950px:justify-between gap-5 max_950px:pb-20">
           <h2 className="text-lg">PassWord</h2>
           <div className="flex">
             <Input type="shadow" value="****" disabled />

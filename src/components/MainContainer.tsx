@@ -52,7 +52,7 @@ const MainContainer = ({ children }: MainContainer) => {
         </div>
       )}
       <div
-        className="h-[80%] bg-[#BFDBFE] p-5 overflow-y-scroll mr-5 max_950px:ml-5 rounded-2xl"
+        className="h-[80%] bg-[#BFDBFE] p-5 overflow-y-auto mr-5 max_950px:ml-5 rounded-2xl"
         style={{
           boxShadow: `inset 8px 8px 16px #97adc9, inset -8px -8px 16px #e7ffff`,
         }}>

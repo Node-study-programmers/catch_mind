@@ -1,5 +1,4 @@
 import React from "react";
-import { FaComment } from "react-icons/fa6";
 import { buttonTypes } from "../types";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
