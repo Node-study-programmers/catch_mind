@@ -14,7 +14,7 @@ const Room = ({ roomId, profileUrl, roomMaster, roomName, currentUser, maxUser, 
   return (
     <div className="flex w-full h-full rounded-xl border bg-white">
       <div className="w-3/4 h-full">
-        <img src={profileUrl} alt="roomImg" className="w-full h-full object-cover rounded-xl" />
+        <img src={profileUrl} alt="roomImg" className="w-full h-auto object-cover rounded-xl" />
       </div>
       <div className="h-full w-full flex flex-col  justify-around">
         <div className="flex justify-end pr-3">

@@ -1,5 +1,6 @@
 import React from "react";
 import Room from "../components/Room";
+import CreateRoomModal from "../components/modal/CreateRoomModal";
 
 //임시 데이터
 const roomsData = [
@@ -43,7 +44,7 @@ const roomsData = [
 
 const Home = () => {
   return (
-    <div className="grid grid-cols-2 overflow-auto w-full h-full  max-h-full gap-4 py-5 px-5">
+    <div className="grid grid-cols-2 overflow-auto w-full h-full  max-h-full gap-4">
       {roomsData.map(room => (
         <Room
           key={room.roomId}
