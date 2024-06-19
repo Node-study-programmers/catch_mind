@@ -20,6 +20,9 @@ const MainContainer = ({ children }: MainContainer) => {
         case "/rank":
           setPageText("Ranking");
           break;
+        case "/mypage":
+          setPageText("My Info");
+          break;
         default:
           setPageText(null);
       }
@@ -28,22 +31,30 @@ const MainContainer = ({ children }: MainContainer) => {
   }, [path]);
 
   return (
-    <div className="rounded-3xl bg-[#e6e6e6] relative flex flex-col justify-center items-center w-full mr-10 h-full">
-      <div className="hidden lg:absolute bg-white w-[80px] h-[80px] rounded-full top-24 -left-10"></div>
+    <div
+      // style={{
+      //   width: "calc(100vw - 300px)",
+      //   height: "calc(100vh - 80px)",
+      // }}
+      className=" 
+      h-[calc(100vh_-_80px)]
+      min-w-[900px]
+      max_950px:w-screen
+      bg-blue-100
+      ">
       {pageText && (
         <div
-          className={`flex justify-start items-center w-full gap-4 pl-10 h-[10%] font-titleW text-xl ${
+          className={`flex justify-start items-end w-full h-[15%] gap-4 pl-10 pb-5 font-titleW text-xl bg-blue-100 ${
             path === "/rank" && "text-rankText"
           }`}>
           {pageText}
-          {path === "/rank" && <img src={rankImg} className="h-full"></img>}
+          {path === "/rank" && <img src={rankImg} className="w-12 h-12"></img>}
         </div>
       )}
       <div
-        className="w-[95%] h-[85%] bg-[#e6e6e6]"
+        className="h-[80%] bg-[#BFDBFE] p-5 overflow-y-scroll mr-5 max_950px:ml-5 rounded-2xl"
         style={{
-          borderRadius: "20px",
-          boxShadow: `inset 12px 12px 20px #adadad, inset -12px -12px 20px #ffffff`,
+          boxShadow: `inset 8px 8px 16px #97adc9, inset -8px -8px 16px #e7ffff`,
         }}>
         {children}
       </div>
