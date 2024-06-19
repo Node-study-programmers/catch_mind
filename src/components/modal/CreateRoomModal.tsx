@@ -44,7 +44,7 @@ const CreateRoomModal = () => {
             제목
             <Input type="normal" />
           </Typography>
-          <Button onClick={handleOpen}>방 생성</Button>
+          <Button onClick={() => {}}>방 생성</Button>
         </Box>
       </Modal>
     </>

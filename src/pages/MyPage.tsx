@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 // import mascot from "../asset/img/mascot.png";
@@ -14,8 +14,53 @@ const userData = [
   },
 ];
 
+const DEFAULT_PASSWORD = "****";
+
 const MyPage = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [isNickDisabled, setNickDisabled] = useState(true);
+  const [isPasswordDisabled, setPasswordDisabled] = useState(true);
+  const [currentNick, setCurrentNick] = useState(userData[0].nickname); //전역 상태 유저 닉넴
+  const [currentPwd, setCurrentPwd] = useState(DEFAULT_PASSWORD); //비밀번호 변경 상태
+  const nickNameRef = useRef<HTMLDivElement>(null);
+  const passwordRef = useRef<HTMLDivElement>(null);
+
+  const handleNickInputOpen = () => setNickDisabled(false);
+  const handlePasswordInputOpen = () => setPasswordDisabled(false);
+
+  const handleOutsideNickName = (e: MouseEvent) => {
+    if (nickNameRef.current && !nickNameRef.current.contains(e.target as Node)) {
+      setCurrentNick(userData[0].nickname);
+      setNickDisabled(true);
+    }
+  };
+
+  const handleOutsidePassword = (e: MouseEvent) => {
+    if (passwordRef.current && !passwordRef.current.contains(e.target as Node)) {
+      setCurrentPwd(DEFAULT_PASSWORD);
+      setPasswordDisabled(true);
+    }
+  };
+
+  const handleChageNickname = () => {
+    //API 호출...
+    alert(currentNick); //기능 확인 알럿
+  };
+
+  const handleChagePassword = () => {
+    //API 호출...
+    alert(currentPwd); //기능 확인 알럿
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideNickName);
+    document.addEventListener("mousedown", handleOutsidePassword);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideNickName);
+      document.removeEventListener("mousedown", handleOutsidePassword);
+    };
+  }, []);
 
   return (
     <div className="grid grid-cols-2 max_950px:flex max_950px:flex-col max_950px:pt-20 h-full">
@@ -45,9 +90,22 @@ const MyPage = () => {
       <div className="flex flex-col gap-7 justify-center items-start max_950px:px-auto max_950px:items-start max_950px:mx-auto">
         <div className=" max_950px:flex max_950px:justify-between gap-5">
           <h2 className="text-lg">NickName</h2>
-          <div className="flex">
-            <Input type="shadow" value={userData[0].nickname} disabled />
-            <Button buttonStyle="submit">수정하기</Button>
+          <div className="flex" ref={nickNameRef}>
+            <Input
+              type="shadow"
+              value={currentNick}
+              disabled={isNickDisabled}
+              onChange={e => setCurrentNick(e.target.value)}
+            />
+            {isNickDisabled ? (
+              <Button buttonStyle="submit" onClick={handleNickInputOpen}>
+                수정하기
+              </Button>
+            ) : (
+              <Button buttonStyle="submit" onClick={handleChageNickname}>
+                완료
+              </Button>
+            )}
           </div>
         </div>
         <div className="max_950px:flex max_950px:justify-between gap-5">
@@ -56,9 +114,22 @@ const MyPage = () => {
         </div>
         <div className="max_950px:flex max_950px:justify-between gap-5 max_950px:pb-20">
           <h2 className="text-lg">PassWord</h2>
-          <div className="flex">
-            <Input type="shadow" value="****" disabled />
-            <Button buttonStyle="submit">수정하기</Button>
+          <div className="flex" ref={passwordRef}>
+            <Input
+              type="shadow"
+              value={currentPwd}
+              disabled={isPasswordDisabled}
+              onChange={e => setCurrentPwd(e.target.value)}
+            />
+            {isPasswordDisabled ? (
+              <Button buttonStyle="submit" onClick={handlePasswordInputOpen}>
+                수정하기
+              </Button>
+            ) : (
+              <Button buttonStyle="submit" onClick={handleChagePassword}>
+                완료
+              </Button>
+            )}
           </div>
         </div>
       </div>
