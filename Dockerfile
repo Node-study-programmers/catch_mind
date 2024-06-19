@@ -20,4 +20,4 @@ EXPOSE 9999
 ENV NODE_ENV=production
 
 # Run the application when the container launches
-CMD ["npm", "start"]
+CMD ["node", "app.js"]

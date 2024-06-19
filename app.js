@@ -22,15 +22,15 @@ if (!fs.existsSync(imageFolder)) {
 const authRouter = require('./routes/auth');
 const mypageRouter = require('./routes/mypage');
 const rankRouter = require('./routes/rank');
+const homeRouter = require('./routes/home');
 // const gameRouter = require('./routes/game');
-// const homeRouter = require('./routes/home');
 // const roomRouter = require('./routes/room');
 
 app.use('/auth', authRouter);
 app.use('/mypage', mypageRouter);
 app.use('/rank', rankRouter);
+app.use('/home', homeRouter);
 // app.use('/game', gameRouter);
-// app.use('/', homeRouter);
 // app.use('/room', roomRouter);
 
 const PORT = process.env.PORT || 9999; // 포트 설정을 이 줄로 이동
