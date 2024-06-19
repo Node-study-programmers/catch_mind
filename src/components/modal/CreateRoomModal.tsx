@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import Input from "../Input";
 
 const style = {
-  position: "absolute" as "absolute",
+  position: "absolute",
   top: "50%",
   left: "50%",
   borderRadius: "20px",
@@ -34,10 +34,13 @@ const CreateRoomModal = () => {
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-describedby="modal-modal-description">
         <Box sx={style}>
-          <Typography sx={{ borderBottom: "2px solid" }} id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            sx={{ borderBottom: "2px solid" }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2">
             방 만들기
           </Typography>
           <Typography id="modal-modal-title" variant="h6" component="h2">

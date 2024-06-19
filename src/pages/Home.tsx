@@ -42,7 +42,7 @@ const roomsData = [
 
 const Home = () => {
   return (
-    <div className="grid grid-cols-2 overflow-auto w-full h-full gap-4 grid-rows-2">
+    <div className="grid grid-cols-2 grid-rows-2 overflow-auto w-full h-full max-h-full gap-4">
       {roomsData.map((room) => (
         <Room
           key={room.roomId}

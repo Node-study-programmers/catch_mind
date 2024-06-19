@@ -41,14 +41,12 @@ const MainContainer = ({ children }: MainContainer) => {
       min-w-[900px]
       max_950px:w-screen
       bg-blue-100
-      "
-    >
+      ">
       {pageText && (
         <div
           className={`flex justify-start items-end w-full h-[15%] gap-4 pl-10 pb-5 font-titleW text-xl bg-blue-100 ${
             path === "/rank" && "text-rankText"
-          }`}
-        >
+          }`}>
           {pageText}
           {path === "/rank" && <img src={rankImg} className="w-12 h-12"></img>}
         </div>
@@ -57,8 +55,7 @@ const MainContainer = ({ children }: MainContainer) => {
         className="h-[80%] bg-[#BFDBFE] overflow-y-auto mr-5 max_950px:ml-5 rounded-2xl max-h-full p-5 shadow-inner"
         style={{
           boxShadow: `inset 8px 8px 16px #97adc9, inset -8px -8px 16px #e7ffff`,
-        }}
-      >
+        }}>
         {children}
       </div>
     </div>
