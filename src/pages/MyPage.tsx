@@ -29,14 +29,20 @@ const MyPage = () => {
   const handlePasswordInputOpen = () => setPasswordDisabled(false);
 
   const handleOutsideNickName = (e: MouseEvent) => {
-    if (nickNameRef.current && !nickNameRef.current.contains(e.target as Node)) {
+    if (
+      nickNameRef.current &&
+      !nickNameRef.current.contains(e.target as Node)
+    ) {
       setCurrentNick(userData[0].nickname);
       setNickDisabled(true);
     }
   };
 
   const handleOutsidePassword = (e: MouseEvent) => {
-    if (passwordRef.current && !passwordRef.current.contains(e.target as Node)) {
+    if (
+      passwordRef.current &&
+      !passwordRef.current.contains(e.target as Node)
+    ) {
       setCurrentPwd(DEFAULT_PASSWORD);
       setPasswordDisabled(true);
     }
@@ -71,10 +77,15 @@ const MyPage = () => {
             style={{
               boxShadow: "5px 5px 10px #99afcb, -5px -5px 10px #e5ffff",
             }}
-            className="bg-[#BFDBFE] rounded-2xl w-full h-full flex flex-col items-center justify-center"
-          >
-            <img src={userData[0].profileUrl} alt="user" className="w-[80%] h-[80%] m-auto rounded-full" />
-            <button className="text-blue-500" onClick={() => setModalOpen(true)}>
+            className="bg-[#BFDBFE] rounded-2xl w-full h-full flex flex-col items-center justify-center">
+            <img
+              src={userData[0].profileUrl}
+              alt="user"
+              className="w-[80%] h-[80%] m-auto rounded-full"
+            />
+            <button
+              className="text-blue-500"
+              onClick={() => setModalOpen(true)}>
               replace
             </button>
             <ImageModal open={modalOpen} onClose={() => setModalOpen(false)} />
@@ -83,7 +94,9 @@ const MyPage = () => {
 
         <div className="p-5 rounded-3xl flex justify-center items-center flex-col max_950px:my-5">
           <h2 className="text-3xl">Total Score</h2>
-          <p className="text-5xl font-titleW p-3 underline">{userData[0].totalScore}</p>
+          <p className="text-5xl font-titleW p-3 underline">
+            {userData[0].totalScore}
+          </p>
         </div>
       </div>
       {/* 이메일, 비밀번호, 닉네임 */}
@@ -95,7 +108,7 @@ const MyPage = () => {
               type="shadow"
               value={currentNick}
               disabled={isNickDisabled}
-              onChange={e => setCurrentNick(e.target.value)}
+              onChange={(e) => setCurrentNick(e.target.value)}
             />
             {isNickDisabled ? (
               <Button buttonStyle="submit" onClick={handleNickInputOpen}>
@@ -119,7 +132,7 @@ const MyPage = () => {
               type="shadow"
               value={currentPwd}
               disabled={isPasswordDisabled}
-              onChange={e => setCurrentPwd(e.target.value)}
+              onChange={(e) => setCurrentPwd(e.target.value)}
             />
             {isPasswordDisabled ? (
               <Button buttonStyle="submit" onClick={handlePasswordInputOpen}>

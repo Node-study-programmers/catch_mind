@@ -1,5 +1,5 @@
 // component types
-export type buttonTypes = "auth" | "ingame" | "side" | "submit";
+export type buttonTypes = "auth" | "ingame" | "shadow" | "submit";
 
 export type InputType = "chat" | "normal" | "password" | "shadow";
 
