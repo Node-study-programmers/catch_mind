@@ -4,34 +4,27 @@ const User = require('../models/user');
 
 const renderMain = async (req,res) => {
     const { page, pageSize } = req.query;
+
     try {
-        const currentPage = parseInt(page) || 1; // 현재 페이지
-        const limit = parseInt(pageSize) || 4; // 페이지 당 방의 수
-
-        const rooms = await Room.find().skip((currentPage - 1) * limit).limit(limit);
-
-        const totalRooms = await Room.countDocuments();
-        const totalPages = Math.ceil(totalRooms / limit);
-
-        const roomData = rooms.map(room => ({
-            roomId: room._id,
-            masterImage: room.masterImage,
-            masterNickname: room.masterNickname,
-            roomName: room.roomName,
-            roomMaxCount: room.roomMaxCount,
-            roomUsersCount: room.roomUsers.length,
-         }));
-
-        return res.status(StatusCodes.OK).json({
-            roomData,
-            currentPage: currentPage,
-            totalPages: totalPages,
-        });
-    
+        const result = await fetchRooms({}, page, pageSize);
+        return res.status(StatusCodes.OK).json(result);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: '서버 에러가 발생했습니다.' });
-    };
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: '서버 에러가 발생했습니다.' });
+    }
+}
+
+const search = async (req,res) => {
+    const { searchName, page, pageSize } = req.query;
+
+    try {
+        const query = { roomName: { $regex: searchName, $options: 'i' } };
+        const result = await fetchRooms(query, page, pageSize);
+        return res.status(StatusCodes.OK).json(result);
+    } catch (err) {
+        console.error(err);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: '서버 에러가 발생했습니다.' });
+    }
 }
 
 const mkgame = async (req,res) => {
@@ -69,6 +62,7 @@ const mkgame = async (req,res) => {
             roomName: room.roomName,
             roomMaxCount: room.roomMaxCount,
             roomUsersCount: room.roomUsers.length,
+            roomStatus: room.status
         });
 
     } catch (err) {
@@ -80,7 +74,37 @@ const mkgame = async (req,res) => {
     }
 }
 
+const fetchRooms = async (query, page, pageSize) => {
+    try {
+        const currentPage = parseInt(page) || 1;
+        const limit = parseInt(pageSize) || 4;
+        const rooms = await Room.find(query).skip((currentPage - 1) * limit).limit(limit);
+        const totalRooms = await Room.countDocuments(query);
+        const totalPages = Math.ceil(totalRooms / limit);
+
+        const roomData = rooms.map(room => ({
+            roomId: room._id,
+            masterImage: room.masterImage,
+            masterNickname: room.masterNickname,
+            roomName: room.roomName,
+            roomMaxCount: room.roomMaxCount,
+            roomUsersCount: room.roomUsers.length,
+            roomStatus: room.status
+        }));
+
+        return {
+            roomData,
+            currentPage,
+            totalPages
+        };
+    } catch (err) {
+        console.error(err);
+        throw new Error('서버 에러가 발생했습니다.');
+    };
+}
+
 module.exports = {
     renderMain,
+    search,
     mkgame,
 };

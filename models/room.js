@@ -17,12 +17,16 @@ const roomSchema = new mongoose.Schema({
         type: Number,
         default: 6
     },
-
     roomUsers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         default: []
-    }]
+    }],
+    status: {
+        type: String,
+        enum: ['waiting', 'playing'],
+        default: 'waiting'
+    }
 }, {
     collection: 'rooms',
     versionKey: false
