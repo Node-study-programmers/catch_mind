@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import rankImg from "../asset/img/ranking.png";
 import Input from "./Input";
 import { IoSearch } from "react-icons/io5";
+import { userStore } from "../store/userStore";
 
 interface MainContainer {
   children: React.ReactNode;
@@ -12,12 +13,13 @@ const MainContainer = ({ children }: MainContainer) => {
   const location = useLocation();
   const path = location.pathname;
   const [pageText, setPageText] = useState<string | null>(null);
+  const user = userStore(state => state.user);
 
   useEffect(() => {
     function printPageText() {
       switch (path) {
         case "/":
-          setPageText(`${"홍길동님"} 안녕하세요!`); //차후 유저 닉네임은 전역 상태 참조
+          setPageText(`${user.nickname} 안녕하세요!`); //차후 유저 닉네임은 전역 상태 참조
           break;
         case "/rank":
           setPageText("Ranking");
@@ -43,17 +45,17 @@ const MainContainer = ({ children }: MainContainer) => {
       min-w-[900px]
       max_950px:w-screen
       bg-blue-100
-      ">
+      "
+    >
       {pageText && (
         <div
           className={`flex justify-between items-end w-full h-[15%] gap-4 px-10 pb-5 font-titleW text-xl bg-blue-100 ${
             path === "/rank" && "text-rankText"
-          }`}>
+          }`}
+        >
           <div className="flex items-end">
             {pageText}
-            {path === "/rank" && (
-              <img src={rankImg} className="w-12 h-12"></img>
-            )}
+            {path === "/rank" && <img src={rankImg} className="w-12 h-12"></img>}
           </div>
           <div className="flex items-center gap-5">
             <Input type="normal" placeholder="방 이름을 입력해주세요." />
@@ -67,7 +69,8 @@ const MainContainer = ({ children }: MainContainer) => {
         className="h-[80%] bg-[#BFDBFE] overflow-y-auto mr-5 max_950px:ml-5 rounded-2xl max-h-full p-5 shadow-inner"
         style={{
           boxShadow: `inset 8px 8px 16px #97adc9, inset -8px -8px 16px #e7ffff`,
-        }}>
+        }}
+      >
         {children}
       </div>
     </div>

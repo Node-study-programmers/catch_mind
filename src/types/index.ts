@@ -23,3 +23,25 @@ export interface InputErr {
   notValidType: "email" | "password" | "nickname";
   message: string;
 }
+
+export interface Room {
+  masterImage: string;
+  masterNickname: string;
+  roomId: string;
+  roomMaxCount: number;
+  roomName: string;
+  roomUsersCount: number;
+  roomStatus: "waiting" | "playing";
+}
+
+export interface Rooms {
+  currentPage: number;
+  roomData: Room[];
+  totalPages: number;
+}
+
+export type RankUsers = {
+  nickname: string;
+  profileImage: string;
+  score: number;
+}[];
