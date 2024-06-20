@@ -34,7 +34,8 @@ const join = async (req,res) => {
             email,
             password: hashPassword,
             nickname,
-            salt
+            salt,
+            profileImage: 'Basic.jpg'
         });
 
         await newUser.save();

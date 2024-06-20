@@ -9,21 +9,35 @@ router.use(ensureAuthorization);
 
 const { passwordReset, changeImage, changeNickname, userDelete } = require('../controllers/mypage');
 
-// Multer 설정
+// 파일 저장 경로 및 파일명 설정
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        console.log("1");
         cb(null, path.join(__dirname, '../profileImages'));
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
-        console.log("2");
     }
 });
-const upload = multer({ storage });
+
+// 파일 형식 필터링 ( 이미지 파일만 허용 )
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+    } else {
+        cb(new Error('이미지 파일만 업로드할 수 있습니다.'), false);
+    }
+};
+
+const upload = multer({ 
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: 1024 * 1024 * 5  // 5MB
+    }
+ });
 
 router.put('/passwordReset', passwordReset);
-router.put('/changeImage', upload.single('file'), changeImage);    
+router.put('/changeImage', upload.single('profileImage'), changeImage);    
 router.put('/changeNickname', changeNickname);
 router.delete('/userDelete', userDelete);
 

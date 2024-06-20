@@ -30,19 +30,23 @@ const passwordReset = async (req,res) => {
 
 const changeImage = async (req,res) => {
     try {
-        // 파일 이름을 User._id로 보내달라. (토큰 뜯어서 id 조회가능하면)
-        const imageFilename = req.file.filename;
-        const user = await User.findOne({ id: user._id });
+        const userId = req.user.id;
+        const user = await User.findById(userId);
 
-        if (user.profileImage) {
-            const oldImagePath = path.join(__dirname, '../profileImages', user.profileImage);
-            if (fs.existsSync(oldImagePath) && oldImagePath.length != "Basic") {
-              fs.unlinkSync(oldImagePath);
-            }
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "유저를 찾을 수 없습니다."
+            })
         }
+
+        const imageFilename = req.file.filename;
         user.profileImage = imageFilename;
         await user.save();
-        res.status(StatusCodes.OK).json({ profileImage: user.profileImage });
+
+        return res.status(StatusCodes.OK).json({
+            profileImage: user.profileImage
+        });
+
     } catch (err) {
         console.error(err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
