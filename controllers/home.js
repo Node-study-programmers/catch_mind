@@ -27,8 +27,64 @@ const search = async (req,res) => {
     }
 }
 
-const mkgame = async (req,res) => {
-    const { masterImage, masterNickname, roomName } = req.body;
+const enterRoom = async (req,res, next) => {
+    try {
+        const { roomId } = req.body;
+        const room = await Room.findOne({ _id: roomId });
+        if (!room) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "방을 찾을 수 없습니다."
+            });
+        }
+
+        const user = await User.findOne({ _id: req.user.id });
+        
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "사용자를 찾을 수 없습니다."
+            });
+        }
+
+        if (room.roomUsers.some(u => u.userId.equals(user.id))) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "사용자가 이미 방에 있습니다."
+            });
+        }
+
+        if (room.roomStatus === 'playing') {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "이미 게임이 진행중입니다."
+            })
+        }
+
+        if (room.roomUsers.length >= room.roomMaxCount) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "방이 가득 찼습니다."
+            });
+        }
+
+        room.roomUsers.push({
+            userId: user.id,
+            nickname: user.nickname,
+            profileImage: user.profileImage,
+            score: user.score
+        });
+        await room.save();
+
+        return res.status(StatusCodes.OK).json({
+            message: "Good"
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "서버 에러"
+        });
+    }
+}
+
+const createRoom = async (req,res) => {
+    const { roomName } = req.body;
 
     if (!roomName) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -37,7 +93,7 @@ const mkgame = async (req,res) => {
     }
 
     try {
-        const user = await User.findOne({ nickname: masterNickname });
+        const user = await User.findOne({ _id: req.user.id });
         if (!user) {
             return res.status(StatusCodes.NOT_FOUND).json({
                 message: "사용자를 찾을 수 없습니다."
@@ -45,26 +101,29 @@ const mkgame = async (req,res) => {
         }
 
         const newRoom = new Room({
-            masterImage: masterImage,
-            masterNickname: masterNickname,
+            masterImage: user.profileImage,
+            masterNickname: user.nickname,
             roomName: roomName,
-            roomUsers: [user._id]
+            roomUsers: [{
+                userId: user.id,
+                nickname: user.nickname,
+                profileImage: user.profileImage,
+                score: user.score
+            }]
         });
 
         await newRoom.save();
 
         const room = await Room.findOne({ masterNickname });
-
         return res.status(StatusCodes.OK).json({
-            roomId: room._id,
+            roomId: room.id,
             masterImage: room.masterImage,
             masterNickname: room.masterNickname,
             roomName: room.roomName,
             roomMaxCount: room.roomMaxCount,
             roomUsersCount: room.roomUsers.length,
-            roomStatus: room.status
+            roomStatus: room.roomStatus
         });
-
     } catch (err) {
         console.error('방 생성 중 에러 발생:', err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -89,7 +148,7 @@ const fetchRooms = async (query, page, pageSize) => {
             roomName: room.roomName,
             roomMaxCount: room.roomMaxCount,
             roomUsersCount: room.roomUsers.length,
-            roomStatus: room.status
+            roomStatus: room.roomStatus
         }));
 
         return {
@@ -106,5 +165,6 @@ const fetchRooms = async (query, page, pageSize) => {
 module.exports = {
     renderMain,
     search,
-    mkgame,
+    enterRoom,
+    createRoom,
 };

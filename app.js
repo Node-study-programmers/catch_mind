@@ -19,7 +19,7 @@ if (!fs.existsSync(imageFolder)) {
   fs.mkdirSync(imageFolder);
 }
 
-app.use('/profileImages', express.static(path.join(__dirname, 'profileImages')));
+app.use('/profileImages', express.static(path.join(__dirname, '../profileImages')));
 
 const authRouter = require('./routes/auth');
 const mypageRouter = require('./routes/mypage');

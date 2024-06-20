@@ -15,7 +15,6 @@ const ensureAuthorization = (req, res, next) => {
         }
 
         let decodedJwt = jwt.verify(receivedJwt, process.env.JWT_SECRET);
-        console.log(decodedJwt);  // 여기에서 해독된 JWT 페이로드를 확인할 수 있습니다.
         req.user = decodedJwt;  // 해독된 JWT 정보를 요청 객체에 추가
         next();  // 다음 미들웨어로 제어를 넘김
 

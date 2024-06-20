@@ -1,5 +1,27 @@
 const mongoose = require('mongoose');
 
+const roomUserSchema = new mongoose.Schema({
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    nickname: {
+      type: String,
+      required: true
+    },
+    profileImage: {
+      type: String,
+      default: "Basic"
+    },
+    score: {
+      type: Number,
+      default: 0
+    }
+  }, {
+    _id: false
+  });
+
 const roomSchema = new mongoose.Schema({
     masterImage: {
         type: String,
@@ -17,12 +39,8 @@ const roomSchema = new mongoose.Schema({
         type: Number,
         default: 6
     },
-    roomUsers: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        default: []
-    }],
-    status: {
+    roomUsers: [roomUserSchema],
+    roomStatus: {
         type: String,
         enum: ['waiting', 'playing'],
         default: 'waiting'

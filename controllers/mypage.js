@@ -6,32 +6,37 @@ const fs = require('fs');
 const path = require('path');
 
 const passwordReset = async (req,res) => {
-    const { password } = req.body;
+    try {
+        const { password } = req.body;
 
-    if (!password) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "공백이 있습니다."
+        if (!password) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "공백이 있습니다."
+            })
+        }
+
+        const salt = crypto.randomBytes(10).toString('base64');
+        const hashPassword = crypto.pbkdf2Sync(password, salt, 10000, 10,'sha512').toString('base64');
+
+        const user = await User.findOne({ _id: req.user.id });
+        user.salt = salt;
+        user.password = hashPassword;
+        await user.save();
+
+        return res.status(StatusCodes.OK).json({
+            message: "비밀번호 변경 성공"
+        })
+    } catch (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "서버 오류"
         })
     }
-
-    const salt = crypto.randomBytes(10).toString('base64');
-    const hashPassword = crypto.pbkdf2Sync(password, salt, 10000, 10,'sha512').toString('base64');
-
-    const user = await User.findOne({ id: req.user._id });
-    user.salt = salt;
-    user.password = hashPassword;
-    await user.save();
-
-    return res.status(StatusCodes.OK).json({
-        message: "비밀번호 변경 성공"
-    })
-
 }
 
 const changeImage = async (req,res) => {
     try {
-        const userId = req.user.id;
-        const user = await User.findById(userId);
+        const user = await User.findOne({ _id: req.user.id });
 
         if (!user) {
             return res.status(StatusCodes.NOT_FOUND).json({
@@ -56,26 +61,40 @@ const changeImage = async (req,res) => {
 }
 
 const changeNickname = async (req,res) => {
-    const { nickname } = req.body;
+    try {
+        const { nickname } = req.body;
 
-    if (!nickname) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "공백이 있습니다."
+        if (!nickname) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "공백이 있습니다."
+            })
+        }
+
+        const duplication = await User.findOne({ nickname });
+        if (duplication) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: "닉네임이 이미 사용 중입니다."
+            })
+        }
+
+        const user = await User.findOne({ _id: req.user.id });
+        user.nickname = nickname;
+        await user.save();
+
+        return res.status(StatusCodes.OK).json({
+            nickname: user.nickname
+        })
+    } catch (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "서버 오류"
         })
     }
-
-    const user = await User.findOne({ id: req.user._id });
-    user.nickname = nickname;
-    await user.save();
-
-    return res.status(StatusCodes.OK).json({
-        nickname: user.nickname
-    })
 }
 
 const userDelete = async (req,res) => {
     try {
-        const result = await User.deleteOne({ id: req.user._id });
+        const result = await User.deleteOne({ _id: req.user.id });
 
         if (result.deletedCount === 0) {
             return res.status(StatusCodes.BAD_REQUEST).json({
