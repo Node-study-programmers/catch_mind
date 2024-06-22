@@ -15,8 +15,8 @@ export const createClient = (config?: AxiosRequestConfig) => {
   });
 
   axiosInstance.interceptors.request.use(
-    respones => respones,
-    error => {
+    (respones) => respones,
+    (error) => {
       if (error.response.status === 401) {
         removeToken();
         window.location.href = "/login";

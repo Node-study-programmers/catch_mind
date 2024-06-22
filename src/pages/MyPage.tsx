@@ -1,21 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
-// import mascot from "../asset/img/mascot.png";
 import ImageModal from "../components/modal/ImageModal";
-import { replaceNickName, replacePassword } from "../components/api/replace.api";
 import { userStore } from "../store/userStore";
 import AlertModal from "../components/modal/AlertModal";
-
-const userData = [
-  {
-    profileUrl: "https://picsum.photos/500/500",
-    nickname: "골목대장",
-    totalScore: 129,
-    email: "qwe@naver.com",
-    password: "qweqwe",
-  },
-];
+import { replaceNickName, replacePassword } from "../api/replace.api";
 
 const DEFAULT_PASSWORD = "****";
 
@@ -39,14 +28,20 @@ const MyPage = () => {
   };
 
   const handleOutsideNickName = (e: MouseEvent) => {
-    if (nickNameRef.current && !nickNameRef.current.contains(e.target as Node)) {
+    if (
+      nickNameRef.current &&
+      !nickNameRef.current.contains(e.target as Node)
+    ) {
       setNewNick(user.nickname!);
       setNickDisabled(true);
     }
   };
 
   const handleOutsidePassword = (e: MouseEvent) => {
-    if (passwordRef.current && !passwordRef.current.contains(e.target as Node)) {
+    if (
+      passwordRef.current &&
+      !passwordRef.current.contains(e.target as Node)
+    ) {
       setNewPwd(DEFAULT_PASSWORD);
       setPasswordDisabled(true);
     }
@@ -54,12 +49,12 @@ const MyPage = () => {
 
   const handleChageNickname = () => {
     replaceNickName({ nickname: newNick })
-      .then(data => {
+      .then((data) => {
         setUser({ ...user, nickname: data.nickname });
         setAlretMessageMessage("닉네임 변경 완료");
         setOpen(true);
       })
-      .catch(e => {
+      .catch((e) => {
         setAlretMessageMessage(e.response.data.message);
         setOpen(true);
       });
@@ -67,11 +62,11 @@ const MyPage = () => {
 
   const handleChagePassword = () => {
     replacePassword({ password: newPwd })
-      .then(data => {
+      .then((data) => {
         setAlretMessageMessage("비밀번호 변경 완료");
         setOpen(true);
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   };
 
   useEffect(() => {
@@ -87,17 +82,26 @@ const MyPage = () => {
   return (
     <div className="grid grid-cols-2 max_950px:flex max_950px:flex-col max_950px:pt-20 h-full">
       {/* 아바타 , score */}
-      <AlertModal open={open} handleClose={handleClose} message={AlretMessage} />
+      <AlertModal
+        open={open}
+        handleClose={handleClose}
+        message={AlretMessage}
+      />
       <div className="flex flex-col justify-center items-center">
         <div className="w-72 h-72">
           <div
             style={{
               boxShadow: "5px 5px 10px #99afcb, -5px -5px 10px #e5ffff",
             }}
-            className="bg-[#BFDBFE] rounded-2xl w-full h-full flex flex-col items-center justify-center"
-          >
-            <img src={user.profileImage!} alt="user" className="w-[80%] h-[80%] m-auto rounded-full" />
-            <button className="text-blue-500" onClick={() => setModalOpen(true)}>
+            className="bg-[#BFDBFE] rounded-2xl w-full h-full flex flex-col items-center justify-center">
+            <img
+              src={user.profileImage!}
+              alt="user"
+              className="w-[80%] h-[80%] m-auto rounded-full"
+            />
+            <button
+              className="text-blue-500"
+              onClick={() => setModalOpen(true)}>
               replace
             </button>
             <ImageModal open={modalOpen} onClose={() => setModalOpen(false)} />
@@ -114,7 +118,12 @@ const MyPage = () => {
         <div className=" max_950px:flex max_950px:justify-between gap-5">
           <h2 className="text-lg">NickName</h2>
           <div className="flex" ref={nickNameRef}>
-            <Input type="shadow" value={newNick} disabled={isNickDisabled} onChange={e => setNewNick(e.target.value)} />
+            <Input
+              type="shadow"
+              value={newNick}
+              disabled={isNickDisabled}
+              onChange={(e) => setNewNick(e.target.value)}
+            />
             {isNickDisabled ? (
               <Button buttonStyle="submit" onClick={handleNickInputOpen}>
                 수정하기
@@ -137,7 +146,7 @@ const MyPage = () => {
               type="shadow"
               value={newPwd}
               disabled={isPasswordDisabled}
-              onChange={e => setNewPwd(e.target.value)}
+              onChange={(e) => setNewPwd(e.target.value)}
             />
             {isPasswordDisabled ? (
               <Button buttonStyle="submit" onClick={handlePasswordInputOpen}>

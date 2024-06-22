@@ -18,7 +18,7 @@ export const removeToken = () => {
 
 export const userStore = create(
   persist<Store>(
-    set => ({
+    (set) => ({
       user: {
         email: null,
         nickname: null,

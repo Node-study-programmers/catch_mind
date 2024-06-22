@@ -20,21 +20,33 @@ const Login = () => {
       return true;
     }
     if (password.length < 3) {
-      setInputErr({ notValidType: "password", message: "비밀번호가 너무 짧습니다" });
+      setInputErr({
+        notValidType: "password",
+        message: "비밀번호가 너무 짧습니다",
+      });
       return true;
     }
     return false;
   };
 
-  const handleClickLogin = () => {
+  const handleClickLogin = (
+    e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
     const isErr = isValidateValue();
 
     if (isErr) return;
 
-    handleLogin().catch(e => {
+    handleLogin().catch((e) => {
       setMessage(e.response.data.message);
       setOpen(true);
     });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter") {
+      handleClickLogin(e);
+    }
   };
 
   return (
@@ -45,21 +57,37 @@ const Login = () => {
           <div className="text-xl font-titleW">Login</div>
           <div className="text-sm">To access your account</div>
         </div>
-        <div className="w-full">
-          <Input type="normal" text="Email address" value={email} onChange={e => setEmail(e.target.value)} />
-          {inputErr?.notValidType === "email" && (
-            <div className="flex justify-start text-red-600 text-xs">{inputErr.message}</div>
-          )}
-        </div>
-        <div className="w-full">
-          <Input type="password" text="Password" value={password} onChange={e => setPassword(e.target.value)} />
-          {inputErr?.notValidType === "password" && (
-            <div className="flex justify-start text-red-600 text-xs">{inputErr.message}</div>
-          )}
-        </div>
-        <Button buttonStyle="auth" onClick={handleClickLogin}>
-          Log in
-        </Button>
+        <form onSubmit={handleClickLogin}>
+          <div className="w-full">
+            <Input
+              type="normal"
+              text="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {inputErr?.notValidType === "email" && (
+              <div className="flex justify-start text-red-600 text-xs">
+                {inputErr.message}
+              </div>
+            )}
+          </div>
+          <div className="w-full">
+            <Input
+              type="password"
+              text="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {inputErr?.notValidType === "password" && (
+              <div className="flex justify-start text-red-600 text-xs">
+                {inputErr.message}
+              </div>
+            )}
+          </div>
+          <Button buttonStyle="auth" type="submit" onKeyDown={handleKeyDown}>
+            Log in
+          </Button>
+        </form>
       </div>
       <div className="flex-[1] flex items-center bg-subBoard w-full h-full justify-center"></div>
     </>

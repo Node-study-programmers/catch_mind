@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { login, signUp } from "../components/api/auth.api";
 import { userStore } from "../store/userStore";
-import { useNavigate } from "react-router-dom";
+import { login, signUp } from "../api/auth.api";
 
 export const useAuth = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const setUser = userStore(state => state.setUser);
+  const setUser = userStore((state) => state.setUser);
 
   const handleLogin = async () => {
     return login({ email, password })
-      .then(data => {
+      .then((data) => {
         localStorage.setItem("token", data.token);
         setUser({
           email: data.email,
@@ -20,10 +18,10 @@ export const useAuth = () => {
           profileImage: `${import.meta.env.VITE_IMG_URL}${data.profileImage}`,
           score: data.score,
         });
-        alert(`${data.nickname} 안녕하세요!`); //알럿창 수정 필요(디자인)
-        navigate("/");
+        // alert(`${data.nickname} 안녕하세요!`); //알럿창 수정 필요(디자인)
+        window.location.href = "/";
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         throw e;
       });
@@ -35,11 +33,20 @@ export const useAuth = () => {
         alert("회원가입 성공"); //알럿창 수정 필요(디자인)
         handleLogin(); //회원가입 성공시 바로 로그인후 홈으로 리다이렉트
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         throw e;
       });
   };
 
-  return { handleLogin, handleSignUp, email, password, nickname, setEmail, setNickname, setPassword };
+  return {
+    handleLogin,
+    handleSignUp,
+    email,
+    password,
+    nickname,
+    setEmail,
+    setNickname,
+    setPassword,
+  };
 };

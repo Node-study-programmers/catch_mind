@@ -1,4 +1,4 @@
-import { Room, Rooms } from "../../types";
+import { Room, Rooms } from "../types";
 import { httpClient } from "./http";
 
 export const createRoom = async (data: { roomName: string }) => {
@@ -8,7 +8,9 @@ export const createRoom = async (data: { roomName: string }) => {
 
 export const getRooms = async (currentPage?: number, limit?: number) => {
   if (currentPage && limit) {
-    const res = await httpClient.get<Rooms>(`/home?page=${currentPage}&pageSize=${limit}`);
+    const res = await httpClient.get<Rooms>(
+      `/home?page=${currentPage}&pageSize=${limit}`
+    );
     return res.data;
   }
 
@@ -18,5 +20,6 @@ export const getRooms = async (currentPage?: number, limit?: number) => {
 
 export const joinRoom = async (data: { roomId: string }) => {
   const res = await httpClient.post("/home/enterRoom", data);
+
   return res.data;
 };
