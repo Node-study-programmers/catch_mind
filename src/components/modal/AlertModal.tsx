@@ -4,9 +4,10 @@ import React from "react";
 interface Props {
   open: boolean;
   handleClose: () => void;
+  message: string;
 }
 
-const AlertModal = ({ open, handleClose }: Props) => {
+const AlertModal = ({ open, handleClose, message }: Props) => {
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -30,7 +31,7 @@ const AlertModal = ({ open, handleClose }: Props) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          이미 게임이 시작된 방입니다.
+          {message}
         </Typography>
       </Box>
     </Modal>

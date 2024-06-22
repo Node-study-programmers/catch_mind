@@ -3,10 +3,14 @@ import Input from "./Input";
 import Button from "./Button";
 import { useAuth } from "../hooks/useAuth";
 import { InputErr } from "../types";
+import AlertModal from "./modal/AlertModal";
 
 const Login = () => {
   const { setEmail, setPassword, email, password, handleLogin } = useAuth();
   const [inputErr, setInputErr] = useState<InputErr | null>(null);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const handleClose = () => setOpen(false);
 
   const isValidateValue = () => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
@@ -27,12 +31,16 @@ const Login = () => {
 
     if (isErr) return;
 
-    handleLogin();
+    handleLogin().catch(e => {
+      setMessage(e.response.data.message);
+      setOpen(true);
+    });
   };
 
   return (
     <>
       <div className="flex flex-[2] flex-col items-center justify-around w-full pl-5 pr-5">
+        <AlertModal open={open} handleClose={handleClose} message={message} />
         <div className="flex flex-col items-center">
           <div className="text-xl font-titleW">Login</div>
           <div className="text-sm">To access your account</div>

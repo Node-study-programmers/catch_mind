@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RankContainer from "../components/Rank/RankContainer";
+import { getToken } from "../store/userStore";
+import { Navigate } from "react-router-dom";
+import { fetchRank } from "../components/api/rank.api";
+import { RankUsers } from "../types";
 
 //임시 데이터
 const rankData = [
@@ -41,6 +45,20 @@ const rankData = [
 ];
 
 const Rank = () => {
+  const token = getToken();
+
+  if (!token) {
+    return <Navigate to={"/auth"} />;
+  }
+
+  const [rankData, setRankData] = useState<RankUsers>([]);
+
+  useEffect(() => {
+    fetchRank()
+      .then(data => setRankData(data))
+      .catch(e => console.log(e));
+  }, []);
+
   return (
     <div className="overflow-auto max-h-full">
       <table className="w-full">
@@ -51,12 +69,15 @@ const Rank = () => {
           <th className="text-center">총점수</th>
         </thead>
         <tbody className="flex flex-col gap-2">
+          {rankData.length === 0 && (
+            <div className="w-full text-center mt-20 font-titleW">랭킹에 이름을 올려보세요!</div>
+          )}
           {rankData.map((user, i) => (
             <RankContainer
               key={i}
-              profileUrl={user.profileUrl}
+              profileUrl={user.profileImage}
               nickname={user.nickname}
-              totalScore={user.totalScore}
+              totalScore={user.score}
               ranking={i + 1}
             />
           ))}

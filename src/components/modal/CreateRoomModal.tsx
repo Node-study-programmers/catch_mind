@@ -5,6 +5,9 @@ import React, { useState } from "react";
 import Input from "../Input";
 import Button from "../Button";
 import { Button as MButton } from "@mui/material";
+import { createRoom } from "../api/room.api";
+import { userStore } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -26,7 +29,18 @@ const CreateRoomModal = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [roomName, setRoomName] = useState("");
+  const user = userStore(state => state.user);
+  const navigate = useNavigate();
+  console.log(user);
+  const handleCreateRoom = () => {
+    createRoom({ roomName: roomName })
+      .then(data => {
+        navigate(`/ingame/${data.roomId}`); //방생성 성공시 방으로 리다이렉트
+        console.log(data);
+      })
+      .catch(e => console.log(e));
+  };
   return (
     <>
       <Button buttonStyle="shadow" onClick={handleOpen}>
@@ -37,20 +51,17 @@ const CreateRoomModal = () => {
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style}>
-          <Typography
-            sx={{ borderBottom: "2px solid" }}
-            id="modal-modal-title"
-            variant="h6"
-            component="h2">
+          <Typography sx={{ borderBottom: "2px solid" }} id="modal-modal-title" variant="h6" component="h2">
             방 만들기
           </Typography>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             제목
-            <Input type="normal" />
+            <Input type="normal" onChange={e => setRoomName(e.target.value)} />
           </Typography>
-          <MButton onClick={() => {}}>방 생성</MButton>
+          <MButton onClick={handleCreateRoom}>방 생성</MButton>
         </Box>
       </Modal>
     </>
