@@ -1,4 +1,4 @@
-import { LoginOk } from "../types";
+import { LoginOk } from "../../types";
 import { httpClient } from "./http";
 
 interface AuthProps {

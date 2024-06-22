@@ -7,7 +7,12 @@ interface Props {
   ranking: number;
 }
 
-const RankContainer = ({ profileUrl, nickname, totalScore, ranking }: Props) => {
+const RankContainer = ({
+  profileUrl,
+  nickname,
+  totalScore,
+  ranking,
+}: Props) => {
   return (
     //각각 1의 비율로 정렬
     <tr className="grid grid-cols-4 items-center justify-center bg-white border rounded-2xl">
@@ -20,7 +25,9 @@ const RankContainer = ({ profileUrl, nickname, totalScore, ranking }: Props) => 
         />
       </td>
       <td className="text-center p-2">{nickname}</td>
-      <td className="text-center p-2 font-titleW text-2xl underline">{totalScore}</td>
+      <td className="text-center p-2 font-titleW text-2xl underline">
+        {totalScore}
+      </td>
     </tr>
   );
 };

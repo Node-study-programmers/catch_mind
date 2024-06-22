@@ -4,17 +4,15 @@ import { useNavigate } from "react-router-dom";
 import AlertModal from "./modal/AlertModal";
 import { Room as IRoom } from "../types";
 
-interface Props {
-  roomId: string;
-  profileUrl: string;
-  roomMaster: string;
-  roomName: string;
-  currentUser: number;
-  maxUser: number;
-  roomStatus: "waiting" | "playing";
-}
-
-const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, roomMaxCount, roomStatus }: IRoom) => {
+const Room = ({
+  roomId,
+  masterImage,
+  masterNickname,
+  roomName,
+  roomUsersCount,
+  roomMaxCount,
+  roomStatus,
+}: IRoom) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -27,7 +25,11 @@ const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, r
   };
   return (
     <div className="flex w-full h-full rounded-xl border bg-white">
-      <AlertModal open={open} handleClose={handleClose} message="이미 게임이 시작된 방입니다" />
+      <AlertModal
+        open={open}
+        handleClose={handleClose}
+        message="이미 게임이 시작된 방입니다"
+      />
       <div className="w-3/4 h-full">
         <img
           src={`${import.meta.env.VITE_IMG_URL}${masterImage}`}
@@ -37,7 +39,10 @@ const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, r
       </div>
       <div className="h-full w-full flex flex-col  justify-around">
         <div className="flex justify-end pr-3">
-          <div className={`w-5 h-5 ${roomStatus === "playing" ? "bg-inGame" : "bg-waitingGame"} rounded-full`}></div>
+          <div
+            className={`w-5 h-5 ${
+              roomStatus === "playing" ? "bg-inGame" : "bg-waitingGame"
+            } rounded-full`}></div>
         </div>
         <div className="flex flex-col pl-3">
           <p className="font-titleW text-2xl">{roomName}</p>

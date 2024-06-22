@@ -9,7 +9,7 @@ interface Props {
 
 const AlertModal = ({ open, handleClose, message }: Props) => {
   const style = {
-    position: "absolute" as "absolute",
+    position: "absolute",
     top: "50%",
     left: "50%",
     borderRadius: "20px",
@@ -27,8 +27,7 @@ const AlertModal = ({ open, handleClose, message }: Props) => {
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+      aria-describedby="modal-modal-description">
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {message}

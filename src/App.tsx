@@ -6,8 +6,19 @@ import MyPage from "./pages/MyPage";
 import Rank from "./pages/Rank";
 import NotFound from "./pages/NotFound";
 import Layout from "./components/layout/Layout";
+import { getToken } from "./store/userStore";
+import { useEffect } from "react";
 
 function App() {
+  const token = getToken();
+
+  useEffect(() => {
+    if (!token && location.pathname !== "/auth") {
+      // 토큰이 없으면 로그인 페이지로 리다이렉트
+      window.location.href = "/auth";
+    }
+  }, [token]);
+
   const router = createBrowserRouter([
     {
       path: "/",
