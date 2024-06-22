@@ -29,15 +29,13 @@ const Login = () => {
     return false;
   };
 
-  const handleClickLogin = (
-    e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLButtonElement>
-  ) => {
+  const handleClickLogin = (e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const isErr = isValidateValue();
 
     if (isErr) return;
 
-    handleLogin().catch((e) => {
+    handleLogin().catch(e => {
       setMessage(e.response.data.message);
       setOpen(true);
     });
@@ -51,37 +49,23 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex flex-[2] flex-col items-center justify-around w-full pl-5 pr-5">
+      <div className="flex flex-[3] flex-col items-center justify-around w-full pl-5 pr-5">
         <AlertModal open={open} handleClose={handleClose} message={message} />
         <div className="flex flex-col items-center">
           <div className="text-xl font-titleW">Login</div>
           <div className="text-sm">To access your account</div>
         </div>
-        <form onSubmit={handleClickLogin}>
+        <form onSubmit={handleClickLogin} className="flex flex-col items-center justify-around w-full h-full">
           <div className="w-full">
-            <Input
-              type="normal"
-              text="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <Input type="normal" text="Email address" value={email} onChange={e => setEmail(e.target.value)} />
             {inputErr?.notValidType === "email" && (
-              <div className="flex justify-start text-red-600 text-xs">
-                {inputErr.message}
-              </div>
+              <div className="flex justify-start text-red-600 text-xs">{inputErr.message}</div>
             )}
           </div>
           <div className="w-full">
-            <Input
-              type="password"
-              text="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <Input type="password" text="Password" value={password} onChange={e => setPassword(e.target.value)} />
             {inputErr?.notValidType === "password" && (
-              <div className="flex justify-start text-red-600 text-xs">
-                {inputErr.message}
-              </div>
+              <div className="flex justify-start text-red-600 text-xs">{inputErr.message}</div>
             )}
           </div>
           <Button buttonStyle="auth" type="submit" onKeyDown={handleKeyDown}>
