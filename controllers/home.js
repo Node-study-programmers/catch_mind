@@ -114,7 +114,7 @@ const createRoom = async (req,res) => {
 
         await newRoom.save();
 
-        const room = await Room.findOne({ masterNickname });
+        const room = await Room.findOne({ masterNickname: user.nickname });
         return res.status(StatusCodes.OK).json({
             roomId: room.id,
             masterImage: room.masterImage,
@@ -137,7 +137,7 @@ const fetchRooms = async (query, page, pageSize) => {
     try {
         const currentPage = parseInt(page) || 1;
         const limit = parseInt(pageSize) || 4;
-        const rooms = await Room.find(query).skip((currentPage - 1) * limit).limit(limit);
+        const rooms = await Room.find(query).sort({ createdAt: -1 }).skip((currentPage - 1) * limit).limit(limit);
         const totalRooms = await Room.countDocuments(query);
         const totalPages = Math.ceil(totalRooms / limit);
 

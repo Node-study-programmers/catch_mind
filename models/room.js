@@ -47,7 +47,8 @@ const roomSchema = new mongoose.Schema({
     }
 }, {
     collection: 'rooms',
-    versionKey: false
+    versionKey: false,
+    timestamps: true
 });
 
 roomSchema.path('roomUsers').validate(function (value) {
