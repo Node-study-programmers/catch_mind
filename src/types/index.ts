@@ -40,8 +40,16 @@ export interface Rooms {
   totalPages: number;
 }
 
-export type RankUsers = {
+export interface RankUsers {
   nickname: string;
   profileImage: string;
   score: number;
-}[];
+}
+
+export interface RoomUser extends RankUsers {
+  userId: string;
+}
+
+export interface RoomUsers {
+  roomUsers: RoomUser[];
+}
