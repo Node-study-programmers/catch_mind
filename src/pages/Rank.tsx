@@ -6,12 +6,12 @@ import { fetchRank } from "../api/rank.api";
 //임시 데이터
 
 const Rank = () => {
-  const [rankData, setRankData] = useState<RankUsers>([]);
+  const [rankData, setRankData] = useState<RankUsers[]>([]);
 
   useEffect(() => {
     fetchRank()
-      .then((data) => setRankData(data))
-      .catch((e) => console.log(e));
+      .then(data => setRankData(data))
+      .catch(e => console.log(e));
   }, []);
 
   return (
@@ -25,9 +25,7 @@ const Rank = () => {
         </thead>
         <tbody className="flex flex-col gap-2">
           {rankData.length === 0 && (
-            <div className="w-full text-center mt-20 font-titleW">
-              랭킹에 이름을 올려보세요!
-            </div>
+            <div className="w-full text-center mt-20 font-titleW">랭킹에 이름을 올려보세요!</div>
           )}
           {rankData.map((user, i) => (
             <RankContainer
