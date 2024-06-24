@@ -3,22 +3,10 @@ const Room = require('../models/room');
 const User = require('../models/user');
 
 const renderMain = async (req,res) => {
-    const { page, pageSize } = req.query;
-
-    try {
-        const result = await fetchRooms({}, page, pageSize);
-        return res.status(StatusCodes.OK).json(result);
-    } catch (err) {
-        console.error(err);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: '서버 에러가 발생했습니다.' });
-    }
-}
-
-const search = async (req,res) => {
     const { searchName, page, pageSize } = req.query;
 
     try {
-        const query = { roomName: { $regex: searchName, $options: 'i' } };
+        const query = searchName ? { roomName: { $regex: searchName, $options: 'i' } } : {};
         const result = await fetchRooms(query, page, pageSize);
         return res.status(StatusCodes.OK).json(result);
     } catch (err) {
@@ -72,7 +60,7 @@ const enterRoom = async (req,res, next) => {
         await room.save();
 
         return res.status(StatusCodes.OK).json({
-            message: "Good"
+            roomUsers: room.roomUsers
         });
 
     } catch (err) {
@@ -104,12 +92,6 @@ const createRoom = async (req,res) => {
             masterImage: user.profileImage,
             masterNickname: user.nickname,
             roomName: roomName,
-            roomUsers: [{
-                userId: user.id,
-                nickname: user.nickname,
-                profileImage: user.profileImage,
-                score: user.score
-            }]
         });
 
         await newRoom.save();
@@ -164,7 +146,6 @@ const fetchRooms = async (query, page, pageSize) => {
 
 module.exports = {
     renderMain,
-    search,
     enterRoom,
     createRoom,
 };
