@@ -2,6 +2,7 @@ import React from "react";
 import { BiSolidCircle } from "react-icons/bi";
 import { FaRegCircle } from "react-icons/fa";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
+import { useSearchParams } from "react-router-dom";
 
 interface PaginationProps {
   pagination: {
@@ -11,13 +12,32 @@ interface PaginationProps {
 }
 
 const Pagination = ({ pagination }: PaginationProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { currentPage, totalPage } = pagination;
+
+  const handleClickPage = (page: number) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+
+    newSearchParams.set("page", page.toString());
+    setSearchParams(newSearchParams);
+  };
+
   return (
     <div
       style={{ boxShadow: "5px 5px 9px #97adc9, -5px -5px 9px #e7ffff" }}
       className="bg-[#BFDBFE] w-[300px] rounded-xl h-[50px] flex justify-between items-center px-5">
-      <MdArrowBackIos className="cursor-pointer fill-blue-400" />
-      {Array.from({ length: pagination.totalPage }).map((_, index) => (
-        <div key={index}>
+      <MdArrowBackIos
+        className={`cursor-pointer fill-blue-400 ${
+          currentPage === 1 ? "fill-blue-200" : ""
+        }`}
+        onClick={() => {
+          if (currentPage > 1) {
+            handleClickPage(currentPage - 1);
+          }
+        }}
+      />
+      {Array.from({ length: totalPage }).map((_, index) => (
+        <div key={index} onClick={() => handleClickPage(index + 1)}>
           {pagination.currentPage === index + 1 ? (
             <BiSolidCircle className="fill-blue-500 rounded-full cursor-pointer" />
           ) : (
@@ -25,7 +45,16 @@ const Pagination = ({ pagination }: PaginationProps) => {
           )}
         </div>
       ))}
-      <MdArrowForwardIos className="cursor-pointer fill-blue-400" />
+      <MdArrowForwardIos
+        className={`cursor-pointer fill-blue-400 ${
+          currentPage === totalPage ? "fill-blue-200" : ""
+        }`}
+        onClick={() => {
+          if (currentPage < totalPage) {
+            handleClickPage(currentPage + 1);
+          }
+        }}
+      />
     </div>
   );
 };

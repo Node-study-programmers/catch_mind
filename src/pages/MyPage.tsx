@@ -62,11 +62,15 @@ const MyPage = () => {
 
   const handleChagePassword = () => {
     replacePassword({ password: newPwd })
-      .then((data) => {
+      .then(() => {
         setAlretMessageMessage("비밀번호 변경 완료");
         setOpen(true);
       })
       .catch((e) => console.log(e));
+  };
+
+  const imageModalClose = () => {
+    setModalOpen(false);
   };
 
   useEffect(() => {
@@ -104,7 +108,12 @@ const MyPage = () => {
               onClick={() => setModalOpen(true)}>
               replace
             </button>
-            <ImageModal open={modalOpen} onClose={() => setModalOpen(false)} />
+            <ImageModal
+              open={modalOpen}
+              onClose={imageModalClose}
+              user={user}
+              setUser={setUser}
+            />
           </div>
         </div>
 

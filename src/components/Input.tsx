@@ -9,7 +9,17 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   onBlur?: () => void;
 }
 
-const Input = ({ text, onChange, placeholder, type, disabled, value, inputErr, onBlur }: Props) => {
+const Input = ({
+  text,
+  onChange,
+  placeholder,
+  type,
+  disabled,
+  value,
+  inputErr,
+  onBlur,
+  ref,
+}: Props) => {
   if (type === "normal") {
     return (
       <div className="flex flex-col w-full">
@@ -34,8 +44,7 @@ const Input = ({ text, onChange, placeholder, type, disabled, value, inputErr, o
         className="flex flex-col rounded-2xl w-[300px]"
         style={{
           boxShadow: "5px 5px 10px #99afcb,-5px -5px 10px #e5ffff",
-        }}
-      >
+        }}>
         <div className="text-subText">{text}</div>
         <input
           placeholder={placeholder}
