@@ -8,16 +8,22 @@ const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, r
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInGame = () => {
     if (roomStatus === "playing") {
       return setOpen(true);
     }
-    navigate(`/ingame/${roomId}`);
+    setIsLoading(true);
+    setTimeout(() => {
+      navigate(`/ingame/${roomId}`);
+    }, 2000);
   };
+
   return (
     <div className="flex w-full h-full rounded-xl border bg-white">
       <AlertModal open={open} handleClose={handleClose} message="이미 게임이 시작된 방입니다" />
+      {isLoading && <AlertModal open={true} handleClose={() => {}} message="방 입장중..." isLoadingAlert={true} />}
       <div className="w-3/4 h-full">
         <img
           src={`${import.meta.env.VITE_IMG_URL}${masterImage}`}

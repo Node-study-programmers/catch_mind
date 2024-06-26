@@ -7,6 +7,7 @@ import Button from "../Button";
 import { Button as MButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { createRoom } from "../../api/room.api";
+import AlertModal from "./AlertModal";
 
 const style = {
   position: "absolute",
@@ -29,41 +30,44 @@ const CreateRoomModal = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [roomName, setRoomName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  // console.log(user);
+
   const handleCreateRoom = () => {
     createRoom({ roomName: roomName })
-      .then((data) => {
-        console.log(data);
-        navigate(`/ingame/${data.roomId}`); //방생성 성공시 방으로 리다이렉트
+      .then(data => {
+        setIsLoading(true);
+        setTimeout(() => {
+          navigate(`/ingame/${data.roomId}`); //방생성 성공시 방으로 리다이렉트
+        }, 2000);
       })
       .catch((e: Error) => console.log(e));
   };
+
+  if (isLoading) {
+    return <AlertModal open={true} handleClose={() => {}} message="방 생성중..." isLoadingAlert={true} />;
+  }
+
   return (
     <>
       <Button buttonStyle="shadow" onClick={handleOpen}>
         방 생성
       </Button>
+
       <Modal
         sx={{ borderRadius: "" }}
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style}>
-          <Typography
-            sx={{ borderBottom: "2px solid" }}
-            id="modal-modal-title"
-            variant="h6"
-            component="h2">
+          <Typography sx={{ borderBottom: "2px solid" }} id="modal-modal-title" variant="h6" component="h2">
             방 만들기
           </Typography>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             제목
-            <Input
-              type="normal"
-              onChange={(e) => setRoomName(e.target.value)}
-            />
+            <Input type="normal" onChange={e => setRoomName(e.target.value)} />
           </Typography>
           <MButton onClick={handleCreateRoom}>방 생성</MButton>
         </Box>
