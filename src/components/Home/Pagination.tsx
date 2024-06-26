@@ -25,11 +25,10 @@ const Pagination = ({ pagination }: PaginationProps) => {
   return (
     <div
       style={{ boxShadow: "5px 5px 9px #97adc9, -5px -5px 9px #e7ffff" }}
-      className="bg-[#BFDBFE] w-[300px] rounded-xl h-[50px] flex justify-between items-center px-5">
+      className="bg-[#BFDBFE] w-[300px] rounded-xl h-[50px] flex justify-between items-center px-5"
+    >
       <MdArrowBackIos
-        className={`cursor-pointer fill-blue-400 ${
-          currentPage === 1 ? "fill-blue-200" : ""
-        }`}
+        className={` fill-blue-400 ${currentPage === 1 ? "opacity-0" : "fill-blue-200 cursor-pointer"}`}
         onClick={() => {
           if (currentPage > 1) {
             handleClickPage(currentPage - 1);
@@ -46,9 +45,7 @@ const Pagination = ({ pagination }: PaginationProps) => {
         </div>
       ))}
       <MdArrowForwardIos
-        className={`cursor-pointer fill-blue-400 ${
-          currentPage === totalPage ? "fill-blue-200" : ""
-        }`}
+        className={`fill-blue-400 ${currentPage === totalPage ? "opacity-0" : "fill-blue-200 cursor-pointer"}`}
         onClick={() => {
           if (currentPage < totalPage) {
             handleClickPage(currentPage + 1);
