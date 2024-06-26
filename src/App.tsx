@@ -8,6 +8,8 @@ import NotFound from "./pages/NotFound";
 import Layout from "./components/layout/Layout";
 import { getToken } from "./store/userStore";
 import { useEffect } from "react";
+import { QueryClientProvider } from "react-query";
+import { queryClient } from "./api/queryClient";
 
 function App() {
   const token = getToken();
@@ -57,7 +59,9 @@ function App() {
   ]);
   return (
     <>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </>
   );
 }

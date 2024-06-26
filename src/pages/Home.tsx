@@ -3,33 +3,24 @@ import Room from "../components/Room";
 import CreateRoomModal from "../components/modal/CreateRoomModal";
 import { useEffect, useState } from "react";
 import { Room as IRoom } from "../types";
-import { getRooms } from "../api/room.api";
+import { useRooms } from "../hooks/useRooms";
 
 const Home = () => {
   const [rooms, setRooms] = useState<IRoom[]>([]);
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPage: 1,
-  });
+  const { roomsData, isRoomsLoading, pagination } = useRooms();
 
   useEffect(() => {
-    //페이지가 바뀔떄마다 방 데이터 호출
-    //리액트 쿼리로 업그레이드 필요
-    getRooms().then((data) => {
-      setPagination({
-        currentPage: data.currentPage,
-        totalPage: data.totalPages,
-      });
-      setRooms(data.roomData);
-    });
-  }, [pagination.currentPage]);
+    if (roomsData && !isRoomsLoading) {
+      setRooms(roomsData);
+    }
+  }, [roomsData, isRoomsLoading]);
 
   return (
     <div className="w-full h-full">
       <div className="h-[10%] flex mb-5 relative">
         <CreateRoomModal />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Pagination pagination={pagination && pagination} />
+          <Pagination pagination={pagination} />
         </div>
       </div>
       {rooms.length === 0 ? (

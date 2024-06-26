@@ -6,6 +6,22 @@ export const replacePassword = async (data: { password: string }) => {
 };
 
 export const replaceNickName = async (data: { nickname: string }) => {
-  const res = await httpClient.put<{ nickname: string }>("/mypage/changeNickname", data);
+  const res = await httpClient.put<{ nickname: string }>(
+    "/mypage/changeNickname",
+    data
+  );
+  return res.data;
+};
+
+export const replaceProfileImage = async (formData: FormData) => {
+  const res = await httpClient.put<{ profileImage: string }>(
+    "/mypage/changeImage",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data", // Content-Type 설정
+      },
+    }
+  );
   return res.data;
 };
