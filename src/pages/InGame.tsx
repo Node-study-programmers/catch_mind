@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import AlertModal from "../components/modal/AlertModal";
-import { joinRoom } from "../api/room.api";
-import mainImg from "../asset/img/mainBackground.png";
-import gameBoard from "../asset/img/gameBoard.png";
-import { RoomUser } from "../types";
-import UserContainer from "../components/Game/UserContainer";
-import Button from "../components/Button";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import AlertModal from '../components/modal/AlertModal';
+import { joinRoom } from '../api/room.api';
+import mainImg from '../asset/img/mainBackground.png';
+import gameBoard from '../asset/img/gameBoard.png';
+import { RoomUser } from '../types';
+import UserContainer from '../components/Game/UserContainer';
+import Button from '../components/Button';
+import { useSocket } from '../hooks/useSocket';
 
 const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<RoomUser[]>([
-    { userId: "asd", nickname: "닉넴1", score: 0, profileImage: "Basic.jpg" }, //디자인용 임시 데이터
-    { userId: "asd", nickname: "닉넴2", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴3", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴4", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴5", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴6", score: 0, profileImage: "Basic.jpg" },
+    { userId: 'asd', nickname: '닉넴1', score: 0, profileImage: 'Basic.jpg' }, //디자인용 임시 데이터
+    { userId: 'asd', nickname: '닉넴2', score: 0, profileImage: 'Basic.jpg' },
+    { userId: 'asd', nickname: '닉넴3', score: 0, profileImage: 'Basic.jpg' },
+    { userId: 'asd', nickname: '닉넴4', score: 0, profileImage: 'Basic.jpg' },
+    { userId: 'asd', nickname: '닉넴5', score: 0, profileImage: 'Basic.jpg' },
+    { userId: 'asd', nickname: '닉넴6', score: 0, profileImage: 'Basic.jpg' },
   ]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
+  const { submitChat } = useSocket();
   const handleClose = () => {
     setOpen(true);
-    navigate("/");
+    navigate('/');
   };
 
   // useEffect(() => {
@@ -42,7 +44,7 @@ const InGame = () => {
         <AlertModal open={open} handleClose={handleClose} message={message} />
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
-          style={{ backgroundImage: `url(${mainImg})`, opacity: 0.5, backgroundAttachment: "fixed" }}
+          style={{ backgroundImage: `url(${mainImg})`, opacity: 0.5, backgroundAttachment: 'fixed' }}
         ></div>
         {/* 유저 1~3명 */}
         <div className="flex w-full h-full justify-around items-center">
@@ -64,9 +66,9 @@ const InGame = () => {
               className="min-w-[690px] max-w-full aspect-video"
               style={{
                 background: `url(${gameBoard})`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
               }}
             ></div>
             <div className="flex justify-end ">
