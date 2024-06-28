@@ -8,7 +8,9 @@ import gameBoard from "../asset/img/gameBoard.png";
 import { RoomUser } from "../types";
 import UserContainer from "../components/Game/UserContainer";
 import Button from "../components/Button";
+import { useSocket } from "../hooks/useSocket";
 import Input from "../components/Input";
+
 
 const InGame = () => {
   const { roomId } = useParams();
@@ -28,6 +30,7 @@ const InGame = () => {
     { userId: "asd6", nickname: "닉넴6", score: 0, profileImage: "Basic.jpg" },
   ]);
   const [message, setMessage] = useState("");
+  const { submitChat } = useSocket();
 
   const handleClose = () => {
     setOpen(true);
