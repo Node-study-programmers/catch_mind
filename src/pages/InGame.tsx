@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import screenfull from "screenfull";
 import AlertModal from "../components/modal/AlertModal";
 import { joinRoom } from "../api/room.api";
 import mainImg from "../asset/img/mainBackground.png";
@@ -7,81 +8,106 @@ import gameBoard from "../asset/img/gameBoard.png";
 import { RoomUser } from "../types";
 import UserContainer from "../components/Game/UserContainer";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState<RoomUser[]>([
-    { userId: "asd", nickname: "닉넴1", score: 0, profileImage: "Basic.jpg" }, //디자인용 임시 데이터
-    { userId: "asd", nickname: "닉넴2", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴3", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴4", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴5", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd", nickname: "닉넴6", score: 0, profileImage: "Basic.jpg" },
+    { userId: "asd1", nickname: "닉넴1", score: 0, profileImage: "Basic.jpg" },
+    {
+      userId: "asd2",
+      nickname: "닉넴212389792187398",
+      score: 0,
+      profileImage: "Basic.jpg",
+    },
+    { userId: "asd3", nickname: "닉넴3", score: 0, profileImage: "Basic.jpg" },
+    { userId: "asd4", nickname: "닉넴4", score: 0, profileImage: "Basic.jpg" },
+    { userId: "asd5", nickname: "닉넴5", score: 0, profileImage: "Basic.jpg" },
+    { userId: "asd6", nickname: "닉넴6", score: 0, profileImage: "Basic.jpg" },
   ]);
   const [message, setMessage] = useState("");
+
   const handleClose = () => {
     setOpen(true);
     navigate("/");
   };
 
-  // useEffect(() => {
-  //   //방 입장시 한번만 API호출
-  //   joinRoom({ roomId: roomId! })
-  //     .then(data => setUsers(data.roomUsers))
-  //     .catch(e => {
-  //       setMessage(e.response.data.message); //에러시 에러 메세지 출력
-  //       setOpen(true);
-  //     });
-  // }, []);
+  const toggleFullScreen = () => {
+    if (screenfull.isEnabled) {
+      screenfull.toggle();
+    }
+  };
 
   return (
     <>
-      <div className="relative w-screen h-screen max-h-screen max-w-screen flex justify-around items-center">
+      <div className="relative w-screen h-screen min-w-[1280px] px-10">
         <AlertModal open={open} handleClose={handleClose} message={message} />
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
-          style={{ backgroundImage: `url(${mainImg})`, opacity: 0.5, backgroundAttachment: "fixed" }}
-        ></div>
+          style={{
+            backgroundImage: `url(${mainImg})`,
+            opacity: 0.5,
+            backgroundAttachment: "fixed",
+          }}></div>
+        {/* header */}
+        <div className="h-[7%] w-full">
+          <Button buttonStyle="submit" onClick={toggleFullScreen}>
+            Toggle Fullscreen
+          </Button>
+        </div>
         {/* 유저 1~3명 */}
-        <div className="flex w-full h-full justify-around items-center">
-          <div className="grid min-w-[350px] max-w-[450px] h-full grid-cols-1 grid-rows-3 justify-items-center gap-2">
-            {users.slice(0, 3).map(user => (
+        <div className="h-[93%] py-24 flex justify-between">
+          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/6">
+            {users.slice(0, 3).map((user) => (
               <UserContainer
+                key={user.userId}
                 userId={user.userId}
                 nickname={user.nickname}
                 score={user.score}
+                currentDraw={false}
                 profileImage={user.profileImage}
+                isLeft={true}
               />
             ))}
           </div>
 
-          <div className="w-full max-w-full flex flex-col justify-center">
+          <div className="h-full flex flex-col justify-around items-center ">
+            <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
+              제시어 : 포도
+            </div>
             {/* 게임 보드 */}
-            <div> 제시어 : '몰라'</div>
             <div
-              className="min-w-[690px] max-w-full aspect-video"
+              className="w-full h-[70%] aspect-video mx-auto"
               style={{
                 background: `url(${gameBoard})`,
                 backgroundSize: "contain",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-              }}
-            ></div>
-            <div className="flex justify-end ">
+              }}></div>
+            {/* <div className="flex justify-end ">
               <Button buttonStyle="submit">다 지우기</Button>
+            </div> */}
+            <div className="w-full grid grid-cols-2 h-[80px] gap-3">
+              <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
+                TIMER : 00:59
+              </div>
+              <Input type="chat" placeholder="정답을 입력하세요." />
             </div>
           </div>
 
           {/* 유저 4~명 */}
-          <div className="grid min-w-[350px] max-w-[450px] h-full grid-cols-1 grid-rows-3 justify-items-center gap-2">
-            {users.slice(3, 6).map(user => (
+          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/6">
+            {users.slice(3, 6).map((user) => (
               <UserContainer
+                key={user.userId}
                 userId={user.userId}
                 nickname={user.nickname}
                 score={user.score}
                 profileImage={user.profileImage}
+                currentDraw={true}
+                isLeft={false}
               />
             ))}
           </div>
