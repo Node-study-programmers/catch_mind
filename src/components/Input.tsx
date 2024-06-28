@@ -76,12 +76,12 @@ const Input = ({
 
   if (type === "chat") {
     return (
-      <div className="flex flex-col w-full">
-        <div className="text-subText">{text}</div>
+      <div className="flex w-full h-full">
+        {/* <div className="text-subText">{text}</div> */}
         <input
           placeholder={placeholder}
           onBlur={onBlur}
-          className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3"
+          className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3 w-full text-2xl"
           onChange={onChange}
         />
       </div>
