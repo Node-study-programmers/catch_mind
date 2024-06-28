@@ -48,8 +48,14 @@ export interface RankUsers {
 
 export interface RoomUser extends RankUsers {
   userId: string;
+  isLeft: boolean;
+  currentDraw: boolean;
 }
 
 export interface RoomUsers {
   roomUsers: RoomUser[];
+}
+
+export interface gameStatus {
+  roomStatus: "waiting" | "playing";
 }

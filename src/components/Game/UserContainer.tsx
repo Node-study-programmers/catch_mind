@@ -1,16 +1,31 @@
-import React from "react";
 import { RoomUser } from "../../types";
 
-const UserContainer = ({ userId, nickname, profileImage, score }: RoomUser) => {
+const UserContainer = ({
+  userId,
+  nickname,
+  profileImage,
+  score,
+  isLeft,
+  currentDraw,
+}: RoomUser) => {
   return (
-    <div className="flex flex-col items-center justify-center max-w-[40%] bg-white rounded-2xl">
+    <div
+      className={`flex items-center justify-center w-full h-fit bg-white rounded-2xl ${
+        currentDraw && "border-8 border-yellow-500"
+      } ${isLeft ? "row" : "flex-row-reverse"}`}>
       <img
-        className="flex-[2] rounded-t-2xl h-full"
+        className={`h-40 w-40`}
         src={`${import.meta.env.VITE_IMG_URL}${profileImage}`}
         alt="userProfile"
       />
-      <div className="flex-[1]  border-y-[1px] border-black w-full flex justify-center items-center">{nickname}</div>
-      <div className="flex-[1] flex items-center">점수 : {score}</div>
+      <div className="w-1/2 h-full flex flex-col justify-around items-center">
+        <div className="w-3/4 text-center text-lg font-bold border-b border-black pb-1 overflow-hidden text-ellipsis whitespace-nowrap">
+          {nickname}
+        </div>
+        <div className="flex items-center">
+          SCORE : <span className="font-bold ml-2">{score}</span>
+        </div>
+      </div>
     </div>
   );
 };
