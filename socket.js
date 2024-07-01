@@ -27,13 +27,25 @@ module.exports = (server) => {
         console.log(`${socket.user.nickname}님 서버 연결`);
 
         // 방 입장
-        socket.on('joinRoom', async (roomId) => {
+        socket.on('joinRoom', async roomId => {
             try {
                 const room = await Room.findById(roomId);
                 if (!room) {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
-
+                console.log(socket.user);
+                const findUser = room.roomUsers.find(user => user.nickname === socket.user.nickname);
+                if (!findUser) {
+                    room.roomUsers.push({
+                        userId: socket.user._id,
+                        nickname: socket.user.nickname,
+                        profileImage: socket.user.profileImage,
+                        score: socket.user.score,
+                    });
+                    
+                    await room.save();
+                }
+                
                 socket.join(roomId);
                 io.to(roomId).emit('updateRoom', room.roomUsers);
             } catch (err) {
@@ -42,7 +54,7 @@ module.exports = (server) => {
             }
         });
         
-        socket.on('GameStart', async (roomId) => {
+        socket.on('gameStart', async (roomId) => {
             const room = await Room.findById(roomId);
             if (!room) {
                 return socket.emit('error', '방이 존재하지 않습니다.');
@@ -50,7 +62,7 @@ module.exports = (server) => {
 
             room.roomStatus = 'playing';
             await room.save();
-            io.to(roomId).emit('GameStart', 'GameStart');
+            io.to(roomId).emit('roomStatus', room.roomStatus);
         })
 
         // 메세지 전송
