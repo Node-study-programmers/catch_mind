@@ -3,26 +3,38 @@ import Button from './Button';
 import { useNavigate } from 'react-router-dom';
 import AlertModal from './modal/AlertModal';
 import { Room as IRoom } from '../types';
+import { joinRoom } from '../api/room.api';
 
 const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, roomMaxCount, roomStatus }: IRoom) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
   const handleInGame = () => {
     if (roomStatus === 'playing') {
+      setMessage('이미 게임이 시작된 방입니다');
       return setOpen(true);
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      navigate(`/ingame/${roomId}`, { state: { master: masterNickname } });
-    }, 2000);
+
+    //방 참가하기 API 호출
+    joinRoom({ roomId })
+      .then(() => {
+        setIsLoading(true);
+        setTimeout(() => {
+          navigate(`/ingame/${roomId}`, { state: { master: masterNickname } });
+        }, 2000);
+      })
+      .catch(e => {
+        setMessage(e.response.data.message);
+        setOpen(true);
+      });
   };
 
   return (
     <div className="flex w-full h-full rounded-xl border bg-white">
-      <AlertModal open={open} handleClose={handleClose} message="이미 게임이 시작된 방입니다" />
+      <AlertModal open={open} handleClose={handleClose} message={message} />
       {isLoading && <AlertModal open={true} handleClose={() => {}} message="방 입장중..." isLoadingAlert={true} />}
       <div className="w-3/4 h-full">
         <img

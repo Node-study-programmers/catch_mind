@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import screenfull from 'screenfull';
 import AlertModal from '../components/modal/AlertModal';
-import { joinRoom } from '../api/room.api';
 import mainImg from '../asset/img/mainBackground.png';
 import gameBoard from '../asset/img/gameBoard.png';
-import { RoomUser, GameStatus } from '../types';
+import { RoomUser } from '../types';
 import UserContainer from '../components/Game/UserContainer';
-import Button from '../components/Button';
 import { useSocket } from '../hooks/useSocket';
 import Input from '../components/Input';
 import { userStore } from '../store/userStore';
@@ -15,38 +13,18 @@ import { userStore } from '../store/userStore';
 const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState<RoomUser[]>([
-    { userId: 'asd1', nickname: 'aaaa', score: 0, profileImage: 'Basic.jpg' },
-    {
-      userId: 'asd2',
-      nickname: '닉넴212389792187398',
-      score: 0,
-      profileImage: 'Basic.jpg',
-    },
-    { userId: 'asd3', nickname: '닉넴3', score: 0, profileImage: 'Basic.jpg' },
-    { userId: 'asd4', nickname: '닉넴4', score: 0, profileImage: 'Basic.jpg' },
-    { userId: 'asd5', nickname: '닉넴5', score: 0, profileImage: 'Basic.jpg' },
-    { userId: 'asd6', nickname: '닉넴6', score: 0, profileImage: 'Basic.jpg' },
-  ]);
   const [masterNickname, setMaster] = useState<string>();
-  const [message, setMessage] = useState('');
   const user = userStore(state => state.user);
-  const [gameStatus, setGameStatus] = useState<GameStatus>('waiting');
   const [currentDrawer, setCurrentDrawer] = useState<RoomUser>();
   const [currentAns, setCurrentAns] = useState<string | null>(null);
   const [stageTimer, setStageTimer] = useState<string | null>(null);
   const location = useLocation();
 
-  const { submitChat } = useSocket(roomId!);
-  console.log(masterNickname);
+  const { submitChat, users, handleClose, open, errMessage, gameStart, gameStatus } = useSocket(roomId!);
+
   useEffect(() => {
     setMaster(location.state.master);
   }, []);
-  const handleClose = () => {
-    setOpen(true);
-    navigate('/');
-  };
 
   const toggleFullScreen = () => {
     if (screenfull.isEnabled) {
@@ -54,10 +32,15 @@ const InGame = () => {
     }
   };
 
+  const handleLeaveRoom = () => {
+    //방 나가기
+    navigate('/');
+  };
+
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
-        <AlertModal open={open} handleClose={handleClose} message={message} />
+        <AlertModal open={open} handleClose={handleClose} message={errMessage} />
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
           style={{
@@ -68,7 +51,9 @@ const InGame = () => {
         ></div>
         {/* header */}
         <div className="h-[7%] w-full text-right py-3">
-          <button className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300">나가기</button>
+          <button className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300" onClick={handleLeaveRoom}>
+            나가기
+          </button>
         </div>
         {/* 유저 1~3명 */}
         <div className="h-[93%] py-24 flex justify-between">
@@ -116,7 +101,10 @@ const InGame = () => {
             <div className="h-full flex flex-col justify-around items-center w-1/2 rounded-xl">
               {/* 방장일시 */}
               {masterNickname === user.nickname ? (
-                <button className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300">
+                <button
+                  className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300"
+                  onClick={gameStart}
+                >
                   게임 시작
                 </button>
               ) : (
