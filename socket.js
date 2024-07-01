@@ -34,10 +34,9 @@ module.exports = (server) => {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
 
-                socket.room = room;
-                socket.join(socket.room.id);
-                console.log(`${socket.user.nickname}님이 ${socket.room.name}에 입장하셨습니다.`);
-                io.to(socket.room.id).emit('message', `${socket.user.nickname}님이 입장하셨습니다.`);
+                socket.join(roomId);
+                console.log(`${socket.user.nickname}님이 ${room.name}에 입장하셨습니다.`);
+                io.to(roomId).emit('message', `${socket.user.nickname}님이 입장하셨습니다.`);
             } catch (err) {
                 console.error('Room 입장 중 에러:', err);
                 socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
@@ -53,22 +52,39 @@ module.exports = (server) => {
             io.to(data.room).emit('message', messageData);
         })
 
-        socket.on('leaveRoom', async () => {
+        socket.on('leaveRoom', async (roomId) => {
             try {
-                socket.leave(socket.room.id);
-                console.log(`${socket.user.nickname}님이 ${socket.room.name}에서 퇴장하셨습니다.`);
-                io.to(socket.room.id).emit('message', `${socket.user.nickname}님이 퇴장하셨습니다.`);
+                socket.leave(roomId);
+                const room = await Room.findById(roomId);
+                if (!room) {
+                    return socket.emit('error', '방이 존재하지 않습니다.');
+                }
+                console.log(`${socket.user.nickname}님이 ${room.name}에서 퇴장하셨습니다.`);
+                io.to(roomId).emit(`${socket.user.nickname}님이 퇴장하셨습니다.`);
             } catch (err) {
-                console.error('Room 입장 중 에러:', err);
-                socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
+                console.error('Room 퇴장 중 에러:', err);
+                socket.emit('error', '방에서 퇴장하는 중 에러가 발생했습니다.');
             }
         });
 
-        socket.on('disConnect', () => {
+        socket.on('disconnect', async () => {
             console.log(`${socket.user.nickname}님 서버 연결 해제`);
-            socket.leave(socket.room.id);
-            io.to(socket.room.id).emit('message', `${socket.user.nickname}님이 퇴장하셨습니다.`);
-            socket.room = null;
+            try {
+                // 사용자가 속한 모든 방에서 퇴장 처리
+                const rooms = Object.keys(socket.rooms);
+                for (const roomId of rooms) {
+                    socket.leave(roomId);
+                    const room = await Room.findById(roomId);
+                    if (room) {
+                        io.to(roomId).emit('message', {
+                            user: 'system',
+                            message: `${socket.user.nickname}님이 퇴장하셨습니다.`
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error('연결 해제 중 에러:', err);
+            }
         });
     });
 }
