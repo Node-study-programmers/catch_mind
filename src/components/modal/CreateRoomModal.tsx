@@ -1,26 +1,26 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import React, { useState } from "react";
-import Input from "../Input";
-import Button from "../Button";
-import { Button as MButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { createRoom } from "../../api/room.api";
-import AlertModal from "./AlertModal";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import React, { useState } from 'react';
+import Input from '../Input';
+import Button from '../Button';
+import { Button as MButton } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { createRoom } from '../../api/room.api';
+import AlertModal from './AlertModal';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  borderRadius: "20px",
-  transform: "translate(-50%, -50%)",
-  height: "50%",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-around",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  borderRadius: '20px',
+  transform: 'translate(-50%, -50%)',
+  height: '50%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-around',
   width: 400,
-  bgcolor: "background.paper",
+  bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
 };
@@ -29,7 +29,7 @@ const CreateRoomModal = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [roomName, setRoomName] = useState("");
+  const [roomName, setRoomName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ const CreateRoomModal = () => {
       .then(data => {
         setIsLoading(true);
         setTimeout(() => {
-          navigate(`/ingame/${data.roomId}`); //방생성 성공시 방으로 리다이렉트
+          navigate(`/ingame/${data.roomId}`, { state: { master: data.masterNickname } }); //방생성 성공시 방으로 리다이렉트
         }, 2000);
       })
       .catch((e: Error) => console.log(e));
@@ -55,14 +55,14 @@ const CreateRoomModal = () => {
       </Button>
 
       <Modal
-        sx={{ borderRadius: "" }}
+        sx={{ borderRadius: '' }}
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography sx={{ borderBottom: "2px solid" }} id="modal-modal-title" variant="h6" component="h2">
+          <Typography sx={{ borderBottom: '2px solid' }} id="modal-modal-title" variant="h6" component="h2">
             방 만들기
           </Typography>
           <Typography id="modal-modal-title" variant="h6" component="h2">
