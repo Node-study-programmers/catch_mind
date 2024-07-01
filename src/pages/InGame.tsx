@@ -64,7 +64,7 @@ const InGame = () => {
         </div>
         {/* 유저 1~3명 */}
         <div className="h-[93%] py-24 flex justify-between">
-          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/6">
+          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10">
             {users.slice(0, 3).map((user) => (
               <UserContainer
                 key={user.userId}
@@ -118,7 +118,7 @@ const InGame = () => {
           )}
 
           {/* 유저 4~명 */}
-          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/6">
+          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10">
             {users.slice(3, 6).map((user) => (
               <UserContainer
                 key={user.userId}
