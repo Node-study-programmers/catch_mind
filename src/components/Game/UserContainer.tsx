@@ -1,5 +1,6 @@
 import { FaCrown } from 'react-icons/fa';
 import { RoomUser } from '../../types';
+import ChatModal from '../modal/ChatModal';
 
 interface UserContainerProps extends RoomUser {
   isLeft: boolean;
@@ -17,10 +18,11 @@ const UserContainer = ({
 }: UserContainerProps) => {
   return (
     <div
-      className={`flex items-center justify-center w-full h-full bg-white rounded-2xl ${
+      className={`relative flex items-center justify-center w-full h-full bg-white rounded-2xl ${
         currentDraw && 'border-8 border-yellow-500'
       } ${isLeft ? 'row' : 'flex-row-reverse'}`}
     >
+      <ChatModal chatMessage="asd" isLeft={isLeft} />
       <div className="w-1/2 h-full relative">
         {masterName === nickname && <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />}
         <img className={`h-full w-full`} src={`${import.meta.env.VITE_IMG_URL}${profileImage}`} alt="userProfile" />
