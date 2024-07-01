@@ -115,6 +115,39 @@ const createRoom = async (req,res) => {
     }
 }
 
+
+const leaveRoom = async (req, res) => {
+    try {
+        const { roomId } = req.body;
+        const room = await Room.findOne({ _id: roomId });
+        if (!room) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "방을 찾을 수 없습니다."
+            });
+        }
+
+        const user = await User.findOne({ _id: req.user.id });
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "사용자를 찾을 수 없습니다."
+            });
+        }
+
+        room.roomUsers = room.roomUsers.filter(u => !u.userId.equals(user._id));
+        await room.save();
+
+        return res.status(StatusCodes.OK).json({
+            roomUsers: room.roomUsers
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "서버 에러"
+        });
+    }
+}
+
 const fetchRooms = async (query, page, pageSize) => {
     try {
         const currentPage = parseInt(page) || 1;
@@ -148,4 +181,5 @@ module.exports = {
     renderMain,
     enterRoom,
     createRoom,
+    leaveRoom,
 };

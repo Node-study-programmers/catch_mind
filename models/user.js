@@ -25,6 +25,10 @@ const UserSchema = new mongoose.Schema({
     type: Number,
     unique: false,
     default: 0
+  },
+  currentDraw: {
+    type: Boolean,
+    default: false
   }
 }, {
     collection: 'users',
