@@ -1,5 +1,6 @@
-import { FaCrown } from 'react-icons/fa';
-import { RoomUser } from '../../types';
+import { FaCrown } from "react-icons/fa";
+import { RoomUser } from "../../types";
+import ChatModal from "../modal/ChatModal";
 
 interface UserContainerProps extends RoomUser {
   isLeft: boolean;
@@ -17,13 +18,19 @@ const UserContainer = ({
 }: UserContainerProps) => {
   return (
     <div
-      className={`flex items-center justify-center w-full h-full bg-white rounded-2xl ${
-        currentDraw && 'border-8 border-yellow-500'
-      } ${isLeft ? 'row' : 'flex-row-reverse'}`}
-    >
+      className={`flex items-center justify-center relative w-full h-full bg-white rounded-2xl ${
+        currentDraw && "border-8 border-yellow-500"
+      } ${isLeft ? "row" : "flex-row-reverse"}`}>
+      <ChatModal chatMessage="asdff" isLeft={isLeft} />
       <div className="w-1/2 h-full relative">
-        {masterName === nickname && <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />}
-        <img className={`h-full w-full`} src={`${import.meta.env.VITE_IMG_URL}${profileImage}`} alt="userProfile" />
+        {masterName === nickname && (
+          <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />
+        )}
+        <img
+          className={`h-full w-full`}
+          src={`${import.meta.env.VITE_IMG_URL}${profileImage}`}
+          alt="userProfile"
+        />
       </div>
       <div className="w-1/2 h-full flex flex-col justify-around items-center">
         <div className="w-3/4 text-center  text-lg font-bold border-b border-black pb-1 overflow-hidden text-ellipsis whitespace-nowrap">
