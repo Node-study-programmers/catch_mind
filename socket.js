@@ -34,16 +34,8 @@ module.exports = (server) => {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
 
-                room.roomUsers.push({
-                    userId: socket.user.id,
-                    nickname: socket.user.nickname,
-                    profileImage: socket.user.profileImage,
-                    score: socket.user.score
-                });
-                await room.save();
-
                 socket.join(roomId);
-                io.to(roomId).emit('joinRoom', room.roomUsers);
+                io.to(roomId).emit('updateRoom', room.roomUsers);
             } catch (err) {
                 console.error('Room 입장 중 에러:', err);
                 socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
@@ -72,12 +64,11 @@ module.exports = (server) => {
         })
 
         socket.on('nextTurn', () => {
-            let turnIndex = static_value();
             const messageData = {
                 nickname: socket.user.nickname,
 
             }
-            io.to(data.roomId).emit('sendMessage', messageData);
+            io.to(data.roomId).emit('nextTurn', messageData);
         })
 
         socket.on('leaveRoom', async (roomId) => {
