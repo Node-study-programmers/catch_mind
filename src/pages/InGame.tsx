@@ -16,19 +16,7 @@ const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState<RoomUser[]>([
-    { userId: "asd1", nickname: "률성박", score: 0, profileImage: "Basic.jpg" },
-    {
-      userId: "asd2",
-      nickname: "닉넴212389792187398",
-      score: 0,
-      profileImage: "Basic.jpg",
-    },
-    { userId: "asd3", nickname: "닉넴3", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd4", nickname: "닉넴4", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd5", nickname: "닉넴5", score: 0, profileImage: "Basic.jpg" },
-    { userId: "asd6", nickname: "닉넴6", score: 0, profileImage: "Basic.jpg" },
-  ]);
+  const [users, setUsers] = useState<RoomUser[]>([]);
   const [masterNickname, setMaster] = useState<string>();
   const [message, setMessage] = useState("");
   const user = userStore((state) => state.user);
@@ -37,12 +25,13 @@ const InGame = () => {
   const [currentAns, setCurrentAns] = useState<string | null>(null);
   const [stageTimer, setStageTimer] = useState<string | null>(null);
   const location = useLocation();
-
   const { submitChat } = useSocket(roomId!);
   console.log(masterNickname);
+
   useEffect(() => {
     setMaster(location.state.master);
   }, []);
+
   const handleClose = () => {
     setOpen(true);
     navigate("/");
@@ -51,6 +40,12 @@ const InGame = () => {
   const toggleFullScreen = () => {
     if (screenfull.isEnabled) {
       screenfull.toggle();
+    }
+  };
+
+  const handleExit = () => {
+    if (window.confirm("방을 나가 시겠습니까?")) {
+      navigate("/");
     }
   };
 
@@ -67,7 +62,9 @@ const InGame = () => {
           }}></div>
         {/* header */}
         <div className="h-[7%] w-full text-right py-3">
-          <button className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300">
+          <button
+            className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300"
+            onClick={handleExit}>
             나가기
           </button>
         </div>
@@ -102,9 +99,6 @@ const InGame = () => {
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
                 }}></div>
-              {/* <div className="flex justify-end ">
-              <Button buttonStyle="submit">다 지우기</Button>
-            </div> */}
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
                   TIMER : 00:59
