@@ -70,7 +70,7 @@ const InGame = () => {
         </div>
         {/* 유저 1~3명 */}
         <div className="h-[93%] py-24 flex justify-between">
-          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10">
+          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
             {users.slice(0, 3).map((user) => (
               <UserContainer
                 key={user.userId}
@@ -85,7 +85,7 @@ const InGame = () => {
           </div>
 
           {gameStatus === "playing" ? (
-            <div className="h-full flex flex-col justify-around items-center ">
+            <div className="h-full flex flex-col justify-around items-center w-1/2">
               <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
                 제시어 : 포도
               </div>
@@ -124,7 +124,7 @@ const InGame = () => {
           )}
 
           {/* 유저 4~명 */}
-          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10">
+          <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
             {users.slice(3, 6).map((user) => (
               <UserContainer
                 key={user.userId}
