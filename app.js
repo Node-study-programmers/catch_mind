@@ -1,5 +1,5 @@
 const cors = require('cors');
-
+const socketIo = require('socket.io');
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -12,7 +12,7 @@ const http = require('http');
 
 // 서버 생성
 const server = http.createServer(app);
-const io = require('./socket')(server); 
+const io = socketIo(server);
 
 connectMongoDB();
 app.use(cors());
@@ -38,6 +38,23 @@ app.use('/rank', rankRouter);
 app.use('/home', homeRouter);
 // app.use('/game', gameRouter);
 // app.use('/room', roomRouter);
+
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // 기본 메시지 이벤트
+  socket.on('message', (message) => {
+      console.log('Received message:', message);
+      socket.emit('message', 'Message received: ' + message);
+  });
+
+  // 연결 해제 이벤트
+  socket.on('disconnect', () => {
+      console.log('A user disconnected');
+  });
+});
+
 
 const PORT = process.env.PORT || 9999; // 포트 설정을 이 줄로 이동
 app.listen(PORT, () => {
