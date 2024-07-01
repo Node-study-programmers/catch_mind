@@ -73,13 +73,12 @@ module.exports = (server) => {
 
         socket.on('leaveRoom', async (roomId) => {
             try {
-                socket.leave(roomId);
                 const room = await Room.findById(roomId);
                 if (!room) {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
-                console.log(`${socket.user.nickname}님이 ${room.name}에서 퇴장하셨습니다.`);
-                io.to(roomId).emit('leaveRoom', `${socket.user.nickname}님이 퇴장하셨습니다.`);
+                io.to(roomId).emit('updateRoom', room.roomUsers);
+                socket.leave(roomId);
             } catch (err) {
                 console.error('Room 퇴장 중 에러:', err);
                 socket.emit('error', '방에서 퇴장하는 중 에러가 발생했습니다.');
