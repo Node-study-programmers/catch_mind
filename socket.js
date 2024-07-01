@@ -90,7 +90,7 @@ module.exports = (server) => {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
 
-                room.roomUsers = room.roomUsers.filter((user) => user.id !== socket.user.id);
+                room.roomUsers = room.roomUsers.filter((user) => user.nickname !== socket.user.nickname);
                 await room.save();
 
                 io.to(roomId).emit('updateRoom', room.roomUsers);
