@@ -7,6 +7,6 @@ router.use(express.json());
 router.get('/', renderMain);
 router.post('/enterRoom', ensureAuthorization, enterRoom);
 router.post('/createRoom',ensureAuthorization ,createRoom);
-router.delete('/leaveRoom',ensureAuthorization ,leaveRoom);
+router.put('/leaveRoom',ensureAuthorization ,leaveRoom);
 
 module.exports = router;
