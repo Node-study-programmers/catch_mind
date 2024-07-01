@@ -38,7 +38,7 @@ const InGame = () => {
   const [stageTimer, setStageTimer] = useState<string | null>(null);
   const location = useLocation();
 
-  const { submitChat } = useSocket();
+  const { submitChat } = useSocket(roomId!);
   console.log(masterNickname);
   useEffect(() => {
     setMaster(location.state.master);
