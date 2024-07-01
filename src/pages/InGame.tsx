@@ -8,7 +8,9 @@ import gameBoard from "../asset/img/gameBoard.png";
 import { RoomUser, GameStatus } from "../types";
 import UserContainer from "../components/Game/UserContainer";
 import Button from "../components/Button";
+import { useSocket } from "../hooks/useSocket";
 import Input from "../components/Input";
+
 
 const InGame = () => {
   const { roomId } = useParams();
@@ -29,10 +31,14 @@ const InGame = () => {
   ]);
   const [master, setMaster] = useState<RoomUser>();
   const [message, setMessage] = useState("");
+
   const [gameStatus, setGameStatus] = useState<GameStatus>("waiting");
   const [currentDrawer, setCurrentDrawer] = useState<RoomUser>();
   const [currentAns, setCurrentAns] = useState<string | null>(null);
   const [stageTimer, setStageTimer] = useState<string | null>(null);
+
+  const { submitChat } = useSocket();
+
 
   const handleClose = () => {
     setOpen(true);
