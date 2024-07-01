@@ -2,6 +2,7 @@ const express = require('express');
 const ensureAuthorization = require('../auth');
 const multer = require('multer');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 router.use(express.json());
@@ -15,7 +16,8 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, '../profileImages'));
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        const ext = path.extname(file.originalname);
+        cb(null, uuidv4() + ext);
     }
 });
 

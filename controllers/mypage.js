@@ -1,9 +1,9 @@
 const {StatusCodes} = require('http-status-codes');
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/user');
 const fs = require('fs');
 const path = require('path');
+
 
 const passwordReset = async (req,res) => {
     try {
@@ -43,6 +43,13 @@ const changeImage = async (req,res) => {
                 message: "유저를 찾을 수 없습니다."
             })
         }
+
+        if (user.profileImage && user.profileImage !== 'Basic.jpg') {
+            const oldImagePath = path.join(__dirname, '../profileImages', user.profileImage);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+            }
+          }
 
         const imageFilename = req.file.filename;
         user.profileImage = imageFilename;

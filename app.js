@@ -7,8 +7,12 @@ const express = require("express");
 const connectMongoDB = require('./models/index');
 const app = express();
 const fs = require('fs');
-const multer = require('multer');
 const path = require('path');
+const http = require('http');
+
+// 서버 생성
+const server = http.createServer(app);
+const io = require('./socket')(server); 
 
 connectMongoDB();
 app.use(cors());
