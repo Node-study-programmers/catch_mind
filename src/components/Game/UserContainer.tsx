@@ -1,5 +1,9 @@
 import { RoomUser } from "../../types";
 
+interface UserContainerProps extends RoomUser {
+  isLeft: boolean;
+}
+
 const UserContainer = ({
   userId,
   nickname,
@@ -7,7 +11,7 @@ const UserContainer = ({
   score,
   isLeft,
   currentDraw,
-}: RoomUser) => {
+}: UserContainerProps) => {
   return (
     <div
       className={`flex items-center justify-center w-full h-fit bg-white rounded-2xl ${
