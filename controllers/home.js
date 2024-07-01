@@ -51,14 +51,6 @@ const enterRoom = async (req,res, next) => {
             });
         }
 
-        room.roomUsers.push({
-            userId: user.id,
-            nickname: user.nickname,
-            profileImage: user.profileImage,
-            score: user.score
-        });
-        await room.save();
-
         return res.status(StatusCodes.OK).json({
             roomUsers: room.roomUsers
         });

@@ -34,22 +34,50 @@ module.exports = (server) => {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
 
+                room.roomUsers.push({
+                    userId: socket.user.id,
+                    nickname: socket.user.nickname,
+                    profileImage: socket.user.profileImage,
+                    score: socket.user.score
+                });
+                await room.save();
+
                 socket.join(roomId);
-                console.log(`${socket.user.nickname}님이 ${room.name}에 입장하셨습니다.`);
-                io.to(roomId).emit('message', `${socket.user.nickname}님이 입장하셨습니다.`);
+                io.to(roomId).emit('joinRoom', room.roomUsers);
             } catch (err) {
                 console.error('Room 입장 중 에러:', err);
                 socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
             }
         });
+        
+        socket.on('GameStart', async (roomId) => {
+            const room = await Room.findById(roomId);
+            if (!room) {
+                return socket.emit('error', '방이 존재하지 않습니다.');
+            }
+
+            room.roomStatus = 'playing';
+            await room.save();
+            io.to(roomId).emit('GameStart', 'GameStart');
+        })
 
         // 메세지 전송
         socket.on('sendMessage', (data) => {
             const messageData = {
                 message: data.message,
                 nickname: socket.user.nickname,
+                isAnswer: data.isAnswer,
             }
-            io.to(data.room).emit('message', messageData);
+            io.to(data.roomId).emit('sendMessage', messageData);
+        })
+
+        socket.on('nextTurn', () => {
+            let turnIndex = static_value();
+            const messageData = {
+                nickname: socket.user.nickname,
+
+            }
+            io.to(data.roomId).emit('sendMessage', messageData);
         })
 
         socket.on('leaveRoom', async (roomId) => {
@@ -60,7 +88,7 @@ module.exports = (server) => {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
                 console.log(`${socket.user.nickname}님이 ${room.name}에서 퇴장하셨습니다.`);
-                io.to(roomId).emit(`${socket.user.nickname}님이 퇴장하셨습니다.`);
+                io.to(roomId).emit('leaveRoom', `${socket.user.nickname}님이 퇴장하셨습니다.`);
             } catch (err) {
                 console.error('Room 퇴장 중 에러:', err);
                 socket.emit('error', '방에서 퇴장하는 중 에러가 발생했습니다.');
