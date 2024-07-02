@@ -64,7 +64,7 @@ module.exports = (server) => {
                 await room.save();
 
                 const messageData = {
-                    nickname: nextUserNickname,
+                    nickname: room.roomUsers[0].nickname,
                     question: "편의점 도시락 사러가는 용환",
                     roomStatus: room.roomStatus
                 }
