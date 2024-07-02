@@ -131,19 +131,17 @@ module.exports = (server) => {
                     question: "또볶이 먹는 수혁"
                 };
 
-                // 특정 유저에게만 메시지 전송
-                io.to(room.roomUsers[findUserIndex + 1].socketId).emit('gameStart', messageData);
-
-                // 나머지 유저들에게 메시지 전송
-                room.roomUsers.forEach(user => {
-                    if (user.socketId !== room.roomUsers[findUserIndex + 1].socketId) {
-                        messageData = {
-                            nickname: nextUserNickname,
-                            question: "??"
-                        };
-                        io.to(user.socketId).emit('gameStart', messageData);
-                    }
-                });
+                if (socket.user.nickname === nextUserNickname) {
+                    io.to(socket.user.socketId).emit('gameStart', messageData);
+                } else {
+                    messageData = {
+                        nickname: room.roomUsers[0].nickname,
+                        question: "??",
+                        roomStatus: room.roomStatus
+                    };
+    
+                    io.to(socket.user.socketId).emit('gameStart', messageData);
+                }
             } catch (err) {
                 console.error('다음 차례 진행 중 에러:', err);
                 socket.emit('error', '다음 차례 진행 중 에러가 발생했습니다.');
