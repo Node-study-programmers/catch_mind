@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import Input from "../Input";
 import gameBoard from "../../asset/img/gameBoard.png";
 
 const GameBoard = () => {
@@ -34,7 +33,7 @@ const GameBoard = () => {
       className="w-full h-[70%] aspect-video mx-auto"
       onMouseDown={() => setPainting(true)}
       onMouseUp={() => setPainting(false)}
-      onMouseMove={e => drawFn(e)}
+      onMouseMove={(e) => drawFn(e)}
       onMouseLeave={() => setPainting(false)}
       ref={canvasRef}
       style={{
@@ -42,8 +41,7 @@ const GameBoard = () => {
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-      }}
-    ></canvas>
+      }}></canvas>
   );
 };
 

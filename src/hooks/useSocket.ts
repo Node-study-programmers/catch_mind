@@ -10,6 +10,12 @@ type currentRoomInfoType = {
   roomStatus: GameStatus;
 };
 
+export type chatMessageType = {
+  nickname: string;
+  isAnswer: boolean;
+  message: string;
+};
+
 export const useSocket = (roomId: string) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [open, setOpen] = useState(false); // 소켓 에러 시 메시지 띄워줌
@@ -18,6 +24,7 @@ export const useSocket = (roomId: string) => {
   const [users, setUsers] = useState<RoomUser[]>([]);
   const [countdown, setCountdown] = useState<number | null>(null); // 카운트다운 상태 추가
   const [currentRoomInfo, setCurrentRoomInfo] = useState<currentRoomInfoType>();
+  const [chatMessages, setChatMessages] = useState<chatMessageType[]>([]);
 
   // 에러 알럿창 닫기
   const handleClose = () => {
@@ -36,6 +43,14 @@ export const useSocket = (roomId: string) => {
       setErrMessage(message);
     });
 
+    socket.on("nextTurn", (data: { nickname: string; question: string }) => {
+      setCurrentRoomInfo({
+        nickname: data.nickname,
+        question: data.question,
+        roomStatus: "playing",
+      });
+    });
+
     socket.emit("joinRoom", roomId);
 
     socket.on("updateRoom", (data: RoomUser[]) => {
@@ -47,6 +62,7 @@ export const useSocket = (roomId: string) => {
 
     socket.on("sendMessage", (data) => {
       // 채팅 메시지
+      setChatMessages((prev) => [...prev, data]);
     });
 
     return () => {
@@ -87,9 +103,16 @@ export const useSocket = (roomId: string) => {
   // 채팅 보내는 이벤트
   const submitChat = (data: {
     chatMessage: string;
-    roomId: string;
+    roomId?: string;
     isAnswer: boolean;
   }) => {
+    if (data.isAnswer) {
+      socket?.emit("sendMessage", data);
+
+      setTimeout(() => {
+        nextTurn();
+      }, 2000);
+    }
     socket?.emit("sendMessage", data);
   };
 
@@ -105,6 +128,9 @@ export const useSocket = (roomId: string) => {
       setErrMessage("3명 이상 시작 가능합니다");
     }
   };
+  const nextTurn = () => {
+    socket?.emit("nextTurn", { roomId, nickname: currentRoomInfo?.nickname });
+  };
 
   return {
     submitChat,
@@ -115,5 +141,7 @@ export const useSocket = (roomId: string) => {
     errMessage,
     countdown,
     currentRoomInfo,
+    chatMessages,
+    nextTurn,
   };
 };
