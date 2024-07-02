@@ -55,22 +55,39 @@ module.exports = (server) => {
         });
         
         socket.on('gameStart', async (roomId) => {
-            const room = await Room.findById(roomId);
-            if (!room) {
-                return socket.emit('error', '방이 존재하지 않습니다.');
+            try {
+                const room = await Room.findById(roomId);
+                if (!room) {
+                    return socket.emit('error', '방이 존재하지 않습니다.');
+                }
+
+                room.roomStatus = 'playing';
+                await room.save();
+
+                let messageData = {
+                    nickname: room.roomUsers[0].nickname,
+                    question: "편의점에 도시락 사러가는 용환",
+                    roomStatus: room.roomStatus
+                };
+
+                // 특정 유저에게만 메시지 전송
+                io.to(room.roomUsers[0].socketId).emit('gameStart', messageData);
+
+                // 나머지 유저들에게 메시지 전송
+                room.roomUsers.forEach(user => {
+                    if (user.socketId !== room.roomUsers[0].socketId) {
+                        messageData = {
+                            nickname: room.roomUsers[0].nickname,
+                            question: "??",
+                            roomStatus: room.roomStatus
+                        };
+                        io.to(user.socketId).emit('gameStart', messageData);
+                    }
+                });
+            } catch (err) {
+                console.error('Room 입장 중 에러:', err);
+                socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
             }
-
-            room.roomStatus = 'playing';
-
-            const messageData = {
-                nickname: room.roomUsers[0].nickname,
-                question: "편의점에 도시락 사러가는 용환",
-                roomStatus: room.roomStatus
-            }
-
-            
-            await room.save();
-            io.to(roomId).emit('roomStatus', messageData);
         })
 
         // 메세지 전송
@@ -98,12 +115,24 @@ module.exports = (server) => {
                     nextUserNickname = room.roomUsers[0].nickname;
                 }
 
-                const messageData = {
+                let messageData = {
                     nickname: nextUserNickname,
                     question: "또볶이 먹는 수혁"
-                }
+                };
 
-                io.to(data.roomId).emit('nextTurn', messageData);
+                // 특정 유저에게만 메시지 전송
+                io.to(room.roomUsers[findUserIndex + 1].socketId).emit('gameStart', messageData);
+
+                // 나머지 유저들에게 메시지 전송
+                room.roomUsers.forEach(user => {
+                    if (user.socketId !== room.roomUsers[findUserIndex + 1].socketId) {
+                        messageData = {
+                            nickname: nextUserNickname,
+                            question: "??"
+                        };
+                        io.to(user.socketId).emit('gameStart', messageData);
+                    }
+                });
             } catch (error) {
 
             }
