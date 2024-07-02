@@ -19,7 +19,6 @@ const InGame = () => {
   const [currentAns, setCurrentAns] = useState<string | null>(null);
   const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
   const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
-  // const [userChat, setUserChat] = useState<string>("");
   const [chattings, setChattings] = useState<chatMessageType[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -41,6 +40,7 @@ const InGame = () => {
 
   useEffect(() => {
     setChattings(chatMessages);
+    console.log(chatMessages);
   }, [chatMessages]);
 
   useEffect(() => {
@@ -130,7 +130,11 @@ const InGame = () => {
                   : `${currentRoomInfo?.nickname}님이 그리는 중입니다`}
               </div>
               {/* 게임 보드 */}
-              <GameBoard emitDraw={emitDraw} setDrawPosition={setDrawPosition} drawPosition={drawPosition} />
+              <GameBoard
+                emitDraw={emitDraw}
+                setDrawPosition={setDrawPosition}
+                drawPosition={drawPosition}
+              />
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
                   TIMER : {stageTimer}
