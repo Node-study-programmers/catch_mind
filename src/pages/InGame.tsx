@@ -1,58 +1,65 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import screenfull from "screenfull";
 import AlertModal from "../components/modal/AlertModal";
-import { joinRoom } from "../api/room.api";
 import mainImg from "../asset/img/mainBackground.png";
 import gameBoard from "../asset/img/gameBoard.png";
-import { RoomUser, GameStatus } from "../types";
+import { GameStatus, RoomUser } from "../types";
 import UserContainer from "../components/Game/UserContainer";
-import Button from "../components/Button";
 import { useSocket } from "../hooks/useSocket";
 import Input from "../components/Input";
 import { userStore } from "../store/userStore";
+import { roomStore } from "../store/roomStore";
 
 const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState<RoomUser[]>([]);
-  const [masterNickname, setMaster] = useState<string>();
-  const [message, setMessage] = useState("");
+  const [masterNickname, setMaster] = useState<string | null>();
   const user = userStore((state) => state.user);
-  const [gameStatus, setGameStatus] = useState<GameStatus>("waiting");
-  const [currentDrawer, setCurrentDrawer] = useState<RoomUser>();
+  const [currentDrawer, setCurrentDrawer] = useState<string | null>(null);
   const [currentAns, setCurrentAns] = useState<string | null>(null);
   const [stageTimer, setStageTimer] = useState<string | null>(null);
+  const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
+  const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
   const location = useLocation();
-  const { submitChat } = useSocket(roomId!);
-  console.log(masterNickname);
+
+  const {
+    submitChat,
+    users,
+    handleClose,
+    open,
+    errMessage,
+    gameStart,
+    currentRoomInfo,
+    countdown,
+  } = useSocket(roomId!);
+
+  console.log(currentRoomInfo);
 
   useEffect(() => {
-    setMaster(location.state.master);
-  }, []);
-
-  const handleClose = () => {
-    setOpen(true);
-    navigate("/");
-  };
-
-  const toggleFullScreen = () => {
-    if (screenfull.isEnabled) {
-      screenfull.toggle();
+    if (currentRoomInfo) {
+      setCurrentDrawer(currentRoomInfo.nickname);
+      setCurrentAns(currentRoomInfo.question);
+      setRoomStatus(currentRoomInfo.roomStatus);
     }
-  };
+    setMaster(currentRoom.masterNickname);
+  }, [currentRoom.masterNickname, setRoom, currentRoomInfo]);
 
-  const handleExit = () => {
-    if (window.confirm("방을 나가 시겠습니까?")) {
+  const handleLeaveRoom = () => {
+    //방 나가기
+    removeRoom();
+    setTimeout(() => {
       navigate("/");
-    }
+    }, 0);
   };
 
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
-        <AlertModal open={open} handleClose={handleClose} message={message} />
+        <AlertModal
+          open={open}
+          handleClose={handleClose}
+          message={errMessage}
+        />
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
           style={{
@@ -64,7 +71,7 @@ const InGame = () => {
         <div className="h-[7%] w-full text-right py-3">
           <button
             className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300"
-            onClick={handleExit}>
+            onClick={handleLeaveRoom}>
             나가기
           </button>
         </div>
@@ -77,7 +84,7 @@ const InGame = () => {
                 userId={user.userId}
                 nickname={user.nickname}
                 score={user.score}
-                currentDraw={false}
+                currentDraw={currentDrawer === user.nickname}
                 profileImage={user.profileImage}
                 masterName={masterNickname!}
                 isLeft={true}
@@ -85,10 +92,14 @@ const InGame = () => {
             ))}
           </div>
 
-          {gameStatus === "playing" ? (
+          {countdown !== null ? (
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl text-white bg-blue-500 px-10 p-10 rounded-2xl">
+              {countdown}
+            </div>
+          ) : roomStatus === "playing" ? (
             <div className="h-full flex flex-col justify-around items-center w-1/2">
               <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
-                제시어 : 포도
+                제시어 : {currentRoomInfo?.question}
               </div>
               {/* 게임 보드 */}
               <div
@@ -110,7 +121,9 @@ const InGame = () => {
             <div className="h-full flex flex-col justify-around items-center w-1/2 rounded-xl">
               {/* 방장일시 */}
               {masterNickname === user.nickname ? (
-                <button className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300">
+                <button
+                  className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300"
+                  onClick={gameStart}>
                   게임 시작
                 </button>
               ) : (
@@ -131,7 +144,7 @@ const InGame = () => {
                 score={user.score}
                 profileImage={user.profileImage}
                 masterName={masterNickname!}
-                currentDraw={true}
+                currentDraw={currentDrawer === user.nickname}
                 isLeft={false}
               />
             ))}

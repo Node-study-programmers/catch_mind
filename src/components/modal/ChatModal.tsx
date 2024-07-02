@@ -17,9 +17,9 @@ const ChatModal = ({ chatMessage, isLeft }: Props) => {
           }`}
         />
 
-        <text className="absolute flex  max-w-[150px] h-[150px] items-center font-titleW justify-center mb-10 break-all whitespace-normal overflow-hidden">
+        <p className="absolute flex  max-w-[150px] h-[150px] items-center font-titleW justify-center mb-10 break-all whitespace-normal overflow-hidden">
           {chatMessage}
-        </text>
+        </p>
       </div>
     </div>
   );
