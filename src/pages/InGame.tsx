@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import AlertModal from "../components/modal/AlertModal";
 import mainImg from "../asset/img/mainBackground.png";
-import gameBoard from "../asset/img/gameBoard.png";
-import { GameStatus, RoomUser } from "../types";
+import { GameStatus } from "../types";
 import UserContainer from "../components/Game/UserContainer";
-import { useSocket } from "../hooks/useSocket";
+import { chatMessageType, useSocket } from "../hooks/useSocket";
 import Input from "../components/Input";
 import { userStore } from "../store/userStore";
 import { roomStore } from "../store/roomStore";
+import GameBoard from "../components/Game/GameBoard";
 
 const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const [masterNickname, setMaster] = useState<string | null>();
+  const [masterNickname, setMaster] = useState<string | null>(null);
   const user = userStore((state) => state.user);
   const [currentDrawer, setCurrentDrawer] = useState<string | null>(null);
   const [currentAns, setCurrentAns] = useState<string | null>(null);
-  const [stageTimer, setStageTimer] = useState<string | null>(null);
   const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
   const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
-  const location = useLocation();
+  // const [userChat, setUserChat] = useState<string>("");
+  const [chattings, setChattings] = useState<chatMessageType[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const {
     submitChat,
@@ -31,11 +32,13 @@ const InGame = () => {
     gameStart,
     currentRoomInfo,
     countdown,
+    chatMessages,
   } = useSocket(roomId!);
 
-  console.log("users", users);
+  useEffect(() => {
+    setChattings(chatMessages);
+  }, [chatMessages]);
 
-  console.log(currentRoomInfo);
   useEffect(() => {
     if (currentRoomInfo) {
       setCurrentDrawer(currentRoomInfo.nickname);
@@ -46,11 +49,20 @@ const InGame = () => {
   }, [currentRoom.masterNickname, setRoom, currentRoomInfo]);
 
   const handleLeaveRoom = () => {
-    //방 나가기
     removeRoom();
     setTimeout(() => {
       navigate("/");
     }, 0);
+  };
+
+  const handleChatting = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const userChat = inputRef.current?.value;
+    const isAnswer = currentAns === userChat;
+    submitChat({ chatMessage: userChat!, roomId, isAnswer });
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
 
   return (
@@ -79,18 +91,27 @@ const InGame = () => {
         {/* 유저 1~3명 */}
         <div className="h-[93%] py-24 flex justify-between">
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(0, 3).map((user) => (
-              <UserContainer
-                key={user.userId}
-                userId={user.userId}
-                nickname={user.nickname}
-                score={user.score}
-                currentDraw={currentDrawer === user.nickname}
-                profileImage={user.profileImage}
-                masterName={masterNickname!}
-                isLeft={true}
-              />
-            ))}
+            {users.slice(0, 3).map((user) => {
+              const userMessages = chattings
+                .filter((chat) => chat.nickname === user.nickname)
+                .slice(-1)
+                .map((chat) => {
+                  return { message: chat.message, isAnswer: chat.isAnswer };
+                });
+              return (
+                <UserContainer
+                  key={user.userId}
+                  userId={user.userId}
+                  nickname={user.nickname}
+                  score={user.score}
+                  currentDraw={currentDrawer === user.nickname}
+                  profileImage={user.profileImage}
+                  masterName={masterNickname!}
+                  chatMessages={userMessages}
+                  isLeft={true}
+                />
+              );
+            })}
           </div>
 
           {countdown !== null ? (
@@ -103,19 +124,21 @@ const InGame = () => {
                 제시어 : {currentRoomInfo?.question}
               </div>
               {/* 게임 보드 */}
-              <div
-                className="w-full h-[70%] aspect-video mx-auto"
-                style={{
-                  background: `url(${gameBoard})`,
-                  backgroundSize: "contain",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                }}></div>
+              <GameBoard />
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
                   TIMER : 00:59
                 </div>
-                <Input type="chat" placeholder="정답을 입력하세요." />
+                <form onSubmit={handleChatting}>
+                  <div className="flex w-full h-full">
+                    <input
+                      type="text"
+                      ref={inputRef}
+                      className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3 w-full text-2xl"
+                      placeholder="정답을 입력하세요."
+                    />
+                  </div>
+                </form>
               </div>
             </div>
           ) : (
@@ -137,18 +160,26 @@ const InGame = () => {
 
           {/* 유저 4~명 */}
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(3, 6).map((user) => (
-              <UserContainer
-                key={user.userId}
-                userId={user.userId}
-                nickname={user.nickname}
-                score={user.score}
-                profileImage={user.profileImage}
-                masterName={masterNickname!}
-                currentDraw={currentDrawer === user.nickname}
-                isLeft={false}
-              />
-            ))}
+            {users.slice(3, 6).map((user) => {
+              const userMessages = chattings
+                .filter((chat) => chat.nickname === user.nickname)
+                .map((chat) => {
+                  return { message: chat.message, isAnswer: chat.isAnswer };
+                });
+              return (
+                <UserContainer
+                  key={user.userId}
+                  userId={user.userId}
+                  nickname={user.nickname}
+                  score={user.score}
+                  currentDraw={currentDrawer === user.nickname}
+                  profileImage={user.profileImage}
+                  masterName={masterNickname!}
+                  chatMessages={userMessages}
+                  isLeft={false}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
