@@ -160,7 +160,13 @@ module.exports = (server) => {
                 room.roomUsers = room.roomUsers.filter((user) => user.nickname !== socket.user.nickname);
                 await room.save();
 
-                io.to(roomId).emit('updateRoom', room.roomUsers);
+                if (room.roomUsers.length === 0) {
+                    await Room.findByIdAndDelete(roomId);
+                    console.log(`Room ${roomId} deleted because no users are left.`);
+                } else {
+                    await room.save();
+                    io.to(roomId).emit('updateRoom', room.roomUsers);
+                }
                 socket.leave(roomId);
             } catch (err) {
                 console.error('Room 퇴장 중 에러:', err);
