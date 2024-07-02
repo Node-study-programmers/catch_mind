@@ -1,70 +1,90 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import screenfull from 'screenfull';
-import AlertModal from '../components/modal/AlertModal';
-import mainImg from '../asset/img/mainBackground.png';
-import gameBoard from '../asset/img/gameBoard.png';
-import { RoomUser } from '../types';
-import UserContainer from '../components/Game/UserContainer';
-import { useSocket } from '../hooks/useSocket';
-import Input from '../components/Input';
-import { userStore } from '../store/userStore';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import AlertModal from "../components/modal/AlertModal";
+import mainImg from "../asset/img/mainBackground.png";
+import gameBoard from "../asset/img/gameBoard.png";
+import { GameStatus, RoomUser } from "../types";
+import UserContainer from "../components/Game/UserContainer";
+import { useSocket } from "../hooks/useSocket";
+import Input from "../components/Input";
+import { userStore } from "../store/userStore";
+import { roomStore } from "../store/roomStore";
 
 const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const [masterNickname, setMaster] = useState<string>();
-  const user = userStore(state => state.user);
-  const [currentDrawer, setCurrentDrawer] = useState<RoomUser>();
+  const [masterNickname, setMaster] = useState<string | null>();
+  const user = userStore((state) => state.user);
+  const [currentDrawer, setCurrentDrawer] = useState<string | null>(null);
   const [currentAns, setCurrentAns] = useState<string | null>(null);
   const [stageTimer, setStageTimer] = useState<string | null>(null);
+  const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
+  const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
   const location = useLocation();
 
-  const { submitChat, users, handleClose, open, errMessage, gameStart, gameStatus } = useSocket(roomId!);
+  const {
+    submitChat,
+    users,
+    handleClose,
+    open,
+    errMessage,
+    gameStart,
+    currentRoomInfo,
+    countdown,
+  } = useSocket(roomId!);
+
+  console.log(currentRoomInfo);
 
   useEffect(() => {
-    setMaster(location.state.master);
-  }, []);
-
-  const toggleFullScreen = () => {
-    if (screenfull.isEnabled) {
-      screenfull.toggle();
+    if (currentRoomInfo) {
+      setCurrentDrawer(currentRoomInfo.nickname);
+      setCurrentAns(currentRoomInfo.question);
+      setRoomStatus(currentRoomInfo.roomStatus);
     }
-  };
+    setMaster(currentRoom.masterNickname);
+  }, [currentRoom.masterNickname, setRoom, currentRoomInfo]);
 
   const handleLeaveRoom = () => {
     //방 나가기
-    navigate('/');
+    removeRoom();
+    setTimeout(() => {
+      navigate("/");
+    }, 0);
   };
 
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
-        <AlertModal open={open} handleClose={handleClose} message={errMessage} />
+        <AlertModal
+          open={open}
+          handleClose={handleClose}
+          message={errMessage}
+        />
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
           style={{
             backgroundImage: `url(${mainImg})`,
             opacity: 0.5,
-            backgroundAttachment: 'fixed',
-          }}
-        ></div>
+            backgroundAttachment: "fixed",
+          }}></div>
         {/* header */}
         <div className="h-[7%] w-full text-right py-3">
-          <button className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300" onClick={handleLeaveRoom}>
+          <button
+            className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300"
+            onClick={handleLeaveRoom}>
             나가기
           </button>
         </div>
         {/* 유저 1~3명 */}
         <div className="h-[93%] py-24 flex justify-between">
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(0, 3).map(user => (
+            {users.slice(0, 3).map((user) => (
               <UserContainer
                 key={user.userId}
                 userId={user.userId}
                 nickname={user.nickname}
                 score={user.score}
-                currentDraw={false}
+                currentDraw={currentDrawer === user.nickname}
                 profileImage={user.profileImage}
                 masterName={masterNickname!}
                 isLeft={true}
@@ -72,24 +92,24 @@ const InGame = () => {
             ))}
           </div>
 
-          {gameStatus === 'playing' ? (
+          {countdown !== null ? (
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl text-white bg-blue-500 px-10 p-10 rounded-2xl">
+              {countdown}
+            </div>
+          ) : roomStatus === "playing" ? (
             <div className="h-full flex flex-col justify-around items-center w-1/2">
               <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
-                제시어 : 포도
+                제시어 : {currentRoomInfo?.question}
               </div>
               {/* 게임 보드 */}
               <div
                 className="w-full h-[70%] aspect-video mx-auto"
                 style={{
                   background: `url(${gameBoard})`,
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                }}
-              ></div>
-              {/* <div className="flex justify-end ">
-              <Button buttonStyle="submit">다 지우기</Button>
-            </div> */}
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}></div>
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
                   TIMER : 00:59
@@ -103,8 +123,7 @@ const InGame = () => {
               {masterNickname === user.nickname ? (
                 <button
                   className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300"
-                  onClick={gameStart}
-                >
+                  onClick={gameStart}>
                   게임 시작
                 </button>
               ) : (
@@ -117,7 +136,7 @@ const InGame = () => {
 
           {/* 유저 4~명 */}
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(3, 6).map(user => (
+            {users.slice(3, 6).map((user) => (
               <UserContainer
                 key={user.userId}
                 userId={user.userId}
@@ -125,7 +144,7 @@ const InGame = () => {
                 score={user.score}
                 profileImage={user.profileImage}
                 masterName={masterNickname!}
-                currentDraw={true}
+                currentDraw={currentDrawer === user.nickname}
                 isLeft={false}
               />
             ))}

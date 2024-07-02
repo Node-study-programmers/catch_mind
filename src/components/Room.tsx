@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
-import Button from './Button';
-import { useNavigate } from 'react-router-dom';
-import AlertModal from './modal/AlertModal';
-import { Room as IRoom } from '../types';
-import { joinRoom } from '../api/room.api';
+import React, { useState } from "react";
+import Button from "./Button";
+import { useNavigate } from "react-router-dom";
+import AlertModal from "./modal/AlertModal";
+import { Room as IRoom } from "../types";
+import { joinRoom } from "../api/room.api";
+import { roomStore } from "../store/roomStore";
 
-const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, roomMaxCount, roomStatus }: IRoom) => {
+const Room = ({
+  roomId,
+  masterImage,
+  masterNickname,
+  roomName,
+  roomUsersCount,
+  roomMaxCount,
+  roomStatus,
+}: IRoom) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const setRoom = roomStore((state) => state.setRoom);
 
   const handleInGame = () => {
-    if (roomStatus === 'playing') {
-      setMessage('이미 게임이 시작된 방입니다');
+    if (roomStatus === "playing") {
+      setMessage("이미 게임이 시작된 방입니다");
       return setOpen(true);
     }
 
@@ -22,11 +32,16 @@ const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, r
     joinRoom({ roomId })
       .then(() => {
         setIsLoading(true);
+        setRoom({
+          masterNickname: masterNickname,
+          roomId: roomId,
+          roomStatus: roomStatus,
+        });
         setTimeout(() => {
-          navigate(`/ingame/${roomId}`, { state: { master: masterNickname } });
+          navigate(`/ingame/${roomId}`);
         }, 2000);
       })
-      .catch(e => {
+      .catch((e) => {
         setMessage(e.response.data.message);
         setOpen(true);
       });
@@ -35,7 +50,14 @@ const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, r
   return (
     <div className="flex w-full h-full rounded-xl border bg-white">
       <AlertModal open={open} handleClose={handleClose} message={message} />
-      {isLoading && <AlertModal open={true} handleClose={() => {}} message="방 입장중..." isLoadingAlert={true} />}
+      {isLoading && (
+        <AlertModal
+          open={true}
+          handleClose={() => {}}
+          message="방 입장중..."
+          isLoadingAlert={true}
+        />
+      )}
       <div className="w-3/4 h-full">
         <img
           src={`${import.meta.env.VITE_IMG_URL}${masterImage}`}
@@ -45,7 +67,10 @@ const Room = ({ roomId, masterImage, masterNickname, roomName, roomUsersCount, r
       </div>
       <div className="h-full w-full flex flex-col  justify-around">
         <div className="flex justify-end pr-3">
-          <div className={`w-5 h-5 ${roomStatus === 'playing' ? 'bg-inGame' : 'bg-waitingGame'} rounded-full`}></div>
+          <div
+            className={`w-5 h-5 ${
+              roomStatus === "playing" ? "bg-inGame" : "bg-waitingGame"
+            } rounded-full`}></div>
         </div>
         <div className="flex flex-col pl-3">
           <p className="font-titleW text-2xl">{roomName}</p>

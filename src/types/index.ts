@@ -26,12 +26,12 @@ export interface InputErr {
 
 export interface Room {
   masterImage: string;
-  masterNickname: string;
-  roomId: string;
+  masterNickname: string | null;
+  roomId: string | null;
   roomMaxCount: number;
   roomName: string;
   roomUsersCount: number;
-  roomStatus: "waiting" | "playing";
+  roomStatus: "waiting" | "playing" | null;
 }
 
 export interface Rooms {
