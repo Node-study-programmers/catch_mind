@@ -33,7 +33,6 @@ module.exports = (server) => {
                 if (!room) {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
-                console.log(socket.user);
                 const findUser = room.roomUsers.find(user => user.nickname === socket.user.nickname);
                 if (!findUser) {
                     room.roomUsers.push({
@@ -44,9 +43,7 @@ module.exports = (server) => {
                     });
                     
                     await room.save();
-                } else {
-                    findUser.socketId = socket.id;
-                }
+                } 
                 
                 socket.join(roomId);
                 io.to(roomId).emit('updateRoom', room.roomUsers);
@@ -72,18 +69,18 @@ module.exports = (server) => {
                     roomStatus: room.roomStatus
                 };
 
-                // 특정 유저에게만 메시지 전송
-                io.to(roomId).emit('gameStart', messageData);
-
-                // 나머지 유저들에게 메시지 전송
+                socket.user.socketId = socket.id;
+                
                 room.roomUsers.forEach(user => {
-                    if (user.socketId !== room.roomUsers[0].socketId) {
+                    if (user.nickname === room.roomUsers[0].nickname) {
+                        io.to(socket.user.socketId).emit('gameStart', messageData);
+                    } else {
                         messageData = {
                             nickname: room.roomUsers[0].nickname,
                             question: "??",
                             roomStatus: room.roomStatus
                         };
-                        io.to(user.socketId).emit('gameStart', messageData);
+                        io.to(socket.user.socketId).emit('gameStart', messageData);
                     }
                 });
             } catch (err) {
