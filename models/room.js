@@ -44,6 +44,10 @@ const roomSchema = new mongoose.Schema({
         type: String,
         enum: ['waiting', 'playing'],
         default: 'waiting'
+    },
+    word: {
+      type: String,
+      default: ""
     }
 }, {
     collection: 'rooms',

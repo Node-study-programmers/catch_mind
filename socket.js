@@ -44,6 +44,8 @@ module.exports = (server) => {
                     });
                     
                     await room.save();
+                } else {
+                    findUser.socketId = socket.id;
                 }
                 
                 socket.join(roomId);
@@ -71,7 +73,7 @@ module.exports = (server) => {
                 };
 
                 // 특정 유저에게만 메시지 전송
-                io.to(room.roomUsers[0].socketId).emit('gameStart', messageData);
+                io.to(roomId).emit('gameStart', messageData);
 
                 // 나머지 유저들에게 메시지 전송
                 room.roomUsers.forEach(user => {
