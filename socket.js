@@ -162,7 +162,6 @@ module.exports = (server) => {
 
                 if (room.roomUsers.length === 0) {
                     await Room.findByIdAndDelete(roomId);
-                    console.log(`Room ${roomId} deleted because no users are left.`);
                 } else {
                     await room.save();
                     io.to(roomId).emit('updateRoom', room.roomUsers);
