@@ -18,7 +18,6 @@ const Input = ({
   value,
   inputErr,
   onBlur,
-  ref,
 }: Props) => {
   if (type === "normal") {
     return (
@@ -77,12 +76,13 @@ const Input = ({
   if (type === "chat") {
     return (
       <div className="flex w-full h-full">
-        {/* <div className="text-subText">{text}</div> */}
         <input
+          type="text"
           placeholder={placeholder}
           onBlur={onBlur}
           className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3 w-full text-2xl"
           onChange={onChange}
+          value={value}
         />
       </div>
     );

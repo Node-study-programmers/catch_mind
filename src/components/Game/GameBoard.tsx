@@ -41,7 +41,7 @@ const GameBoard = ({ emitDraw, setDrawPosition, drawPosition }: Props) => {
       className="w-full h-[70%] aspect-video mx-auto"
       onMouseDown={() => setPainting(true)}
       onMouseUp={() => setPainting(false)}
-      onMouseMove={e => drawFn(e)}
+      onMouseMove={(e) => drawFn(e)}
       onMouseLeave={() => setPainting(false)}
       ref={canvasRef}
       style={{
@@ -49,8 +49,7 @@ const GameBoard = ({ emitDraw, setDrawPosition, drawPosition }: Props) => {
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-      }}
-    ></canvas>
+      }}></canvas>
   );
 };
 
