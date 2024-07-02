@@ -33,8 +33,9 @@ const InGame = () => {
     countdown,
   } = useSocket(roomId!);
 
-  console.log(currentRoomInfo);
+  console.log("users", users);
 
+  console.log(currentRoomInfo);
   useEffect(() => {
     if (currentRoomInfo) {
       setCurrentDrawer(currentRoomInfo.nickname);

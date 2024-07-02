@@ -21,7 +21,7 @@ const UserContainer = ({
       className={`flex items-center justify-center relative w-full h-full bg-white rounded-2xl ${
         currentDraw && "border-8 border-yellow-500"
       } ${isLeft ? "row" : "flex-row-reverse"}`}>
-      <ChatModal chatMessage="asdff" isLeft={isLeft} />
+      {/* <ChatModal chatMessage="asdff" isLeft={isLeft} /> */}
       <div className="w-1/2 h-full relative">
         {masterName === nickname && (
           <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />

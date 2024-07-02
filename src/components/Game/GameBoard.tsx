@@ -31,13 +31,15 @@ const GameBoard = () => {
 
   return (
     <div className="h-full flex flex-col justify-around items-center w-1/2">
-      <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">제시어 : 포도</div>
+      <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
+        제시어 : 포도
+      </div>
       {/* 게임 보드 */}
       <canvas
         className="w-full h-[70%] aspect-video mx-auto"
         onMouseDown={() => setPainting(true)}
         onMouseUp={() => setPainting(false)}
-        onMouseMove={e => drawFn(e)}
+        onMouseMove={(e) => drawFn(e)}
         onMouseLeave={() => setPainting(false)}
         ref={canvasRef}
         style={{
@@ -45,8 +47,7 @@ const GameBoard = () => {
           backgroundSize: "contain",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-        }}
-      ></canvas>
+        }}></canvas>
       {/* <div className="flex justify-end ">
     <Button buttonStyle="submit">다 지우기</Button>
   </div> */}
