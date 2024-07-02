@@ -55,4 +55,9 @@ export interface RoomUsers {
   roomUsers: RoomUser[];
 }
 
+export interface DrawPosition {
+  x: number;
+  y: number;
+}
+
 export type GameStatus = "waiting" | "playing";

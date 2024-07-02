@@ -1,8 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import Input from "../Input";
 import gameBoard from "../../asset/img/gameBoard.png";
+import { DrawPosition } from "../../types";
 
-const GameBoard = () => {
+interface Props {
+  emitDraw: () => void;
+  setDrawPosition: Dispatch<SetStateAction<DrawPosition>>;
+  drawPosition: DrawPosition;
+}
+
+const GameBoard = ({ emitDraw, setDrawPosition, drawPosition }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [getCtx, setGetCtx] = useState<CanvasRenderingContext2D | null>();
   const [painting, setPainting] = useState(false);
