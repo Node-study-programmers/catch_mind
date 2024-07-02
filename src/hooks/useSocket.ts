@@ -77,6 +77,7 @@ export const useSocket = (roomId: string) => {
         question: data.question,
         roomStatus: "playing",
       });
+      setChatMessages([]);
     });
 
     socket.on("draw", (data: { x: number; y: number }) => {
@@ -137,7 +138,7 @@ export const useSocket = (roomId: string) => {
     }
 
     return () => clearInterval(clear);
-  }, [currentRoomInfo?.nickname, socket, currentRoomInfo]);
+  }, [socket, currentRoomInfo]);
 
   // 채팅 보내는 이벤트
   const submitChat = (data: {

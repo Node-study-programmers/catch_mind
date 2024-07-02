@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AlertModal from "../components/modal/AlertModal";
 import mainImg from "../asset/img/mainBackground.png";
@@ -40,7 +40,6 @@ const InGame = () => {
 
   useEffect(() => {
     setChattings(chatMessages);
-    console.log(chatMessages);
   }, [chatMessages]);
 
   useEffect(() => {
@@ -69,6 +68,32 @@ const InGame = () => {
     }
   };
 
+  // memoizedUserContainers를 useMemo로 생성
+  const memoizedUserContainers = useMemo(() => {
+    return users.slice(0, 6).map((user, index) => {
+      const userMessages = chattings
+        .filter((chat) => chat.nickname === user.nickname)
+        .slice(-1)
+        .map((chat) => {
+          return { message: chat.message, isAnswer: chat.isAnswer };
+        });
+
+      return (
+        <UserContainer
+          key={user.userId}
+          userId={user.userId}
+          nickname={user.nickname}
+          score={user.score}
+          currentDraw={currentDrawer === user.nickname}
+          profileImage={user.profileImage}
+          masterName={masterNickname!}
+          chatMessages={userMessages}
+          isLeft={index < 3} // index를 사용하여 isLeft 결정
+        />
+      );
+    });
+  }, [users, chattings, currentDrawer, masterNickname]);
+
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
@@ -95,27 +120,7 @@ const InGame = () => {
         {/* 유저 1~3명 */}
         <div className="h-[93%] py-24 flex justify-between">
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(0, 3).map((user) => {
-              const userMessages = chattings
-                .filter((chat) => chat.nickname === user.nickname)
-                .slice(-1)
-                .map((chat) => {
-                  return { message: chat.message, isAnswer: chat.isAnswer };
-                });
-              return (
-                <UserContainer
-                  key={user.userId}
-                  userId={user.userId}
-                  nickname={user.nickname}
-                  score={user.score}
-                  currentDraw={currentDrawer === user.nickname}
-                  profileImage={user.profileImage}
-                  masterName={masterNickname!}
-                  chatMessages={userMessages}
-                  isLeft={true}
-                />
-              );
-            })}
+            {memoizedUserContainers.slice(0, 3)}
           </div>
 
           {countdown !== null ? (
@@ -170,26 +175,7 @@ const InGame = () => {
 
           {/* 유저 4~명 */}
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(3, 6).map((user) => {
-              const userMessages = chattings
-                .filter((chat) => chat.nickname === user.nickname)
-                .map((chat) => {
-                  return { message: chat.message, isAnswer: chat.isAnswer };
-                });
-              return (
-                <UserContainer
-                  key={user.userId}
-                  userId={user.userId}
-                  nickname={user.nickname}
-                  score={user.score}
-                  currentDraw={currentDrawer === user.nickname}
-                  profileImage={user.profileImage}
-                  masterName={masterNickname!}
-                  chatMessages={userMessages}
-                  isLeft={false}
-                />
-              );
-            })}
+            {memoizedUserContainers.slice(3)}
           </div>
         </div>
       </div>
