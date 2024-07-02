@@ -133,8 +133,37 @@ module.exports = (server) => {
                         io.to(user.socketId).emit('gameStart', messageData);
                     }
                 });
-            } catch (error) {
+            } catch (err) {
+                console.error('다음 차례 진행 중 에러:', err);
+                socket.emit('error', '다음 차례 진행 중 에러가 발생했습니다.');
+            }
+        })
 
+        socket.on('finishGame', async (data) => {
+            try {
+                const room = await Room.findById(data.roomId);
+                if (!room) {
+                    return socket.emit('error', '방이 존재하지 않습니다.');
+                }
+
+                for (const userData of data.users) {
+                    const user = await User.findOne({ nickname: userData.nickname });
+                    if (user) {
+                        user.score += userData.score;
+                        await user.save();
+                    } else {
+                        console.warn(`사용자를 찾을 수 없습니다: ${userData.nickname}`);
+                    }
+                }
+
+                room.roomStatus = 'waiting';
+                await room.save();
+
+                io.to(data.roomId).emit('finishGame', room.roomStatus);
+
+            } catch (err) {
+                console.error('게임 종료 중 에러:', err);
+                socket.emit('error', '게임 종료 중 에러가 발생했습니다.');
             }
         })
 
