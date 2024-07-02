@@ -29,39 +29,43 @@ const style = {
 const CreateRoomModal = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setIsErr(false);
+  };
   const [roomName, setRoomName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const setRoom = roomStore((state) => state.setRoom);
+  const setRoom = roomStore(state => state.setRoom);
+  const [message, setMessage] = useState("방 생성중...");
+  const [isErr, setIsErr] = useState(false);
 
-  const handleCreateRoom = () => {
-    createRoom({ roomName: roomName })
-      .then((data) => {
-        joinRoom({ roomId: data.roomId! }).then(() => {
-          setIsLoading(true);
-          setRoom({
-            masterNickname: data.masterNickname,
-            roomId: data.roomId,
-            roomStatus: data.roomStatus,
-          });
-          setTimeout(() => {
-            navigate(`/ingame/${data.roomId}`); //방생성 성공시 방으로 리다이렉트
-          }, 2000);
-        });
-      })
-      .catch((e: Error) => console.log(e));
+  const handleCreateRoom = async () => {
+    try {
+      const roomData = await createRoom({ roomName: roomName });
+      await joinRoom({ roomId: roomData.roomId! });
+      setIsLoading(true);
+      setRoom({
+        masterNickname: roomData.masterNickname,
+        roomId: roomData.roomId,
+        roomStatus: roomData.roomStatus,
+      });
+      setTimeout(() => {
+        navigate(`/ingame/${roomData.roomId}`); //방생성 성공시 방으로 리다이렉트
+      }, 2000);
+    } catch (e: any) {
+      setMessage(e.response.data.message);
+      setOpen(true);
+      setIsErr(true);
+    }
   };
 
+  if (isErr) {
+    return <AlertModal open={open} handleClose={handleClose} message={message} />;
+  }
+
   if (isLoading) {
-    return (
-      <AlertModal
-        open={true}
-        handleClose={() => {}}
-        message="방 생성중..."
-        isLoadingAlert={true}
-      />
-    );
+    return <AlertModal open={true} handleClose={() => {}} message={message} isLoadingAlert={true} />;
   }
 
   return (
@@ -75,21 +79,15 @@ const CreateRoomModal = () => {
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
+        aria-describedby="modal-modal-description"
+      >
         <Box sx={style}>
-          <Typography
-            sx={{ borderBottom: "2px solid" }}
-            id="modal-modal-title"
-            variant="h6"
-            component="h2">
+          <Typography sx={{ borderBottom: "2px solid" }} id="modal-modal-title" variant="h6" component="h2">
             방 만들기
           </Typography>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             제목
-            <Input
-              type="normal"
-              onChange={(e) => setRoomName(e.target.value)}
-            />
+            <Input type="normal" onChange={e => setRoomName(e.target.value)} />
           </Typography>
           <MButton onClick={handleCreateRoom}>방 생성</MButton>
         </Box>

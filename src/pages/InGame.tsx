@@ -32,6 +32,10 @@ const InGame = () => {
     gameStart,
     currentRoomInfo,
     countdown,
+    stageTimer,
+    drawPosition,
+    emitDraw,
+    setDrawPosition,
     chatMessages,
   } = useSocket(roomId!);
 
@@ -121,13 +125,15 @@ const InGame = () => {
           ) : roomStatus === "playing" ? (
             <div className="h-full flex flex-col justify-around items-center w-1/2">
               <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
-                제시어 : {currentRoomInfo?.question}
+                {user.nickname === currentRoomInfo?.nickname
+                  ? `제시어 : ${currentRoomInfo?.question}`
+                  : `${currentRoomInfo?.nickname}님이 그리는 중입니다`}
               </div>
               {/* 게임 보드 */}
-              <GameBoard />
+              <GameBoard emitDraw={emitDraw} setDrawPosition={setDrawPosition} drawPosition={drawPosition} />
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
-                  TIMER : 00:59
+                  TIMER : {stageTimer}
                 </div>
                 <form onSubmit={handleChatting}>
                   <div className="flex w-full h-full">

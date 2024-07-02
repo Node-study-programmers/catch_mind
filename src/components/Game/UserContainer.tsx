@@ -9,6 +9,7 @@ interface UserContainerProps extends RoomUser {
   chatMessages: chatMessage[];
 }
 
+
 const UserContainer = ({
   userId,
   nickname,
@@ -37,6 +38,7 @@ const UserContainer = ({
     <div
       className={`flex items-center justify-center relative w-full h-full bg-white rounded-2xl ${
         currentDraw && "border-8 border-yellow-500"
+
       } ${isLeft ? "row" : "flex-row-reverse"}`}>
       {visibleMessage && (
         <ChatModal chatMessage={visibleMessage} isLeft={isLeft} />
