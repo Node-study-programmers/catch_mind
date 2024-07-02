@@ -63,28 +63,14 @@ module.exports = (server) => {
                 room.roomStatus = 'playing';
                 await room.save();
 
-                let messageData;
-                socket.user.socketId = socket.id;
-                
-                for (let i = 0; i < room.roomUsers.length; i++) {       
-                    if (socket.user.nickname === room.roomUsers[0].nickname) {
-                        messageData = {
-                            nickname: room.roomUsers[0].nickname,
-                            question: "편의점에 도시락 사러가는 용환",
-                            roomStatus: room.roomStatus
-                        };
-
-                        io.to(socket.user.socketId).emit('gameStart', messageData);    
-                    } else {
-                        messageData = {
-                            nickname: room.roomUsers[0].nickname,
-                            question: "??",
-                            roomStatus: room.roomStatus
-                        };
-
-                        io.to(socket.user.socketId).emit('gameStart', messageData);
-                    }
+                const messageData = {
+                    nickname: nextUserNickname,
+                    question: "편의점 도시락 사러가는 용환",
+                    roomStatus: room.roomStatus
                 }
+                
+                io.to(roomId).emit('gameStart', messageData);
+
             } catch (err) {
                 console.error('Room 입장 중 에러:', err);
                 socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
@@ -116,25 +102,13 @@ module.exports = (server) => {
                     nextUserNickname = room.roomUsers[0].nickname;
                 }
 
-                let messageData;
-                socket.user.socketId = socket.id;
+                const messageData = {
+                    nickname: nextUserNickname,
+                    question: "또볶이 먹는 수혁"
+                }
 
-                room.roomUsers.forEach(user => {
-                    if (user.nickname === socket.user.nickname) {
-                        messageData = {
-                            nickname: nextUserNickname,
-                            question: "또볶이 먹는 수혁"
-                        };
+                io.to(data.roomId).emit('nextTurn', messageData);
 
-                        io.to(socket.user.socketId).emit('gameStart', messageData);
-                    } else {
-                        messageData = {
-                            nickname: nextUserNickname,
-                            question: "또볶이 먹는 수혁"
-                        };
-                        io.to(socket.user.socketId).emit('gameStart', otherMessageData);
-                    }
-                });
             } catch (err) {
                 console.error('다음 차례 진행 중 에러:', err);
                 socket.emit('error', '다음 차례 진행 중 에러가 발생했습니다.');
