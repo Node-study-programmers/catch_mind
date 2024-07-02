@@ -71,18 +71,30 @@ module.exports = (server) => {
 
                 socket.user.socketId = socket.id;
                 
-                room.roomUsers.forEach(user => {
-                    if (user.nickname === room.roomUsers[0].nickname) {
-                        io.to(socket.user.socketId).emit('gameStart', messageData);
-                    } else {
-                        messageData = {
-                            nickname: room.roomUsers[0].nickname,
-                            question: "??",
-                            roomStatus: room.roomStatus
-                        };
-                        io.to(socket.user.socketId).emit('gameStart', messageData);
-                    }
-                });
+                // room.roomUsers.forEach(user => {
+                //     if (socket.user.nickname === room.roomUsers[0].nickname) {
+                //         io.to(socket.user.socketId).emit('gameStart', messageData);
+                //     } else {
+                //         messageData = {
+                //             nickname: room.roomUsers[0].nickname,
+                //             question: "??",
+                //             roomStatus: room.roomStatus
+                //         };
+                //         io.to(socket.user.socketId).emit('gameStart', messageData);
+                //     }
+                // });
+
+                if (socket.user.nickname === room.roomUsers[0].nickname) {
+                    io.to(socket.user.socketId).emit('gameStart', messageData);
+                } else {
+                    messageData = {
+                        nickname: room.roomUsers[0].nickname,
+                        question: "??",
+                        roomStatus: room.roomStatus
+                    };
+    
+                    io.to(socket.user.socketId).emit('gameStart', messageData);
+                }
             } catch (err) {
                 console.error('Room 입장 중 에러:', err);
                 socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
