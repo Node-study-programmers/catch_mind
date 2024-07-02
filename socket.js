@@ -61,8 +61,16 @@ module.exports = (server) => {
             }
 
             room.roomStatus = 'playing';
+
+            const messageData = {
+                nickname: room.roomUsers[0].nickname,
+                question: "편의점에 도시락 사러가는 용환",
+                roomStatus: room.roomStatus
+            }
+
+            
             await room.save();
-            io.to(roomId).emit('roomStatus', room.roomStatus);
+            io.to(roomId).emit('roomStatus', messageData);
         })
 
         // 메세지 전송
@@ -75,12 +83,30 @@ module.exports = (server) => {
             io.to(data.roomId).emit('sendMessage', messageData);
         })
 
-        socket.on('nextTurn', () => {
-            const messageData = {
-                nickname: socket.user.nickname,
+        socket.on('nextTurn', async (data) => {
+            try {
+                const room = await Room.findById(data.roomId);
+                if (!room) {
+                    return socket.emit('error', '방이 존재하지 않습니다.');
+                }
+
+                let nextUserNickname;
+                const findUserIndex = room.roomUsers.findIndex(user => user.nickname === data.nickname);
+                if (findUserIndex !== -1 && findUserIndex + 1 < room.roomUsers.length) {
+                    nextUserNickname = room.roomUsers[findUserIndex + 1].nickname;
+                } else {
+                    nextUserNickname = room.roomUsers[0].nickname;
+                }
+
+                const messageData = {
+                    nickname: nextUserNickname,
+                    question: "또볶이 먹는 수혁"
+                }
+
+                io.to(data.roomId).emit('nextTurn', messageData);
+            } catch (error) {
 
             }
-            io.to(data.roomId).emit('nextTurn', messageData);
         })
 
         socket.on('leaveRoom', async (roomId) => {
