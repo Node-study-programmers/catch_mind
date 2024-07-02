@@ -123,22 +123,13 @@ module.exports = (server) => {
         })
 
 
-        socket.on('darw', async (data) => {
-            try {
-                const room = await Room.findById(data.roomId);
-                if (!room) {
-                    return socket.emit('error', '방이 존재하지 않습니다.');
-                }
-                const xy = {
-                    x: data.x,
-                    y: data.y
-                }
-
-                io.to(data.roomId).emit('draw', xy);
-            } catch (err) {
-                console.error('��자 그리기 중 에러:', err);
-                socket.emit('error', '��자 그리기 중 에러가 발생했습니다.');
+        socket.on('darw', (data) => {
+            const xy = {
+                x: data.x,
+                y: data.y
             }
+
+            io.to(data.roomId).emit('draw', xy);
         })
 
         socket.on('finishGame', async (data) => {
