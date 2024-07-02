@@ -84,7 +84,7 @@ module.exports = (server) => {
         // 메세지 전송
         socket.on('sendMessage', (data) => {
             const messageData = {
-                message: data.message,
+                message: data.chatMessage,
                 nickname: socket.user.nickname,
                 isAnswer: data.isAnswer,
             }
