@@ -9,6 +9,8 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
+const initialWords = require('./words');
+const Word = require('./models/word');
 
 
 // 서버 생성
@@ -24,23 +26,38 @@ if (!fs.existsSync(imageFolder)) {
   fs.mkdirSync(imageFolder);
 }
 
+const initializeDatabase = async () => {
+  const count = await Word.countDocuments();
+  if (count === 0) {
+      try {
+          for (const word of initialWords) {
+              await Word.create({ word });
+          }
+          console.log('Initial words inserted successfully');
+          console.log(`Number of initial words: ${initialWords.length}`);
+      } catch (error) {
+          console.error('Error inserting initial words:', error);
+      }
+  } else {
+      console.log('Database already initialized');
+  }
+};
+
 app.use('/profileImages', express.static(path.join(__dirname, '../profileImages')));
 
 const authRouter = require('./routes/auth');
 const mypageRouter = require('./routes/mypage');
 const rankRouter = require('./routes/rank');
 const homeRouter = require('./routes/home');
-// const gameRouter = require('./routes/game');
-// const roomRouter = require('./routes/room');
 
 app.use('/auth', authRouter);
 app.use('/mypage', mypageRouter);
 app.use('/rank', rankRouter);
 app.use('/home', homeRouter);
-// app.use('/game', gameRouter);
-// app.use('/room', roomRouter);
+
 
 const PORT = process.env.PORT || 9999; // 포트 설정을 이 줄로 이동
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    initializeDatabase();
 });

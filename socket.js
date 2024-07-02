@@ -1,6 +1,7 @@
 const socketIo = require('socket.io');
 const User = require('./models/User');
 const Room = require('./models/Room');
+const Word = require('./models/Word');
 
 module.exports = (server) => {
     const io = socketIo(server, {path : '/socket.io', cors: { origin: '*'}});
@@ -60,12 +61,15 @@ module.exports = (server) => {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
 
+                const randomWordDoc = await Word.aggregate([{ $sample: { size: 1 } }]);
+                const randomWord = randomWordDoc[0]?.word || '기본 단어';
+
                 room.roomStatus = 'playing';
                 await room.save();
 
                 const messageData = {
                     nickname: room.roomUsers[0].nickname,
-                    question: "편의점 도시락 사러가는 용환",
+                    question: randomWord,
                     roomStatus: room.roomStatus
                 }
                 
@@ -102,9 +106,12 @@ module.exports = (server) => {
                     nextUserNickname = room.roomUsers[0].nickname;
                 }
 
+                const randomWordDoc = await Word.aggregate([{ $sample: { size: 1 } }]);
+                const randomWord = randomWordDoc[0]?.word || '기본 단어';
+
                 const messageData = {
                     nickname: nextUserNickname,
-                    question: "또볶이 먹는 수혁"
+                    question: randomWord
                 }
 
                 io.to(data.roomId).emit('nextTurn', messageData);
