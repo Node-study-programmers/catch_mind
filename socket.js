@@ -168,6 +168,7 @@ module.exports = (server) => {
 
         socket.on('leaveRoom', async (roomId) => {
             try {
+                console.log("님아");
                 const room = await Room.findById(roomId);
                 if (!room) {
                     return socket.emit('error', '방이 존재하지 않습니다.');
