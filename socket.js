@@ -178,10 +178,9 @@ module.exports = (server) => {
                         room.masterNickname = room.roomUsers[0].nickname;
                         room.masterImage = room.roomUsers[0].profileImage;
                     }
-                    
-                    await room.save();
                     io.to(roomId).emit('updateRoom', room.roomUsers);
                 }
+                await room.save();
                 socket.leave(roomId);
             } catch (err) {
                 console.error('Room 퇴장 중 에러:', err);
