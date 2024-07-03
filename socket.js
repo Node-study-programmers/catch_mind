@@ -167,14 +167,16 @@ module.exports = (server) => {
         })
 
         socket.on('leaveRoom', async (roomId) => {
+            console.log(socket.user.nickname, " 퇴장");
             try {
-                console.log("님아");
+                console.log(socket.user.nickname, " 정상 퇴장");
                 const room = await Room.findById(roomId);
                 if (!room) {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
 
                 room.roomUsers = room.roomUsers.filter((user) => user.nickname !== socket.user.nickname);
+                await room.save();
 
                 if (room.roomUsers.length === 0) {
                     await Room.findByIdAndDelete(roomId);
@@ -189,6 +191,7 @@ module.exports = (server) => {
                 io.to(roomId).emit('updateRoom', room.roomUsers);        
                 socket.leave(roomId);
             } catch (err) {
+                console.log(socket.user.nickname, " 에러 퇴장");
                 console.error('Room 퇴장 중 에러:', err);
                 socket.emit('error', '방에서 퇴장하는 중 에러가 발생했습니다.');
             }
