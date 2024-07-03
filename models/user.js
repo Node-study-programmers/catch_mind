@@ -21,6 +21,11 @@ const UserSchema = new mongoose.Schema({
     unique: false,
     default: "Basic.jpg"
   },
+  localScore: {
+    type: Number,
+    unique: false,
+    default: 0
+  },
   score: {
     type: Number,
     unique: false,
