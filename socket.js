@@ -153,7 +153,12 @@ module.exports = (server) => {
                 room.roomStatus = 'waiting';
                 await room.save();
 
-                io.to(data.roomId).emit('finishGame', room.roomStatus);
+                const roomData = {
+                    roomStatus: room.roomStatus,
+                    masterNickname: room.masterNickname
+                }
+
+                io.to(data.roomId).emit('finishGame', roomData);
 
             } catch (err) {
                 console.error('게임 종료 중 에러:', err);
@@ -169,7 +174,6 @@ module.exports = (server) => {
                 }
 
                 room.roomUsers = room.roomUsers.filter((user) => user.nickname !== socket.user.nickname);
-                await room.save();
 
                 if (room.roomUsers.length === 0) {
                     await Room.findByIdAndDelete(roomId);
