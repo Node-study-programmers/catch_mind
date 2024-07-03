@@ -123,7 +123,7 @@ module.exports = (server) => {
         })
 
 
-        socket.on('darw', (data) => {
+        socket.on('draw', (data) => {
             const xy = {
                 x: data.x,
                 y: data.y
