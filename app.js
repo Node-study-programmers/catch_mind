@@ -1,3 +1,5 @@
+console.log(1);
+
 const cors = require('cors');
 const socketIo = require('./socket.js');
 const dotenv = require("dotenv");
