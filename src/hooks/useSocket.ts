@@ -25,10 +25,7 @@ export const useSocket = (roomId: string) => {
   const [countdown, setCountdown] = useState<number | null>(null); // 카운트다운 상태 추가
   const [currentRoomInfo, setCurrentRoomInfo] = useState<currentRoomInfoType>();
   const [stageTimer, setStageTimer] = useState<number | null>(null);
-  const [drawPosition, setDrawPosition] = useState<DrawPosition>({
-    x: 0,
-    y: 0,
-  });
+  const [drawPosition, setDrawPosition] = useState<DrawPosition>();
   const [chatMessages, setChatMessages] = useState<chatMessageType[]>([]);
 
   // 에러 알럿창 닫기
@@ -59,6 +56,7 @@ export const useSocket = (roomId: string) => {
     socket.emit("joinRoom", roomId);
 
     socket.on("updateRoom", (data: RoomUser[]) => {
+      console.log("유저들 입퇴장", data);
       setUsers(data); // 유저 입퇴장
     });
     socket.on("gameStart", data => {
@@ -77,10 +75,11 @@ export const useSocket = (roomId: string) => {
         question: data.question,
         roomStatus: "playing",
       });
+      setChatMessages([]);
     });
 
-    socket.on("draw", (data: { x: number; y: number }) => {
-      setDrawPosition({ x: data.x, y: data.y });
+    socket.on("draw", data => {
+      setDrawPosition({ x: data.x, y: data.y, stopDraw: data.stopDraw });
     });
 
     return () => {
@@ -137,7 +136,7 @@ export const useSocket = (roomId: string) => {
     }
 
     return () => clearInterval(clear);
-  }, [currentRoomInfo?.nickname, socket, currentRoomInfo]);
+  }, [socket, currentRoomInfo]);
 
   // 채팅 보내는 이벤트
   const submitChat = (data: { chatMessage: string; roomId?: string; isAnswer: boolean }) => {
@@ -167,8 +166,8 @@ export const useSocket = (roomId: string) => {
     socket?.emit("nextTurn", { roomId, nickname: currentRoomInfo?.nickname });
   };
 
-  const emitDraw = () => {
-    socket?.emit("draw", { roomId, x: drawPosition.x, y: drawPosition.y });
+  const emitDraw = (x: number, y: number, stopDraw: boolean) => {
+    socket?.emit("draw", { roomId, x, y, stopDraw });
   };
 
   return {

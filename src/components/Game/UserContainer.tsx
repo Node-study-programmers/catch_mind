@@ -9,7 +9,6 @@ interface UserContainerProps extends RoomUser {
   chatMessages: chatMessage[];
 }
 
-
 const UserContainer = ({
   userId,
   nickname,
@@ -20,14 +19,12 @@ const UserContainer = ({
   masterName,
   chatMessages,
 }: UserContainerProps) => {
-  const [visibleMessage, setVisibleMessage] = useState<chatMessage | null>(
-    null
-  );
+  const [visibleMessage, setVisibleMessage] = useState<chatMessage | null>(null);
 
   useEffect(() => {
     if (chatMessages.length > 0) {
       setVisibleMessage(chatMessages[chatMessages.length - 1]);
-      const timer = setTimeout(() => {
+      const timer = window.setTimeout(() => {
         setVisibleMessage(null);
       }, 2000);
       return () => clearTimeout(timer);
@@ -38,20 +35,12 @@ const UserContainer = ({
     <div
       className={`flex items-center justify-center relative w-full h-full bg-white rounded-2xl ${
         currentDraw && "border-8 border-yellow-500"
-
-      } ${isLeft ? "row" : "flex-row-reverse"}`}>
-      {visibleMessage && (
-        <ChatModal chatMessage={visibleMessage} isLeft={isLeft} />
-      )}
+      } ${isLeft ? "row" : "flex-row-reverse"}`}
+    >
+      {visibleMessage && <ChatModal chatMessage={visibleMessage} isLeft={isLeft} />}
       <div className="w-1/2 h-full relative">
-        {masterName === nickname && (
-          <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />
-        )}
-        <img
-          className="h-full w-full"
-          src={`${import.meta.env.VITE_IMG_URL}${profileImage}`}
-          alt="userProfile"
-        />
+        {masterName === nickname && <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />}
+        <img className="h-full w-full" src={`${import.meta.env.VITE_IMG_URL}${profileImage}`} alt="userProfile" />
       </div>
       <div className="w-1/2 h-full flex flex-col justify-around items-center">
         <div className="w-3/4 text-center text-lg font-bold border-b border-black pb-1 overflow-hidden text-ellipsis whitespace-nowrap">
