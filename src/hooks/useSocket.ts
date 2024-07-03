@@ -4,7 +4,7 @@ import { userStore } from "../store/userStore";
 import { DrawPosition, GameStatus, RoomUser } from "../types";
 import screenfull from "screenfull";
 
-type currentRoomInfoType = {
+export type currentRoomInfoType = {
   nickname: string;
   question: string;
   roomStatus: GameStatus;
@@ -20,7 +20,7 @@ export const useSocket = (roomId: string) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [open, setOpen] = useState(false); // 소켓 에러 시 메시지 띄워줌
   const [errMessage, setErrMessage] = useState(""); // 에러 메시지 상태
-  const email = userStore((state) => state.user.email);
+  const email = userStore(state => state.user.email);
   const [users, setUsers] = useState<RoomUser[]>([]);
   const [countdown, setCountdown] = useState<number | null>(null); // 카운트다운 상태 추가
   const [currentRoomInfo, setCurrentRoomInfo] = useState<currentRoomInfoType>();
@@ -43,7 +43,7 @@ export const useSocket = (roomId: string) => {
     }); // 소켓 연결
     setSocket(socket);
 
-    socket.on("error", (message) => {
+    socket.on("error", message => {
       setOpen(true); // 소켓 에러 시 메시지 띄우기
       setErrMessage(message);
     });
@@ -61,14 +61,14 @@ export const useSocket = (roomId: string) => {
     socket.on("updateRoom", (data: RoomUser[]) => {
       setUsers(data); // 유저 입퇴장
     });
-    socket.on("gameStart", (data) => {
+    socket.on("gameStart", data => {
       setCurrentRoomInfo(data);
     });
 
-    socket.on("sendMessage", (data) => {
+    socket.on("sendMessage", data => {
       // 채팅 메시지
 
-      setChatMessages((prev) => [...prev, data]);
+      setChatMessages(prev => [...prev, data]);
     });
 
     socket.on("nextTurn", (data: { nickname: string; question: string }) => {
@@ -140,11 +140,7 @@ export const useSocket = (roomId: string) => {
   }, [currentRoomInfo?.nickname, socket, currentRoomInfo]);
 
   // 채팅 보내는 이벤트
-  const submitChat = (data: {
-    chatMessage: string;
-    roomId?: string;
-    isAnswer: boolean;
-  }) => {
+  const submitChat = (data: { chatMessage: string; roomId?: string; isAnswer: boolean }) => {
     if (data.isAnswer) {
       socket?.emit("sendMessage", data);
       setTimeout(() => {

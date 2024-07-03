@@ -14,10 +14,10 @@ const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [masterNickname, setMaster] = useState<string | null>(null);
-  const user = userStore((state) => state.user);
+  const user = userStore(state => state.user);
   const [currentDrawer, setCurrentDrawer] = useState<string | null>(null);
   const [currentAns, setCurrentAns] = useState<string | null>(null);
-  const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
+  const { setRoom, removeRoom, currentRoom } = roomStore(state => state);
   const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
   const [chattings, setChattings] = useState<chatMessageType[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -72,34 +72,29 @@ const InGame = () => {
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
-        <AlertModal
-          open={open}
-          handleClose={handleClose}
-          message={errMessage}
-        />
+        <AlertModal open={open} handleClose={handleClose} message={errMessage} />
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
           style={{
             backgroundImage: `url(${mainImg})`,
             opacity: 0.5,
             backgroundAttachment: "fixed",
-          }}></div>
+          }}
+        ></div>
         {/* header */}
         <div className="h-[7%] w-full text-right py-3">
-          <button
-            className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300"
-            onClick={handleLeaveRoom}>
+          <button className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300" onClick={handleLeaveRoom}>
             나가기
           </button>
         </div>
         {/* 유저 1~3명 */}
         <div className="h-[93%] py-24 flex justify-between">
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(0, 3).map((user) => {
+            {users.slice(0, 3).map(user => {
               const userMessages = chattings
-                .filter((chat) => chat.nickname === user.nickname)
+                .filter(chat => chat.nickname === user.nickname)
                 .slice(-1)
-                .map((chat) => {
+                .map(chat => {
                   return { message: chat.message, isAnswer: chat.isAnswer };
                 });
               return (
@@ -134,6 +129,7 @@ const InGame = () => {
                 emitDraw={emitDraw}
                 setDrawPosition={setDrawPosition}
                 drawPosition={drawPosition}
+                currentRoomInfo={currentRoomInfo}
               />
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
@@ -157,7 +153,8 @@ const InGame = () => {
               {masterNickname === user.nickname ? (
                 <button
                   className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300"
-                  onClick={gameStart}>
+                  onClick={gameStart}
+                >
                   게임 시작
                 </button>
               ) : (
@@ -170,10 +167,10 @@ const InGame = () => {
 
           {/* 유저 4~명 */}
           <div className="grid h-full grid-cols-1 grid-rows-3 justify-items-center gap-10 w-1/5">
-            {users.slice(3, 6).map((user) => {
+            {users.slice(3, 6).map(user => {
               const userMessages = chattings
-                .filter((chat) => chat.nickname === user.nickname)
-                .map((chat) => {
+                .filter(chat => chat.nickname === user.nickname)
+                .map(chat => {
                   return { message: chat.message, isAnswer: chat.isAnswer };
                 });
               return (
