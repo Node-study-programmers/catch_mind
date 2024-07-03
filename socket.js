@@ -1,7 +1,7 @@
 const socketIo = require('socket.io');
-const User = require('./models/User');
-const Room = require('./models/Room');
-const Word = require('./models/Word');
+const User = require('./models/user');
+const Room = require('./models/room');
+const Word = require('./models/word');
 
 module.exports = (server) => {
     const io = socketIo(server, {path : '/socket.io', cors: { origin: '*'}});
