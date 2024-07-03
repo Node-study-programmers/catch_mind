@@ -190,6 +190,7 @@ module.exports = (server) => {
 
                 io.to(roomId).emit('updateRoom', room.roomUsers);        
                 socket.leave(roomId);
+                socket.disconnect(true);
             } catch (err) {
                 console.log(socket.user.nickname, " 에러 퇴장");
                 console.error('Room 퇴장 중 에러:', err);
@@ -199,22 +200,6 @@ module.exports = (server) => {
 
         socket.on('disconnect', async () => {
             console.log(`${socket.user.nickname}님 서버 연결 해제`);
-            try {
-                // 사용자가 속한 모든 방에서 퇴장 처리
-                const rooms = Object.keys(socket.rooms);
-                for (const roomId of rooms) {
-                    socket.leave(roomId);
-                    const room = await Room.findById(roomId);
-                    if (room) {
-                        io.to(roomId).emit('message', {
-                            user: 'system',
-                            message: `${socket.user.nickname}님이 퇴장하셨습니다.`
-                        });
-                    }
-                }
-            } catch (err) {
-                console.error('연결 해제 중 에러:', err);
-            }
         });
     });
 }
