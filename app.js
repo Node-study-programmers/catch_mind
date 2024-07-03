@@ -17,7 +17,9 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 connectMongoDB();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173'
+}));
 
 // Image 폴더가 없으면 생성
 const imageFolder = path.join(__dirname, 'profileImages');

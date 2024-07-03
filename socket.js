@@ -4,7 +4,7 @@ const Room = require('./models/room');
 const Word = require('./models/word');
 
 module.exports = (server) => {
-    const io = socketIo(server, {path : '/socket.io', cors: { origin: '*'}});
+    const io = socketIo(server, {path : '/socket.io', cors: { origin: 'http://localhost:5173'}});
 
     io.use(async (socket, next) => {
         const email = socket.handshake.query.email;
@@ -184,7 +184,7 @@ module.exports = (server) => {
                     }
                     await room.save();
                 }
-                
+
                 io.to(roomId).emit('updateRoom', room.roomUsers);        
                 socket.leave(roomId);
             } catch (err) {
