@@ -83,8 +83,10 @@ export const useSocket = (roomId: string) => {
     });
 
     return () => {
-      socket.emit("leaveRoom", roomId); // 커스텀 훅 사라질 때 방 나감
-      socket.disconnect(); // 커스텀 훅 사라질 때 소켓 연결 끊음
+      // 커스텀 훅 사라질 때 방 나감
+      socket.emit("leaveRoom", roomId, () => {
+        socket.disconnect();
+      });
     };
   }, []);
 
