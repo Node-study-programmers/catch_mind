@@ -126,7 +126,8 @@ module.exports = (server) => {
         socket.on('draw', (data) => {
             const xy = {
                 x: data.x,
-                y: data.y
+                y: data.y,
+                stopDraw: data.stopDraw,
             }
 
             io.to(data.roomId).emit('draw', xy);
