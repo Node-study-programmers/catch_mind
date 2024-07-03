@@ -42,7 +42,7 @@ const initializeDatabase = async () => {
   }
 };
 
-app.use('/profileImages', express.static(path.join(__dirname, '../profileImages')));
+app.use('/profileImages', express.static("profileImages"));
 
 const authRouter = require('./routes/auth');
 const mypageRouter = require('./routes/mypage');
