@@ -173,6 +173,11 @@ module.exports = (server) => {
                 if (room.roomUsers.length === 0) {
                     await Room.findByIdAndDelete(roomId);
                 } else {
+                    if (socket.user.nickname === room.masterNickname) {
+                        room.masterNickname = room.roomUsers[0].nickname;
+                        room.masterImage = room.roomUsers[0].profileImage;
+                    }
+                    
                     await room.save();
                     io.to(roomId).emit('updateRoom', room.roomUsers);
                 }

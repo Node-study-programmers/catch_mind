@@ -29,7 +29,7 @@ const roomSchema = new mongoose.Schema({
     },
     masterNickname: {
         type: String,
-        default: "AA"
+        default: ""
     },
     roomName: {
         type: String,
