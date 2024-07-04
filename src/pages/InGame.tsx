@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState, useMemo } from "react";
+import React, { FormEvent, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AlertModal from "../components/modal/AlertModal";
 import mainImg from "../asset/img/mainBackground.png";
@@ -8,6 +8,9 @@ import { chatMessageType, useSocket } from "../hooks/useSocket";
 import { userStore } from "../store/userStore";
 import { roomStore } from "../store/roomStore";
 import GameBoard from "../components/Game/GameBoard";
+import Button from "../components/Button";
+import DrawController from "../components/Game/DrawController";
+import StageModal from "../components/modal/StageModal";
 
 const InGame = () => {
   const { roomId } = useParams();
@@ -20,6 +23,9 @@ const InGame = () => {
   const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
   const [chattings, setChattings] = useState<chatMessageType[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [getCtx, setGetCtx] = useState<CanvasRenderingContext2D | null>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [color, setColor] = useState<string>("#000000");
 
   const {
     submitChat,
@@ -35,6 +41,8 @@ const InGame = () => {
     emitDraw,
     chatMessages,
     setDrawPosition,
+    answerUser,
+    stageModalOpen,
   } = useSocket(roomId!);
 
   useEffect(() => {
@@ -52,6 +60,19 @@ const InGame = () => {
     }
     setMaster(currentRoom.masterNickname);
   }, [currentRoom.masterNickname, currentRoomInfo]);
+
+  const handleClearBoard = () => {
+    if (canvasRef.current) {
+      emitDraw(0, 0, false, color, true);
+      getCtx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      setDrawPosition(undefined);
+      getCtx?.beginPath();
+    }
+  };
+
+  const handleChangeColor = (color: string) => {
+    setColor(color);
+  };
 
   const handleLeaveRoom = () => {
     removeRoom();
@@ -76,9 +97,9 @@ const InGame = () => {
   const memoizedUserContainers = useMemo(() => {
     return users.slice(0, 6).map((user, index) => {
       const userMessages = chattings
-        .filter((chat) => chat.nickname === user.nickname)
+        .filter(chat => chat.nickname === user.nickname)
         .slice(-1)
-        .map((chat) => {
+        .map(chat => {
           return { message: chat.message, isAnswer: chat.isAnswer };
         });
 
@@ -97,18 +118,13 @@ const InGame = () => {
         />
       );
     });
-  }, [
-    users,
-    chattings,
-    currentDrawer,
-    masterNickname,
-    currentRoomInfo?.roomStatus,
-  ]);
+  }, [users, chattings, currentDrawer, masterNickname, currentRoomInfo?.roomStatus]);
 
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
         <AlertModal open={open} handleClose={handleClose} message={errMessage} />
+        <StageModal open={stageModalOpen} answerUser={answerUser} currentRoomInfo={currentRoomInfo} users={users} />
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
           style={{
@@ -145,22 +161,35 @@ const InGame = () => {
                 emitDraw={emitDraw}
                 drawPosition={drawPosition}
                 currentRoomInfo={currentRoomInfo}
-                setDrawPosition={setDrawPosition}
+                canvasRef={canvasRef}
+                setGetCtx={setGetCtx}
+                getCtx={getCtx}
+                handleClearBoard={handleClearBoard}
+                color={color}
               />
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
                   TIMER : {stageTimer}
                 </div>
-                <form onSubmit={handleChatting}>
-                  <div className="flex w-full h-full">
-                    <input
-                      type="text"
-                      ref={inputRef}
-                      className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3 w-full text-2xl"
-                      placeholder="정답을 입력하세요."
-                    />
-                  </div>
-                </form>
+                {currentRoomInfo?.nickname === user.nickname ? (
+                  <DrawController
+                    color={color}
+                    setColor={setColor}
+                    handleChangeColor={handleChangeColor}
+                    handleClearBoard={handleClearBoard}
+                  />
+                ) : (
+                  <form onSubmit={handleChatting}>
+                    <div className="flex w-full h-full">
+                      <input
+                        type="text"
+                        ref={inputRef}
+                        className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3 w-full text-2xl"
+                        placeholder="정답을 입력하세요."
+                      />
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           ) : (
