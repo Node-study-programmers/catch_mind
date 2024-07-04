@@ -54,32 +54,91 @@ module.exports = (server) => {
             }
         });
         
+        // socket.on('gameStart', async (roomId) => {
+        //     try {
+        //         const room = await Room.findById(roomId);
+        //         if (!room) {
+        //             return socket.emit('error', '방이 존재하지 않습니다.');
+        //         }
+
+        //         const randomWordDoc = await Word.aggregate([{ $sample: { size: 1 } }]);
+        //         const randomWord = randomWordDoc[0]?.word || '기본 단어';
+
+        //         room.roomStatus = 'playing';
+        //         await room.save();
+
+        //         const messageData = {
+        //             nickname: room.roomUsers[0].nickname,
+        //             question: randomWord,
+        //             roomStatus: room.roomStatus
+        //         }
+                
+        //         io.to(roomId).emit('gameStart', messageData);
+
+        //     } catch (err) {
+        //         console.error('Room 입장 중 에러:', err);
+        //         socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
+        //     }
+        // })
+
+
+        //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+        
         socket.on('gameStart', async (roomId) => {
             try {
                 const room = await Room.findById(roomId);
                 if (!room) {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
-
-                const randomWordDoc = await Word.aggregate([{ $sample: { size: 1 } }]);
-                const randomWord = randomWordDoc[0]?.word || '기본 단어';
-
-                room.roomStatus = 'playing';
-                await room.save();
-
-                const messageData = {
-                    nickname: room.roomUsers[0].nickname,
-                    question: randomWord,
-                    roomStatus: room.roomStatus
-                }
-                
-                io.to(roomId).emit('gameStart', messageData);
-
+        
+                // 카운트다운 진행
+                let countdown = 3;
+                const countdownInterval = setInterval(() => {
+                    io.to(roomId).emit('countdown', countdown);
+                    countdown--;
+        
+                    if (countdown < 0) {
+                        clearInterval(countdownInterval);
+        
+                        // 비동기 함수 호출
+                        startGame(roomId);
+                    }
+                }, 1000);
+        
             } catch (err) {
                 console.error('Room 입장 중 에러:', err);
                 socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
             }
-        })
+        });
+        
+        const startGame = async (roomId) => {
+            try {
+                const room = await Room.findById(roomId);
+                if (!room) {
+                    io.to(roomId).emit('error', '방이 존재하지 않습니다.');
+                    return;
+                }
+        
+                const randomWordDoc = await Word.aggregate([{ $sample: { size: 1 } }]);
+                const randomWord = randomWordDoc[0]?.word || '기본 단어';
+        
+                room.roomStatus = 'playing';
+                await room.save();
+        
+                const messageData = {
+                    nickname: room.roomUsers[0].nickname,
+                    question: randomWord,
+                    roomStatus: room.roomStatus
+                };
+        
+                io.to(roomId).emit('gameStart', messageData);
+            } catch (err) {
+                console.error('게임 시작 중 에러:', err);
+                io.to(roomId).emit('error', '게임을 시작하는 중 에러가 발생했습니다.');
+            }
+        };
+
+        // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
         // 메세지 전송
         socket.on('sendMessage', async (data) => {
