@@ -90,6 +90,12 @@ module.exports = (server) => {
                 if (!room) {
                     return socket.emit('error', '방이 존재하지 않습니다.');
                 }
+
+                // 게임이 이미 시작된 상태인지 확인
+                if (room.roomStatus === 'playing') {
+                    return socket.emit('error', '게임이 이미 시작되었습니다.');
+                }
+                
         
                 // 카운트다운 진행
                 let countdown = 3;
@@ -115,10 +121,14 @@ module.exports = (server) => {
         
         const startGame = async (roomId) => {
             try {
-                console.log("여기 2번 들어오니??");
                 const room = await Room.findById(roomId);
                 if (!room) {
                     io.to(roomId).emit('error', '방이 존재하지 않습니다.');
+                    return;
+                }
+
+                // 게임이 이미 시작된 상태인지 확인
+                if (room.roomStatus === 'playing') {
                     return;
                 }
         
