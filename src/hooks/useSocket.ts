@@ -122,7 +122,6 @@ export const useSocket = (roomId: string) => {
     return () => {
       // 커스텀 훅 사라질 때 소켓 연결 끊음
       socket?.off("sendMessage", handleSendMessage);
-      console.log("sibal");
     };
   }, [users, socket, setRoom, roomId, chatMessages]);
 
