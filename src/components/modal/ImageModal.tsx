@@ -45,14 +45,11 @@ const ImageModal = ({ open, onClose, user, setUser }: ImageModalProps) => {
     if (blob) {
       const formData = new FormData();
       formData.append("profileImage", blob, "profileImage.jpg");
-      for (const entry of formData.entries()) {
-        console.log(entry);
-      }
+
       try {
         const response = await replaceProfileImage(formData);
-        console.log(response);
+
         if (response.profileImage) {
-          console.log(response.profileImage);
           setUser({
             ...user,
             profileImage: import.meta.env.VITE_IMG_URL + response.profileImage,
