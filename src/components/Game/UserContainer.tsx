@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaCrown } from "react-icons/fa";
-import { RoomUser } from "../../types";
+import { GameStatus, RoomUser } from "../../types";
 import ChatModal, { chatMessage } from "../modal/ChatModal";
 
 interface UserContainerProps extends RoomUser {
   isLeft: boolean;
   masterName: string;
   chatMessages: chatMessage[];
+  currentRoom: GameStatus | undefined;
 }
 
 const UserContainer = ({
-  userId,
   nickname,
   profileImage,
   score,
@@ -18,10 +18,14 @@ const UserContainer = ({
   currentDraw,
   masterName,
   chatMessages,
+  currentRoom,
 }: UserContainerProps) => {
   const [visibleMessage, setVisibleMessage] = useState<chatMessage | null>(null);
 
   useEffect(() => {
+    if (currentRoom === "waiting") {
+      setVisibleMessage(null);
+    }
     if (chatMessages.length > 0) {
       setVisibleMessage(chatMessages[chatMessages.length - 1]);
       const timer = window.setTimeout(() => {
@@ -29,15 +33,16 @@ const UserContainer = ({
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [chatMessages]);
+  }, [chatMessages, currentRoom]);
 
   return (
     <div
       className={`flex items-center justify-center relative w-full h-full bg-white rounded-2xl ${
         currentDraw && "border-8 border-yellow-500"
-      } ${isLeft ? "row" : "flex-row-reverse"}`}
-    >
-      {visibleMessage && <ChatModal chatMessage={visibleMessage} isLeft={isLeft} />}
+      } ${isLeft ? "row" : "flex-row-reverse"}`}>
+      {visibleMessage && (
+        <ChatModal chatMessage={visibleMessage} isLeft={isLeft} />
+      )}
       <div className="w-1/2 h-full relative">
         {masterName === nickname && <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />}
         <img className="h-full w-full" src={`${import.meta.env.VITE_IMG_URL}${profileImage}`} alt="userProfile" />

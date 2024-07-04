@@ -1,11 +1,10 @@
-import React, { FormEvent, useEffect, useRef, useState, useMemo } from "react";
+import { FormEvent, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AlertModal from "../components/modal/AlertModal";
 import mainImg from "../asset/img/mainBackground.png";
 import { GameStatus } from "../types";
 import UserContainer from "../components/Game/UserContainer";
 import { chatMessageType, useSocket } from "../hooks/useSocket";
-import Input from "../components/Input";
 import { userStore } from "../store/userStore";
 import { roomStore } from "../store/roomStore";
 import GameBoard from "../components/Game/GameBoard";
@@ -48,8 +47,11 @@ const InGame = () => {
       setCurrentAns(currentRoomInfo.question);
       setRoomStatus(currentRoomInfo.roomStatus);
     }
+    if (currentRoomInfo?.roomStatus === "waiting") {
+      setCurrentDrawer(null);
+    }
     setMaster(currentRoom.masterNickname);
-  }, [currentRoom.masterNickname, setRoom, currentRoomInfo]);
+  }, [currentRoom.masterNickname, currentRoomInfo]);
 
   const handleLeaveRoom = () => {
     removeRoom();
@@ -62,7 +64,9 @@ const InGame = () => {
     e.preventDefault();
     const userChat = inputRef.current?.value;
     const isAnswer = currentAns === userChat;
+
     submitChat({ chatMessage: userChat!, roomId, isAnswer });
+
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -72,9 +76,9 @@ const InGame = () => {
   const memoizedUserContainers = useMemo(() => {
     return users.slice(0, 6).map((user, index) => {
       const userMessages = chattings
-        .filter(chat => chat.nickname === user.nickname)
+        .filter((chat) => chat.nickname === user.nickname)
         .slice(-1)
-        .map(chat => {
+        .map((chat) => {
           return { message: chat.message, isAnswer: chat.isAnswer };
         });
 
@@ -88,11 +92,18 @@ const InGame = () => {
           profileImage={user.profileImage}
           masterName={masterNickname!}
           chatMessages={userMessages}
+          currentRoom={currentRoomInfo?.roomStatus}
           isLeft={index < 3} // index를 사용하여 isLeft 결정
         />
       );
     });
-  }, [users, chattings, currentDrawer, masterNickname]);
+  }, [
+    users,
+    chattings,
+    currentDrawer,
+    masterNickname,
+    currentRoomInfo?.roomStatus,
+  ]);
 
   return (
     <>
