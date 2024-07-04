@@ -44,6 +44,11 @@ export const useSocket = (roomId: string) => {
     }); // 소켓 연결
     setSocket(socket);
     socket.emit("joinRoom", roomId);
+
+    socket.on("draw", data => {
+      setDrawPosition({ x: data.x, y: data.y, stopDraw: data.stopDraw, color: data.color, erase: data.erase });
+    });
+
     return () => {
       socket.emit("leaveRoom", roomId, () => {
         socket.disconnect();
@@ -113,10 +118,6 @@ export const useSocket = (roomId: string) => {
 
     socket?.on("gameStart", data => {
       setCurrentRoomInfo(data);
-    });
-
-    socket?.on("draw", data => {
-      setDrawPosition({ x: data.x, y: data.y, stopDraw: data.stopDraw, color: data.color, erase: data.erase });
     });
 
     return () => {
