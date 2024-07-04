@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState, useMemo } from "react";
+import React, { FormEvent, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AlertModal from "../components/modal/AlertModal";
 import mainImg from "../asset/img/mainBackground.png";
@@ -10,6 +10,10 @@ import { roomStore } from "../store/roomStore";
 import GameBoard from "../components/Game/GameBoard";
 import ResultModal from "../components/modal/ResultModal";
 import CountModal from "../components/modal/CountModal";
+import Button from "../components/Button";
+import DrawController from "../components/Game/DrawController";
+import StageModal from "../components/modal/StageModal";
+
 
 const InGame = () => {
   const { roomId } = useParams();
@@ -24,6 +28,10 @@ const InGame = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [gameResultModalOpen, setGameResultModalOpen] =
     useState<boolean>(false);
+  const [getCtx, setGetCtx] = useState<CanvasRenderingContext2D | null>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [color, setColor] = useState<string>("#000000");
+
   const {
     submitChat,
     users,
@@ -39,6 +47,8 @@ const InGame = () => {
     chatMessages,
     setDrawPosition,
     gameResult,
+    answerUser,
+    stageModalOpen,
   } = useSocket(roomId!);
 
   useEffect(() => {
@@ -65,6 +75,19 @@ const InGame = () => {
     }
     setMaster(currentRoom.masterNickname);
   }, [currentRoom.masterNickname, currentRoomInfo]);
+
+  const handleClearBoard = () => {
+    if (canvasRef.current) {
+      emitDraw(0, 0, false, color, true);
+      getCtx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      setDrawPosition(undefined);
+      getCtx?.beginPath();
+    }
+  };
+
+  const handleChangeColor = (color: string) => {
+    setColor(color);
+  };
 
   const handleLeaveRoom = () => {
     removeRoom();
@@ -94,6 +117,7 @@ const InGame = () => {
         userMessages = null;
       }
 
+
       console.log(userMessages, user.nickname, "in memo");
       return (
         <UserContainer
@@ -119,6 +143,7 @@ const InGame = () => {
   ]);
   console.log(countdown);
 
+
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
@@ -128,6 +153,8 @@ const InGame = () => {
           handleClose={handleClose}
           message={errMessage}
         />
+        <StageModal open={stageModalOpen} answerUser={answerUser} currentRoomInfo={currentRoomInfo} users={users} />
+
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
           style={{
@@ -163,22 +190,35 @@ const InGame = () => {
                 emitDraw={emitDraw}
                 drawPosition={drawPosition}
                 currentRoomInfo={currentRoomInfo}
-                setDrawPosition={setDrawPosition}
+                canvasRef={canvasRef}
+                setGetCtx={setGetCtx}
+                getCtx={getCtx}
+                handleClearBoard={handleClearBoard}
+                color={color}
               />
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
                   TIMER : {stageTimer}
                 </div>
-                <form onSubmit={handleChatting}>
-                  <div className="flex w-full h-full">
-                    <input
-                      type="text"
-                      ref={inputRef}
-                      className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3 w-full text-2xl"
-                      placeholder="정답을 입력하세요."
-                    />
-                  </div>
-                </form>
+                {currentRoomInfo?.nickname === user.nickname ? (
+                  <DrawController
+                    color={color}
+                    setColor={setColor}
+                    handleChangeColor={handleChangeColor}
+                    handleClearBoard={handleClearBoard}
+                  />
+                ) : (
+                  <form onSubmit={handleChatting}>
+                    <div className="flex w-full h-full">
+                      <input
+                        type="text"
+                        ref={inputRef}
+                        className="border-2 rounded-r-full focus:outline-none focus:border-yellow-300 p-3 w-full text-2xl"
+                        placeholder="정답을 입력하세요."
+                      />
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           ) : (

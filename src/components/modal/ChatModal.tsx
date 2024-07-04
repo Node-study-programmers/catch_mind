@@ -11,11 +11,12 @@ const ChatModal = ({ chatMessage, isLeft }: Props) => {
       className={`absolute ${
         isLeft ? "right-[-250px] top-[-80px]" : "left-[-250px] top-[-80px]"
       } z-[49] w-96 h-32 flex justify-center items-center`}>
+
       <div className="relative w-[150px] h-full max-w-[150px] flex justify-center items-center">
         <IoChatbox
-          className={`absolute ${
-            chatMessage.isAnswer ? "fill-blue-300" : "fill-yellow-200"
-          } text-[200px] ${!isLeft && "scale-x-[-1]"}`}
+          className={`absolute ${chatMessage.isAnswer ? "fill-blue-300" : "fill-yellow-200"} text-[200px] ${
+            !isLeft && "scale-x-[-1]"
+          }`}
         />
         <p className="absolute flex max-w-[150px] h-[150px] items-center font-titleW justify-center mb-10 break-all whitespace-normal overflow-hidden">
           {chatMessage.message}

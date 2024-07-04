@@ -1,24 +1,22 @@
 import React from "react";
 import { buttonTypes } from "../types";
+import { FaPaintBrush } from "react-icons/fa";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   buttonStyle: buttonTypes;
   active?: boolean;
+  colorValue?: string;
 }
 
-const Button = ({
-  children,
-  onClick,
-  type = "button",
-  buttonStyle,
-}: ButtonProps) => {
+const Button = ({ children, onClick, type = "button", buttonStyle, colorValue = "#000000" }: ButtonProps) => {
   if (buttonStyle === "ingame") {
     return (
       <button
         onClick={onClick}
         type={type}
-        className="font-titleW text-white bg-blue-400 w-[250px] h-[55px] flex justify-center items-center cursor-pointer text-lg hover:opacity-80 rounded-2xl ">
+        className="font-titleW text-white bg-blue-400 w-[250px] h-[55px] flex justify-center items-center cursor-pointer text-lg hover:opacity-80 rounded-2xl "
+      >
         {children}
       </button>
     );
@@ -28,7 +26,8 @@ const Button = ({
       <button
         className="bg-loginBtnBg text-loginBtnText w-[230px] h-[46px] rounded-full flex justify-center items-center cursor-pointer tracking-widest text-sm hover:opacity-80"
         onClick={onClick}
-        type={type}>
+        type={type}
+      >
         {children}
       </button>
     );
@@ -38,7 +37,8 @@ const Button = ({
       <button
         className="bg-loginBtnBg text-loginBtnText w-[100px] rounded-lg flex justify-center items-center cursor-pointer tracking-widest text-sm hover:opacity-80 text-nowrap"
         onClick={onClick}
-        type={type}>
+        type={type}
+      >
         {children}
       </button>
     );
@@ -52,8 +52,17 @@ const Button = ({
         }}
         className="bg-blue-400 text-loginBtnText w-[100px] rounded-lg flex justify-center items-center cursor-pointer tracking-widest text-sm hover:opacity-80 text-nowrap"
         onClick={onClick}
-        type={type}>
+        type={type}
+      >
         {children}
+      </button>
+    );
+  }
+
+  if (buttonStyle === "color") {
+    return (
+      <button className="w-[12%] aspect-square " onClick={onClick} type={type}>
+        <FaPaintBrush style={{ color: colorValue }} className="w-full h-full" />
       </button>
     );
   }

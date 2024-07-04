@@ -1,5 +1,5 @@
 // component types
-export type buttonTypes = "auth" | "ingame" | "shadow" | "submit";
+export type buttonTypes = "auth" | "ingame" | "shadow" | "submit" | "color";
 
 export type InputType = "chat" | "normal" | "password" | "shadow";
 
@@ -59,6 +59,8 @@ export interface DrawPosition {
   x: number;
   y: number;
   stopDraw: boolean;
+  color: string;
+  erase: boolean;
 }
 
 export type GameStatus = "waiting" | "playing";

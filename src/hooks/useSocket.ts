@@ -20,15 +20,18 @@ export const useSocket = (roomId: string) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [open, setOpen] = useState(false); // 소켓 에러 시 메시지 띄워줌
   const [errMessage, setErrMessage] = useState(""); // 에러 메시지 상태
-  const email = userStore((state) => state.user.email);
-  const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
+  const email = userStore(state => state.user.email);
+  const { setRoom, removeRoom, currentRoom } = roomStore(state => state);
   const [users, setUsers] = useState<RoomUser[]>([]);
   const [countdown, setCountdown] = useState<number | null>(null); // 카운트다운 상태 추가
   const [currentRoomInfo, setCurrentRoomInfo] = useState<currentRoomInfoType>();
   const [stageTimer, setStageTimer] = useState<number | null>(null);
   const [drawPosition, setDrawPosition] = useState<DrawPosition>();
+
   const [chatMessages, setChatMessages] = useState<chatMessageType | null>();
   const [gameResult, setGameResult] = useState<RoomUser[]>();
+  const [answerUser, setAnswerUser] = useState<chatMessageType | null>(null);
+  const [stageModalOpen, setStageModalOpen] = useState(false);
 
   // 에러 알럿창 닫기
   const handleClose = () => {
@@ -56,6 +59,11 @@ export const useSocket = (roomId: string) => {
     }); // 소켓 연결
     setSocket(socket);
     socket.emit("joinRoom", roomId);
+
+    socket.on("draw", data => {
+      setDrawPosition({ x: data.x, y: data.y, stopDraw: data.stopDraw, color: data.color, erase: data.erase });
+    });
+
     return () => {
       socket.emit("leaveRoom", roomId, () => {
         socket.disconnect();
@@ -64,16 +72,14 @@ export const useSocket = (roomId: string) => {
   }, []);
 
   useEffect(() => {
-    socket?.on("error", (message) => {
+    socket?.on("error", message => {
       setOpen(true); // 소켓 에러 시 메시지 띄우기
       setErrMessage(message);
     });
 
     socket?.on("updateRoom", (data: RoomUser[]) => {
       setUsers(data);
-      setUsers((prevUsers) =>
-        prevUsers.map((userEl) => ({ ...userEl, score: 0 }))
-      );
+      setUsers(prevUsers => prevUsers.map(userEl => ({ ...userEl, score: 0 })));
     });
     socket?.on("nextTurn", (data: { nickname: string; question: string }) => {
       setCurrentRoomInfo({
@@ -87,7 +93,9 @@ export const useSocket = (roomId: string) => {
     const handleSendMessage = (data: chatMessageType) => {
       // 채팅 메시지
       if (data.isAnswer) {
-        const newUsers = users.map((user) => {
+        setAnswerUser(data); //정답 맞춘 사용자 상태 저장
+        setStageModalOpen(true);
+        const newUsers = users.map(user => {
           if (data.nickname === user.nickname) {
             return { ...user, score: user.score + 1 };
           }
@@ -97,16 +105,19 @@ export const useSocket = (roomId: string) => {
         setUsers(newUsers);
 
         setTimeout(() => {
+          setAnswerUser(null); //2초후 정답 맞춘 유저 상태 null값으로 변경
+          setStageModalOpen(false); //2초후 모달 닫기
           nextTurn(newUsers);
         }, 2000);
       }
-      // setChatMessages((prev) => [...prev, data]);
+
       setChatMessages(data);
+
     };
     socket?.on("sendMessage", handleSendMessage);
 
     socket?.on("finishGame", ({ roomStatus, masterNickname }) => {
-      setCurrentRoomInfo((prevInfo) => ({
+      setCurrentRoomInfo(prevInfo => ({
         ...prevInfo,
         nickname: masterNickname,
         question: null,
@@ -119,17 +130,11 @@ export const useSocket = (roomId: string) => {
         roomStatus: roomStatus,
       });
 
-      setUsers((prevUsers) =>
-        prevUsers.map((userEl) => ({ ...userEl, score: 0 }))
-      );
+      setUsers(prevUsers => prevUsers.map(userEl => ({ ...userEl, score: 0 })));
     });
 
-    socket?.on("gameStart", (data) => {
+    socket?.on("gameStart", data => {
       setCurrentRoomInfo(data);
-    });
-
-    socket?.on("draw", (data) => {
-      setDrawPosition({ x: data.x, y: data.y, stopDraw: data.stopDraw });
     });
 
     return () => {
@@ -177,9 +182,13 @@ export const useSocket = (roomId: string) => {
         setStageTimer(count);
 
         if (count <= 0) {
-          nextTurn();
           clearInterval(clear);
           setStageTimer(null);
+          setStageModalOpen(true);
+          setTimeout(() => {
+            nextTurn();
+            setStageModalOpen(false);
+          }, 2000);
         }
       }, 1000);
     }
@@ -188,11 +197,7 @@ export const useSocket = (roomId: string) => {
   }, [socket, currentRoomInfo]);
 
   // 채팅 보내는 이벤
-  const submitChat = (data: {
-    chatMessage: string;
-    roomId?: string;
-    isAnswer: boolean;
-  }) => {
+  const submitChat = (data: { chatMessage: string; roomId?: string; isAnswer: boolean }) => {
     socket?.emit("sendMessage", data);
   };
 
@@ -206,8 +211,9 @@ export const useSocket = (roomId: string) => {
     }
   };
 
-  const emitDraw = (x: number, y: number, stopDraw: boolean) => {
-    socket?.emit("draw", { roomId, x, y, stopDraw });
+
+  const emitDraw = (x: number, y: number, stopDraw: boolean, color: string, erase: boolean) => {
+    socket?.emit("draw", { roomId, x, y, stopDraw, color, erase });
   };
 
   return {
@@ -226,5 +232,8 @@ export const useSocket = (roomId: string) => {
     chatMessages,
     nextTurn,
     gameResult,
+    answerUser,
+    stageModalOpen,
+
   };
 };
