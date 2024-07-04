@@ -58,6 +58,7 @@ export interface RoomUsers {
 export interface DrawPosition {
   x: number;
   y: number;
+  stopDraw: boolean;
 }
 
 export type GameStatus = "waiting" | "playing";
