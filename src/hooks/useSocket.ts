@@ -3,10 +3,11 @@ import io, { Socket } from "socket.io-client";
 import { userStore } from "../store/userStore";
 import { DrawPosition, GameStatus, RoomUser } from "../types";
 import screenfull from "screenfull";
+import { roomStore } from "../store/roomStore";
 
 type currentRoomInfoType = {
   nickname: string;
-  question: string;
+  question: string | null;
   roomStatus: GameStatus;
 };
 
@@ -21,6 +22,7 @@ export const useSocket = (roomId: string) => {
   const [open, setOpen] = useState(false); // 소켓 에러 시 메시지 띄워줌
   const [errMessage, setErrMessage] = useState(""); // 에러 메시지 상태
   const email = userStore((state) => state.user.email);
+  const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
   const [users, setUsers] = useState<RoomUser[]>([]);
   const [countdown, setCountdown] = useState<number | null>(null); // 카운트다운 상태 추가
   const [currentRoomInfo, setCurrentRoomInfo] = useState<currentRoomInfoType>();
@@ -42,36 +44,26 @@ export const useSocket = (roomId: string) => {
       query: { email },
     }); // 소켓 연결
     setSocket(socket);
+    socket?.emit("joinRoom", roomId);
+    return () => {
+      socket.emit("leaveRoom", roomId); // 커스텀 훅 사라질 때 방 나감
+      socket.disconnect();
+    };
+  }, []);
 
-    socket.on("error", (message) => {
+  useEffect(() => {
+    socket?.on("error", (message) => {
       setOpen(true); // 소켓 에러 시 메시지 띄우기
       setErrMessage(message);
     });
 
-    socket.on("nextTurn", (data: { nickname: string; question: string }) => {
-      setCurrentRoomInfo({
-        nickname: data.nickname,
-        question: data.question,
-        roomStatus: "playing",
-      });
+    socket?.on("updateRoom", (data: RoomUser[]) => {
+      setUsers(data);
+      setUsers((prevUsers) =>
+        prevUsers.map((userEl) => ({ ...userEl, score: 0 }))
+      );
     });
-
-    socket.emit("joinRoom", roomId);
-
-    socket.on("updateRoom", (data: RoomUser[]) => {
-      setUsers(data); // 유저 입퇴장
-    });
-    socket.on("gameStart", (data) => {
-      setCurrentRoomInfo(data);
-    });
-
-    socket.on("sendMessage", (data) => {
-      // 채팅 메시지
-
-      setChatMessages((prev) => [...prev, data]);
-    });
-
-    socket.on("nextTurn", (data: { nickname: string; question: string }) => {
+    socket?.on("nextTurn", (data: { nickname: string; question: string }) => {
       setCurrentRoomInfo({
         nickname: data.nickname,
         question: data.question,
@@ -80,18 +72,62 @@ export const useSocket = (roomId: string) => {
       setChatMessages([]);
     });
 
-    socket.on("draw", (data: { x: number; y: number }) => {
+    const handleSendMessage = (data: chatMessageType) => {
+      // 채팅 메시지
+      if (data.isAnswer) {
+        const newUsers = users.map((user) => {
+          if (data.nickname === user.nickname) {
+            console.log("correct");
+            return { ...user, score: user.score + 1 };
+          }
+          return user;
+        });
+
+        setUsers(newUsers);
+        setTimeout(() => {
+          nextTurn(newUsers);
+        }, 2000);
+      }
+      setChatMessages((prev) => [...prev, data]);
+    };
+    socket?.on("sendMessage", handleSendMessage);
+
+    socket?.on("finishGame", ({ roomStatus, masterNickname }) => {
+      setCurrentRoomInfo((prevInfo) => ({
+        ...prevInfo,
+        nickname: masterNickname,
+        question: null,
+        roomStatus: roomStatus,
+      }));
+
+      setRoom({
+        masterNickname: masterNickname,
+        roomId: roomId,
+        roomStatus: roomStatus,
+      });
+
+      setUsers((prevUsers) =>
+        prevUsers.map((userEl) => ({ ...userEl, score: 0 }))
+      );
+    });
+
+    socket?.on("gameStart", (data) => {
+      setCurrentRoomInfo(data);
+    });
+
+    socket?.on("draw", (data: { x: number; y: number }) => {
       setDrawPosition({ x: data.x, y: data.y });
     });
 
     return () => {
-      socket.emit("leaveRoom", roomId); // 커스텀 훅 사라질 때 방 나감
-      socket.disconnect(); // 커스텀 훅 사라질 때 소켓 연결 끊음
+      // 커스텀 훅 사라질 때 소켓 연결 끊음
+      socket?.off("sendMessage", handleSendMessage);
+      console.log("sibal");
     };
-  }, []);
+  }, [users, socket, setRoom, roomId, chatMessages]);
 
   useEffect(() => {
-    let timer: any;
+    let timer: number;
     if (countdown !== null) {
       if (countdown > 0) {
         timer = setTimeout(() => {
@@ -146,13 +182,6 @@ export const useSocket = (roomId: string) => {
     roomId?: string;
     isAnswer: boolean;
   }) => {
-    if (data.isAnswer) {
-      socket?.emit("sendMessage", data);
-      setTimeout(() => {
-        nextTurn();
-      }, 2000);
-    }
-
     socket?.emit("sendMessage", data);
   };
 
@@ -168,8 +197,22 @@ export const useSocket = (roomId: string) => {
       setErrMessage("3명 이상 시작 가능합니다");
     }
   };
-  const nextTurn = () => {
-    socket?.emit("nextTurn", { roomId, nickname: currentRoomInfo?.nickname });
+
+  const nextTurn = (newUsers?: RoomUser[]) => {
+    const isGameFinished = newUsers?.some((userEl) => userEl.score === 3);
+    console.log(users);
+    if (isGameFinished) {
+      const updatedUsers = newUsers?.map((user) => {
+        return { ...user, score: user.score };
+      });
+      setTimeout(() => {
+        // 게임끝났을때 보여줘야할 모달 실행 위한 부분
+        console.log(updatedUsers);
+      }, 5000);
+      socket?.emit("finishGame", { roomId: roomId, users: updatedUsers });
+    } else {
+      socket?.emit("nextTurn", { roomId, nickname: currentRoomInfo?.nickname });
+    }
   };
 
   const emitDraw = () => {

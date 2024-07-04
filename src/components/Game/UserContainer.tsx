@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaCrown } from "react-icons/fa";
-import { RoomUser } from "../../types";
+import { GameStatus, RoomUser } from "../../types";
 import ChatModal, { chatMessage } from "../modal/ChatModal";
 
 interface UserContainerProps extends RoomUser {
   isLeft: boolean;
   masterName: string;
   chatMessages: chatMessage[];
+  currentRoom: GameStatus | undefined;
 }
 
 const UserContainer = ({
-  userId,
   nickname,
   profileImage,
   score,
@@ -18,12 +18,16 @@ const UserContainer = ({
   currentDraw,
   masterName,
   chatMessages,
+  currentRoom,
 }: UserContainerProps) => {
   const [visibleMessage, setVisibleMessage] = useState<chatMessage | null>(
     null
   );
 
   useEffect(() => {
+    if (currentRoom === "waiting") {
+      setVisibleMessage(null);
+    }
     if (chatMessages.length > 0) {
       setVisibleMessage(chatMessages[chatMessages.length - 1]);
       const timer = window.setTimeout(() => {
@@ -31,7 +35,7 @@ const UserContainer = ({
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [chatMessages]);
+  }, [chatMessages, currentRoom]);
 
   return (
     <div
