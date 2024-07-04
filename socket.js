@@ -84,16 +84,11 @@ module.exports = (server) => {
         // 메세지 전송
         socket.on('sendMessage', async (data) => {
             const user = await User.findOne({ nickname: socket.user.nickname });
-            
-            if (data.isAnswer == true) {
-                user.localScore += 1
-            }
 
             const messageData = {
                 message: data.chatMessage,
                 nickname: socket.user.nickname,
                 isAnswer: data.isAnswer,
-                localScore: user.localScore
             }
             io.to(data.roomId).emit('sendMessage', messageData);
         })
@@ -134,6 +129,8 @@ module.exports = (server) => {
             const xy = {
                 x: data.x,
                 y: data.y,
+                color: data.color,
+                erase: data.erase,
                 stopDraw: data.stopDraw,
             }
 
