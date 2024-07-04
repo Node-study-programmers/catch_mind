@@ -115,6 +115,7 @@ module.exports = (server) => {
         
         const startGame = async (roomId) => {
             try {
+                console.log("여기 2번 들어오니??");
                 const room = await Room.findById(roomId);
                 if (!room) {
                     io.to(roomId).emit('error', '방이 존재하지 않습니다.');
