@@ -6,7 +6,7 @@ import ChatModal, { chatMessage } from "../modal/ChatModal";
 interface UserContainerProps extends RoomUser {
   isLeft: boolean;
   masterName: string;
-  chatMessages: chatMessage[];
+  chatMessages: chatMessage | null;
   currentRoom: GameStatus | undefined;
 }
 
@@ -20,20 +20,22 @@ const UserContainer = ({
   chatMessages,
   currentRoom,
 }: UserContainerProps) => {
-  const [visibleMessage, setVisibleMessage] = useState<chatMessage | null>(null);
-
+  const [visibleMessage, setVisibleMessage] = useState<chatMessage | null>(
+    null
+  );
+  console.log(visibleMessage, nickname);
   useEffect(() => {
     if (currentRoom === "waiting") {
       setVisibleMessage(null);
     }
-    if (chatMessages.length > 0) {
-      setVisibleMessage(chatMessages[chatMessages.length - 1]);
+    if (chatMessages) {
+      setVisibleMessage(chatMessages);
       const timer = window.setTimeout(() => {
         setVisibleMessage(null);
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [chatMessages, currentRoom]);
+  }, [chatMessages, currentRoom, score]);
 
   return (
     <div
@@ -44,8 +46,14 @@ const UserContainer = ({
         <ChatModal chatMessage={visibleMessage} isLeft={isLeft} />
       )}
       <div className="w-1/2 h-full relative">
-        {masterName === nickname && <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />}
-        <img className="h-full w-full" src={`${import.meta.env.VITE_IMG_URL}${profileImage}`} alt="userProfile" />
+        {masterName === nickname && (
+          <FaCrown className="absolute text-4xl top-[-30px] fill-yellow-200 z-50" />
+        )}
+        <img
+          className="h-full w-full"
+          src={`${import.meta.env.VITE_IMG_URL}${profileImage}`}
+          alt="userProfile"
+        />
       </div>
       <div className="w-1/2 h-full flex flex-col justify-around items-center">
         <div className="w-3/4 text-center text-lg font-bold border-b border-black pb-1 overflow-hidden text-ellipsis whitespace-nowrap">

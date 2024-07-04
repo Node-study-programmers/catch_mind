@@ -46,6 +46,15 @@ export default {
       screens: {
         max_950px: { max: "1020px" }, // Custom breakpoint
       },
+      keyframes: {
+        underline: {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
+      },
+      animation: {
+        underline: "underline 3s forwards", // Adjust duration as necessary
+      },
     },
   },
   plugins: [],

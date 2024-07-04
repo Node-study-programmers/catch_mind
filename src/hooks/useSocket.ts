@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { userStore } from "../store/userStore";
 import { DrawPosition, GameStatus, RoomUser } from "../types";
-import screenfull from "screenfull";
 import { roomStore } from "../store/roomStore";
 
 export type currentRoomInfoType = {
@@ -28,13 +27,29 @@ export const useSocket = (roomId: string) => {
   const [currentRoomInfo, setCurrentRoomInfo] = useState<currentRoomInfoType>();
   const [stageTimer, setStageTimer] = useState<number | null>(null);
   const [drawPosition, setDrawPosition] = useState<DrawPosition>();
-  const [chatMessages, setChatMessages] = useState<chatMessageType[]>([]);
+
+  const [chatMessages, setChatMessages] = useState<chatMessageType | null>();
+  const [gameResult, setGameResult] = useState<RoomUser[]>();
   const [answerUser, setAnswerUser] = useState<chatMessageType | null>(null);
   const [stageModalOpen, setStageModalOpen] = useState(false);
 
   // 에러 알럿창 닫기
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const nextTurn = (newUsers?: RoomUser[]) => {
+    const isGameFinished = newUsers?.some((userEl) => userEl.score === 3);
+
+    if (isGameFinished) {
+      const updatedUsers = newUsers?.map((user) => {
+        return { ...user, score: user.score };
+      });
+      setGameResult(updatedUsers);
+      socket?.emit("finishGame", { roomId: roomId, users: updatedUsers });
+    } else {
+      socket?.emit("nextTurn", { roomId, nickname: currentRoomInfo?.nickname });
+    }
   };
 
   useEffect(() => {
@@ -72,7 +87,7 @@ export const useSocket = (roomId: string) => {
         question: data.question,
         roomStatus: "playing",
       });
-      setChatMessages([]);
+      setChatMessages(null);
     });
 
     const handleSendMessage = (data: chatMessageType) => {
@@ -82,20 +97,22 @@ export const useSocket = (roomId: string) => {
         setStageModalOpen(true);
         const newUsers = users.map(user => {
           if (data.nickname === user.nickname) {
-            console.log("correct");
             return { ...user, score: user.score + 1 };
           }
           return user;
         });
 
         setUsers(newUsers);
+
         setTimeout(() => {
           setAnswerUser(null); //2초후 정답 맞춘 유저 상태 null값으로 변경
           setStageModalOpen(false); //2초후 모달 닫기
           nextTurn(newUsers);
         }, 2000);
       }
-      setChatMessages(prev => [...prev, data]);
+
+      setChatMessages(data);
+
     };
     socket?.on("sendMessage", handleSendMessage);
 
@@ -123,7 +140,7 @@ export const useSocket = (roomId: string) => {
     return () => {
       socket?.off("sendMessage", handleSendMessage);
     };
-  }, [users, socket, setRoom, roomId, chatMessages]);
+  }, [users, socket, setRoom, roomId, chatMessages, currentRoomInfo]);
 
   useEffect(() => {
     let timer: number;
@@ -187,9 +204,6 @@ export const useSocket = (roomId: string) => {
   const gameStart = () => {
     // 개발 시에는 2명 이상, 릴리즈 시에는 3명 이상으로 변경 요망
     if (users.length >= 2) {
-      if (screenfull.isEnabled) {
-        screenfull.toggle();
-      }
       setCountdown(3);
     } else {
       setOpen(true);
@@ -197,22 +211,6 @@ export const useSocket = (roomId: string) => {
     }
   };
 
-  const nextTurn = (newUsers?: RoomUser[]) => {
-    const isGameFinished = newUsers?.some(userEl => userEl.score === 3);
-    console.log(users);
-    if (isGameFinished) {
-      const updatedUsers = newUsers?.map(user => {
-        return { ...user, score: user.score };
-      });
-      setTimeout(() => {
-        // 게임끝났을때 보여줘야할 모달 실행 위한 부분
-        console.log(updatedUsers);
-      }, 5000);
-      socket?.emit("finishGame", { roomId: roomId, users: updatedUsers });
-    } else {
-      socket?.emit("nextTurn", { roomId, nickname: currentRoomInfo?.nickname });
-    }
-  };
 
   const emitDraw = (x: number, y: number, stopDraw: boolean, color: string, erase: boolean) => {
     socket?.emit("draw", { roomId, x, y, stopDraw, color, erase });
@@ -233,7 +231,9 @@ export const useSocket = (roomId: string) => {
     stageTimer,
     chatMessages,
     nextTurn,
+    gameResult,
     answerUser,
     stageModalOpen,
+
   };
 };

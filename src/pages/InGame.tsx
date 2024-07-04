@@ -8,21 +8,26 @@ import { chatMessageType, useSocket } from "../hooks/useSocket";
 import { userStore } from "../store/userStore";
 import { roomStore } from "../store/roomStore";
 import GameBoard from "../components/Game/GameBoard";
+import ResultModal from "../components/modal/ResultModal";
+import CountModal from "../components/modal/CountModal";
 import Button from "../components/Button";
 import DrawController from "../components/Game/DrawController";
 import StageModal from "../components/modal/StageModal";
+
 
 const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [masterNickname, setMaster] = useState<string | null>(null);
-  const user = userStore(state => state.user);
+  const user = userStore((state) => state.user);
   const [currentDrawer, setCurrentDrawer] = useState<string | null>(null);
   const [currentAns, setCurrentAns] = useState<string | null>(null);
-  const { setRoom, removeRoom, currentRoom } = roomStore(state => state);
+  const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
   const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
-  const [chattings, setChattings] = useState<chatMessageType[]>([]);
+  const [chattings, setChattings] = useState<chatMessageType | null>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [gameResultModalOpen, setGameResultModalOpen] =
+    useState<boolean>(false);
   const [getCtx, setGetCtx] = useState<CanvasRenderingContext2D | null>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [color, setColor] = useState<string>("#000000");
@@ -41,6 +46,7 @@ const InGame = () => {
     emitDraw,
     chatMessages,
     setDrawPosition,
+    gameResult,
     answerUser,
     stageModalOpen,
   } = useSocket(roomId!);
@@ -48,6 +54,15 @@ const InGame = () => {
   useEffect(() => {
     setChattings(chatMessages);
   }, [chatMessages]);
+
+  useEffect(() => {
+    if (gameResult) {
+      setGameResultModalOpen(true);
+      setTimeout(() => {
+        setGameResultModalOpen(false);
+      }, 7000);
+    }
+  }, [gameResult]);
 
   useEffect(() => {
     if (currentRoomInfo) {
@@ -93,16 +108,17 @@ const InGame = () => {
     }
   };
 
-  // memoizedUserContainers를 useMemo로 생성
   const memoizedUserContainers = useMemo(() => {
     return users.slice(0, 6).map((user, index) => {
-      const userMessages = chattings
-        .filter(chat => chat.nickname === user.nickname)
-        .slice(-1)
-        .map(chat => {
-          return { message: chat.message, isAnswer: chat.isAnswer };
-        });
+      let userMessages;
+      if (chattings) {
+        userMessages = chattings?.nickname === user.nickname ? chattings : null;
+      } else {
+        userMessages = null;
+      }
 
+
+      console.log(userMessages, user.nickname, "in memo");
       return (
         <UserContainer
           key={user.userId}
@@ -118,24 +134,39 @@ const InGame = () => {
         />
       );
     });
-  }, [users, chattings, currentDrawer, masterNickname, currentRoomInfo?.roomStatus]);
+  }, [
+    users,
+    chattings,
+    currentDrawer,
+    masterNickname,
+    currentRoomInfo?.roomStatus,
+  ]);
+  console.log(countdown);
+
 
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
-        <AlertModal open={open} handleClose={handleClose} message={errMessage} />
+        <ResultModal userData={gameResult} open={gameResultModalOpen} />
+        <AlertModal
+          open={open}
+          handleClose={handleClose}
+          message={errMessage}
+        />
         <StageModal open={stageModalOpen} answerUser={answerUser} currentRoomInfo={currentRoomInfo} users={users} />
+
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
           style={{
             backgroundImage: `url(${mainImg})`,
             opacity: 0.5,
             backgroundAttachment: "fixed",
-          }}
-        ></div>
+          }}></div>
         {/* header */}
         <div className="h-[7%] w-full text-right py-3">
-          <button className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300" onClick={handleLeaveRoom}>
+          <button
+            className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300"
+            onClick={handleLeaveRoom}>
             나가기
           </button>
         </div>
@@ -146,9 +177,7 @@ const InGame = () => {
           </div>
 
           {countdown !== null ? (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-5xl text-white bg-blue-500 px-10 p-10 rounded-2xl">
-              {countdown}
-            </div>
+            <CountModal countdown={countdown} />
           ) : roomStatus === "playing" ? (
             <div className="h-full flex flex-col justify-around items-center w-1/2">
               <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
@@ -198,8 +227,7 @@ const InGame = () => {
               {masterNickname === user.nickname ? (
                 <button
                   className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300"
-                  onClick={gameStart}
-                >
+                  onClick={gameStart}>
                   게임 시작
                 </button>
               ) : (

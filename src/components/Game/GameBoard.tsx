@@ -1,11 +1,12 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import Input from "../Input";
 import gameBoard from "../../asset/img/gameBoard.png";
 import { DrawPosition } from "../../types";
 import { currentRoomInfoType } from "../../hooks/useSocket";
 import { userStore } from "../../store/userStore";
+import canvas from "../../asset/img/cursor.png";
 
 interface Props {
+
   emitDraw: (x: number, y: number, stopDraw: boolean, color: string, erase: boolean) => void;
   drawPosition: DrawPosition | undefined;
   currentRoomInfo: currentRoomInfoType | undefined;
@@ -27,12 +28,17 @@ const GameBoard = ({
   color,
 }: Props) => {
   const [painting, setPainting] = useState(false);
-  const user = userStore(state => state.user);
+  const user = userStore((state) => state.user);
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const mouseX = e.nativeEvent.offsetX;
     const mouseY = e.nativeEvent.offsetY;
-    if (painting && currentRoomInfo && currentRoomInfo.nickname === user.nickname && canvasRef.current) {
+    if (
+      painting &&
+      currentRoomInfo &&
+      currentRoomInfo.nickname === user.nickname &&
+      canvasRef.current
+    ) {
       //소켓으로 X,Y 좌표 데이터 보낼때 비율로 보냄
       const x = mouseX / canvasRef.current.width;
       const y = mouseY / canvasRef.current.height;
@@ -95,7 +101,9 @@ const GameBoard = ({
 
   //그림 그리는 사람이 지우기 했을때
   useEffect(() => {
+
     if (drawPosition && drawPosition.erase && currentRoomInfo && currentRoomInfo.nickname !== user.nickname) {
+
       handleClearBoard();
     }
   }, [drawPosition?.erase]);
@@ -121,16 +129,16 @@ const GameBoard = ({
       className="w-full h-[70%] aspect-video mx-auto relative"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onMouseMove={e => drawFn(e)}
+      onMouseMove={(e) => drawFn(e)}
       onMouseLeave={() => setPainting(false)}
       ref={canvasRef}
       style={{
+        cursor: `url(${canvas})`,
         background: `url(${gameBoard})`,
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-      }}
-    ></canvas>
+      }}></canvas>
   );
 };
 
