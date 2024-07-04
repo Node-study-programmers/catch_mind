@@ -5,7 +5,7 @@ import { DrawPosition, GameStatus, RoomUser } from "../types";
 import screenfull from "screenfull";
 import { roomStore } from "../store/roomStore";
 
-type currentRoomInfoType = {
+export type currentRoomInfoType = {
   nickname: string;
   question: string | null;
   roomStatus: GameStatus;
@@ -27,10 +27,7 @@ export const useSocket = (roomId: string) => {
   const [countdown, setCountdown] = useState<number | null>(null); // 카운트다운 상태 추가
   const [currentRoomInfo, setCurrentRoomInfo] = useState<currentRoomInfoType>();
   const [stageTimer, setStageTimer] = useState<number | null>(null);
-  const [drawPosition, setDrawPosition] = useState<DrawPosition>({
-    x: 0,
-    y: 0,
-  });
+  const [drawPosition, setDrawPosition] = useState<DrawPosition>();
   const [chatMessages, setChatMessages] = useState<chatMessageType[]>([]);
 
   // 에러 알럿창 닫기
@@ -44,12 +41,14 @@ export const useSocket = (roomId: string) => {
       query: { email },
     }); // 소켓 연결
     setSocket(socket);
-    socket?.emit("joinRoom", roomId);
+    socket.emit("joinRoom", roomId);
     return () => {
-      socket.emit("leaveRoom", roomId); // 커스텀 훅 사라질 때 방 나감
-      socket.disconnect();
+      socket.emit("leaveRoom", roomId, () => {
+        socket.disconnect();
+      });
     };
   }, []);
+
 
   useEffect(() => {
     socket?.on("error", (message) => {
@@ -115,12 +114,11 @@ export const useSocket = (roomId: string) => {
       setCurrentRoomInfo(data);
     });
 
-    socket?.on("draw", (data: { x: number; y: number }) => {
-      setDrawPosition({ x: data.x, y: data.y });
+   socket?.on("draw", data => {
+      setDrawPosition({ x: data.x, y: data.y, stopDraw: data.stopDraw });
     });
 
     return () => {
-      // 커스텀 훅 사라질 때 소켓 연결 끊음
       socket?.off("sendMessage", handleSendMessage);
     };
   }, [users, socket, setRoom, roomId, chatMessages]);
@@ -175,7 +173,7 @@ export const useSocket = (roomId: string) => {
     return () => clearInterval(clear);
   }, [socket, currentRoomInfo]);
 
-  // 채팅 보내는 이벤트
+  // 채팅 보내는 이벤
   const submitChat = (data: {
     chatMessage: string;
     roomId?: string;
@@ -214,8 +212,8 @@ export const useSocket = (roomId: string) => {
     }
   };
 
-  const emitDraw = () => {
-    socket?.emit("draw", { roomId, x: drawPosition.x, y: drawPosition.y });
+  const emitDraw = (x: number, y: number, stopDraw: boolean) => {
+    socket?.emit("draw", { roomId, x, y, stopDraw });
   };
 
   return {
