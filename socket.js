@@ -83,7 +83,7 @@ module.exports = (server) => {
 
 
         //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-        
+
         socket.on('gameStart', async (roomId) => {
             try {
                 const room = await Room.findById(roomId);
@@ -98,6 +98,8 @@ module.exports = (server) => {
                     countdown--;
         
                     if (countdown < 0) {
+                        countdown = null;
+                        io.to(roomId).emit('countdown', countdown);
                         clearInterval(countdownInterval);
         
                         // 비동기 함수 호출
