@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import gameBoard from "../../asset/img/gameBoard.png";
 import { DrawPosition } from "../../types";
 import { currentRoomInfoType } from "../../hooks/useSocket";
@@ -6,15 +6,23 @@ import { userStore } from "../../store/userStore";
 import canvas from "../../asset/img/cursor.png";
 
 interface Props {
-
-  emitDraw: (x: number, y: number, stopDraw: boolean, color: string, erase: boolean) => void;
+  emitDraw: (
+    x: number,
+    y: number,
+    stopDraw: boolean,
+    color: string,
+    erase: boolean
+  ) => void;
   drawPosition: DrawPosition | undefined;
   currentRoomInfo: currentRoomInfoType | undefined;
-  setGetCtx: Dispatch<SetStateAction<CanvasRenderingContext2D | null | undefined>>;
+  setGetCtx: Dispatch<
+    SetStateAction<CanvasRenderingContext2D | null | undefined>
+  >;
   getCtx: CanvasRenderingContext2D | null | undefined;
   handleClearBoard: () => void;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   color: string;
+  currentDrawer: boolean;
 }
 
 const GameBoard = ({
@@ -26,6 +34,7 @@ const GameBoard = ({
   handleClearBoard,
   canvasRef,
   color,
+  currentDrawer,
 }: Props) => {
   const [painting, setPainting] = useState(false);
   const user = userStore((state) => state.user);
@@ -101,9 +110,12 @@ const GameBoard = ({
 
   //그림 그리는 사람이 지우기 했을때
   useEffect(() => {
-
-    if (drawPosition && drawPosition.erase && currentRoomInfo && currentRoomInfo.nickname !== user.nickname) {
-
+    if (
+      drawPosition &&
+      drawPosition.erase &&
+      currentRoomInfo &&
+      currentRoomInfo.nickname !== user.nickname
+    ) {
       handleClearBoard();
     }
   }, [drawPosition?.erase]);
@@ -112,7 +124,13 @@ const GameBoard = ({
     const mouseX = e.nativeEvent.offsetX;
     const mouseY = e.nativeEvent.offsetY;
 
-    if (painting && currentRoomInfo && currentRoomInfo.nickname === user.nickname && canvasRef.current && getCtx) {
+    if (
+      painting &&
+      currentRoomInfo &&
+      currentRoomInfo.nickname === user.nickname &&
+      canvasRef.current &&
+      getCtx
+    ) {
       //소켓으로 X,Y 좌표 데이터 보낼때 비율로 보냄
       const x = mouseX / canvasRef.current.width;
       const y = mouseY / canvasRef.current.height;
@@ -133,7 +151,7 @@ const GameBoard = ({
       onMouseLeave={() => setPainting(false)}
       ref={canvasRef}
       style={{
-        cursor: `url(${canvas})`,
+        cursor: currentDrawer ? `url(${canvas}), auto` : "none",
         background: `url(${gameBoard})`,
         backgroundSize: "contain",
         backgroundPosition: "center",

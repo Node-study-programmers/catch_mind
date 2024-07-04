@@ -27,10 +27,11 @@ const ResultModal = ({ userData, open }: ResultModalProps) => {
               key={user.userId}
               className="w-full h-20 bg-white mb-2 rounded-2xl grid grid-cols-[1fr_1fr_4fr_1fr] items-center px-10 gap-4">
               <div className="text-3xl">{index + 1}</div>
-              <div className="rounded-full w-14 h-14 bg-red-300">
-                {user.profileImage}
-              </div>
-              <div className="overflow-hidden text-ellipsis whitespace-nowrap">
+              <img
+                className="rounded-full w-14 h-14"
+                src={`${import.meta.env.VITE_IMG_URL}${user.profileImage}`}
+              />
+              <div className="overflow-hidden text-ellipsis whitespace-nowrap relative">
                 {user.nickname}
               </div>
               <div

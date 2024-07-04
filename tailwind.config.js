@@ -51,9 +51,21 @@ export default {
           "0%": { width: "0%" },
           "100%": { width: "100%" },
         },
+        "circle-draw": {
+          "0%": { transform: "scale(0)" },
+          "50%": { transform: "scale(1.1)" },
+          "100%": { transform: "scale(1)" },
+        },
+        "text-grow": {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.5)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
       animation: {
         underline: "underline 3s forwards", // Adjust duration as necessary
+        "circle-draw": "circle-draw 3s ease",
+        "text-grow": "text-grow 3s ease",
       },
     },
   },

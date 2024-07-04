@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useRef, useState, useMemo } from "react";
+import { FormEvent, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AlertModal from "../components/modal/AlertModal";
 import mainImg from "../asset/img/mainBackground.png";
@@ -10,10 +10,8 @@ import { roomStore } from "../store/roomStore";
 import GameBoard from "../components/Game/GameBoard";
 import ResultModal from "../components/modal/ResultModal";
 import CountModal from "../components/modal/CountModal";
-import Button from "../components/Button";
 import DrawController from "../components/Game/DrawController";
 import StageModal from "../components/modal/StageModal";
-
 
 const InGame = () => {
   const { roomId } = useParams();
@@ -22,7 +20,7 @@ const InGame = () => {
   const user = userStore((state) => state.user);
   const [currentDrawer, setCurrentDrawer] = useState<string | null>(null);
   const [currentAns, setCurrentAns] = useState<string | null>(null);
-  const { setRoom, removeRoom, currentRoom } = roomStore((state) => state);
+  const { removeRoom, currentRoom } = roomStore((state) => state);
   const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
   const [chattings, setChattings] = useState<chatMessageType | null>();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -79,7 +77,12 @@ const InGame = () => {
   const handleClearBoard = () => {
     if (canvasRef.current) {
       emitDraw(0, 0, false, color, true);
-      getCtx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      getCtx?.clearRect(
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
       setDrawPosition(undefined);
       getCtx?.beginPath();
     }
@@ -117,7 +120,6 @@ const InGame = () => {
         userMessages = null;
       }
 
-
       console.log(userMessages, user.nickname, "in memo");
       return (
         <UserContainer
@@ -141,8 +143,6 @@ const InGame = () => {
     masterNickname,
     currentRoomInfo?.roomStatus,
   ]);
-  console.log(countdown);
-
 
   return (
     <>
@@ -153,7 +153,12 @@ const InGame = () => {
           handleClose={handleClose}
           message={errMessage}
         />
-        <StageModal open={stageModalOpen} answerUser={answerUser} currentRoomInfo={currentRoomInfo} users={users} />
+        <StageModal
+          open={stageModalOpen}
+          answerUser={answerUser}
+          currentRoomInfo={currentRoomInfo}
+          users={users}
+        />
 
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
@@ -180,10 +185,22 @@ const InGame = () => {
             <CountModal countdown={countdown} />
           ) : roomStatus === "playing" ? (
             <div className="h-full flex flex-col justify-around items-center w-1/2">
-              <div className="bg-blue-300 h-[50px] flex items-center justify-center text-3xl w-[80%]">
-                {user.nickname === currentRoomInfo?.nickname
-                  ? `제시어 : ${currentRoomInfo?.question}`
-                  : `${currentRoomInfo?.nickname}님이 그리는 중입니다`}
+              <div className="bg-blue-300 h-[50px] flex items-center justify-center text-2xl w-[80%]">
+                {user.nickname === currentRoomInfo?.nickname ? (
+                  <div>
+                    제시어 :{" "}
+                    <span className="text-4xl">
+                      {currentRoomInfo?.question}
+                    </span>
+                  </div>
+                ) : (
+                  <div>
+                    <span className="text-4xl">
+                      {currentRoomInfo?.nickname}
+                    </span>
+                    님이 그리는 중입니다
+                  </div>
+                )}
               </div>
               {/* 게임 보드 */}
               <GameBoard
@@ -195,6 +212,7 @@ const InGame = () => {
                 getCtx={getCtx}
                 handleClearBoard={handleClearBoard}
                 color={color}
+                currentDrawer={currentDrawer === user.nickname}
               />
               <div className="w-full grid grid-cols-2 h-[80px] gap-3">
                 <div className="w-full border-2 rounded-l-full h-full bg-blue-300 flex justify-center items-center text-2xl">
