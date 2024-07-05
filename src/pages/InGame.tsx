@@ -51,6 +51,7 @@ const InGame = () => {
 
   useEffect(() => {
     setChattings(chatMessages);
+    console.log("chat messages", chatMessages);
   }, [chatMessages]);
 
   useEffect(() => {

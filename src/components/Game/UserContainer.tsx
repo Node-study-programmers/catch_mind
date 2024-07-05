@@ -26,18 +26,31 @@ const UserContainer = ({
   );
   const user = userStore((state) => state.user);
   console.log(visibleMessage, nickname);
+
   useEffect(() => {
     if (currentRoom === "waiting") {
       setVisibleMessage(null);
     }
     if (chatMessages) {
       setVisibleMessage(chatMessages);
-      const timer = window.setTimeout(() => {
+      const timer = setTimeout(() => {
         setVisibleMessage(null);
+        console.log(visibleMessage, "visible message");
+        console.log("hihi");
       }, 2000);
+
       return () => clearTimeout(timer);
+    } else if (chatMessages === null) {
+      if (visibleMessage) {
+        const timer = setTimeout(() => {
+          setVisibleMessage(null);
+          console.log(visibleMessage, "visible message");
+          console.log("hihi");
+        }, 2000);
+        return () => clearTimeout(timer);
+      }
     }
-  }, [chatMessages, currentRoom, score]);
+  }, [chatMessages, currentRoom]);
 
   return (
     <div
