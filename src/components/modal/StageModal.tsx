@@ -22,9 +22,9 @@ const StageModal = ({ open, answerUser, currentRoomInfo, users }: Props) => {
           <span className="absolute left-0 bottom-[-10px] w-full h-[2px] bg-white animate-underline"></span>
         </div>
         <div className="w-full mt-40 h-full flex justify-around">
-          <div className="text-3xl">
+          <div className="text-3xl flex flex-wrap">
             정답 :{" "}
-            <span className="text-5xl p-2 animate-circledraw relative animate-text-grow">
+            <span className="text-5xl p-2 animate-circledraw relative animate-text-grow whitespace-nowrap">
               {currentRoomInfo?.question}
               <span className="absolute inset-0 flex items-center justify-center">
                 <span className="animate-circle-draw w-full h-full border-4 border-red-500 rounded-full transform scale-0"></span>
