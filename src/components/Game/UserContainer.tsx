@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaCrown } from "react-icons/fa";
 import { GameStatus, RoomUser } from "../../types";
 import ChatModal, { chatMessage } from "../modal/ChatModal";
+import { userStore } from "../../store/userStore";
 
 interface UserContainerProps extends RoomUser {
   isLeft: boolean;
@@ -23,6 +24,7 @@ const UserContainer = ({
   const [visibleMessage, setVisibleMessage] = useState<chatMessage | null>(
     null
   );
+  const user = userStore((state) => state.user);
   console.log(visibleMessage, nickname);
   useEffect(() => {
     if (currentRoom === "waiting") {
@@ -40,10 +42,28 @@ const UserContainer = ({
   return (
     <div
       className={`flex items-center justify-center relative w-full h-full bg-white rounded-2xl ${
-        currentDraw && "border-8 border-yellow-500"
+        currentDraw && "border-4 border-green-400"
       } ${isLeft ? "row" : "flex-row-reverse"}`}>
       {visibleMessage && (
         <ChatModal chatMessage={visibleMessage} isLeft={isLeft} />
+      )}
+      {currentDraw && (
+        <div
+          style={{ transform: "rotate(10deg)", fontFamily: "Rubik Mono One" }}
+          className={`absolute -top-0 ${
+            isLeft ? "-right-10" : "-left-10"
+          } text-green-500 rounded-full px-2 py-1 font-bold z-[30] text-3xl`}>
+          TURN
+        </div>
+      )}
+      {user.nickname === nickname && (
+        <div
+          style={{ fontFamily: "Rubik Mono One" }}
+          className={`absolute -top-0 ${
+            !isLeft ? "-right-0" : "-left-0"
+          } text-blue-500 bg-white rounded-full px-2 py-1 font-bold z-[30] text-3xl`}>
+          ME
+        </div>
       )}
       <div className="w-1/2 h-full relative">
         {masterName === nickname && (
