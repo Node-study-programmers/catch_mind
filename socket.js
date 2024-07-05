@@ -53,36 +53,6 @@ module.exports = (server) => {
                 socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
             }
         });
-        
-        // socket.on('gameStart', async (roomId) => {
-        //     try {
-        //         const room = await Room.findById(roomId);
-        //         if (!room) {
-        //             return socket.emit('error', '방이 존재하지 않습니다.');
-        //         }
-
-        //         const randomWordDoc = await Word.aggregate([{ $sample: { size: 1 } }]);
-        //         const randomWord = randomWordDoc[0]?.word || '기본 단어';
-
-        //         room.roomStatus = 'playing';
-        //         await room.save();
-
-        //         const messageData = {
-        //             nickname: room.roomUsers[0].nickname,
-        //             question: randomWord,
-        //             roomStatus: room.roomStatus
-        //         }
-                
-        //         io.to(roomId).emit('gameStart', messageData);
-
-        //     } catch (err) {
-        //         console.error('Room 입장 중 에러:', err);
-        //         socket.emit('error', '방에 입장하는 중 에러가 발생했습니다.');
-        //     }
-        // })
-
-
-        //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 
         socket.on('gameStart', async (roomId) => {
             try {
@@ -264,6 +234,13 @@ module.exports = (server) => {
                     await room.save();
                 }
 
+                const roomData = {
+                    masterNickname: room.masterNickname,
+                    roomStatus: room.roomStatus,
+                    rooomId: room.roomId
+                }
+
+                io.to(roomId).emit('updateRoom', roomData);  
                 io.to(roomId).emit('updateRoom', room.roomUsers);        
                 socket.leave(roomId);
                 socket.disconnect(true);
