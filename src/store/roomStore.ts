@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Room } from "../types";
 import { persist, devtools } from "zustand/middleware";
 
-type CurrentRoom = Pick<Room, "masterNickname" | "roomId" | "roomStatus">;
+export type CurrentRoom = Pick<Room, "masterNickname" | "roomId" | "roomStatus">;
 
 interface Store {
   //스토어 타입들
@@ -14,7 +14,7 @@ interface Store {
 export const roomStore = create(
   devtools(
     persist<Store>(
-      (set) => ({
+      set => ({
         currentRoom: {
           masterNickname: null,
           roomId: null,
