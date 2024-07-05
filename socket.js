@@ -230,17 +230,18 @@ module.exports = (server) => {
                     if (socket.user.nickname === room.masterNickname) {
                         room.masterNickname = room.roomUsers[0].nickname;
                         room.masterImage = room.roomUsers[0].profileImage;
+
+                        const roomData = {
+                            masterNickname: room.masterNickname,
+                            roomStatus: room.roomStatus,
+                            rooomId: room.roomId
+                        }
+        
+                        io.to(roomId).emit('changeMaster', roomData);  
                     }
                     await room.save();
                 }
 
-                const roomData = {
-                    masterNickname: room.masterNickname,
-                    roomStatus: room.roomStatus,
-                    rooomId: room.roomId
-                }
-
-                io.to(roomId).emit('updateRoom', roomData);  
                 io.to(roomId).emit('updateRoom', room.roomUsers);        
                 socket.leave(roomId);
                 socket.disconnect(true);
