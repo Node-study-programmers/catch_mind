@@ -4,7 +4,7 @@ const Room = require('./models/room');
 const Word = require('./models/word');
 
 module.exports = (server) => {
-    const io = socketIo(server, {path : '/socket.io', cors: { origin: 'https://6687c55a96539900087603fc--catchmind-program.netlify.app'}});
+    const io = socketIo(server, {path : '/socket.io', cors: { origin: 'https://catchmind-program.netlify.app'}});
 
     io.use(async (socket, next) => {
         const email = socket.handshake.query.email;
