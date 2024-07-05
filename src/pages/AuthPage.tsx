@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import mainImg from "../asset/img/mainBackground.png";
 import Join from "../components/Join";
 import Login from "../components/Login";
+import { getToken } from "../store/userStore";
+import { Navigate } from "react-router-dom";
 
 type Auth = "join" | "login";
 
 const AuthPage = () => {
   const [select, setSelect] = useState<Auth>("login");
+
+  if (getToken()) {
+    return <Navigate to={"/"} />;
+  }
 
   const handleSelectChange = (select: Auth) => {
     setSelect(select);
