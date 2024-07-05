@@ -50,7 +50,6 @@ const InGame = () => {
 
   useEffect(() => {
     setChattings(chatMessages);
-    console.log("chat messages", chatMessages);
   }, [chatMessages]);
 
   useEffect(() => {
@@ -115,7 +114,6 @@ const InGame = () => {
         userMessages = null;
       }
 
-      console.log(userMessages, user.nickname, "in memo");
       return (
         <UserContainer
           key={user.userId}
