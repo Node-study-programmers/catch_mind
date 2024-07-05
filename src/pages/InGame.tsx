@@ -17,14 +17,15 @@ const InGame = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [masterNickname, setMaster] = useState<string | null>(null);
-  const user = userStore(state => state.user);
+  const user = userStore((state) => state.user);
   const [currentDrawer, setCurrentDrawer] = useState<string | null>(null);
   const [currentAns, setCurrentAns] = useState<string | null>(null);
-  const { removeRoom, currentRoom } = roomStore(state => state);
+  const { removeRoom, currentRoom } = roomStore((state) => state);
   const [roomStatus, setRoomStatus] = useState<GameStatus>("waiting");
   const [chattings, setChattings] = useState<chatMessageType | null>();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [gameResultModalOpen, setGameResultModalOpen] = useState<boolean>(false);
+  const [gameResultModalOpen, setGameResultModalOpen] =
+    useState<boolean>(false);
   const [getCtx, setGetCtx] = useState<CanvasRenderingContext2D | null>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [color, setColor] = useState<string>("#000000");
@@ -76,7 +77,12 @@ const InGame = () => {
   const handleClearBoard = () => {
     if (canvasRef.current && drawPosition) {
       emitDraw(0, 0, false, color, true);
-      getCtx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      getCtx?.clearRect(
+        0,
+        0,
+        canvasRef.current.width,
+        canvasRef.current.height
+      );
       setDrawPosition(undefined);
       getCtx?.beginPath();
     }
@@ -129,14 +135,29 @@ const InGame = () => {
         />
       );
     });
-  }, [users, chattings, currentDrawer, masterNickname, currentRoomInfo?.roomStatus]);
+  }, [
+    users,
+    chattings,
+    currentDrawer,
+    masterNickname,
+    currentRoomInfo?.roomStatus,
+  ]);
 
   return (
     <>
       <div className="relative w-screen h-screen min-w-[1280px] px-10">
         <ResultModal userData={gameResult} open={gameResultModalOpen} />
-        <AlertModal open={open} handleClose={handleClose} message={errMessage} />
-        <StageModal open={stageModalOpen} answerUser={answerUser} currentRoomInfo={currentRoomInfo} users={users} />
+        <AlertModal
+          open={open}
+          handleClose={handleClose}
+          message={errMessage}
+        />
+        <StageModal
+          open={stageModalOpen}
+          answerUser={answerUser}
+          currentRoomInfo={currentRoomInfo}
+          users={users}
+        />
 
         <div
           className="absolute inset-0 bg-cover bg-center -z-50"
@@ -144,11 +165,15 @@ const InGame = () => {
             backgroundImage: `url(${mainImg})`,
             opacity: 0.5,
             backgroundAttachment: "fixed",
-          }}
-        ></div>
+          }}></div>
         {/* header */}
         <div className="h-[7%] w-full text-right py-3">
-          <button className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300" onClick={handleLeaveRoom}>
+          <p className="text-2xl text-red-500 mr-10">
+            %새로 고침을 하시면 에러가 발생합니다! 금지!%
+          </p>
+          <button
+            className="bg-red-500 text-white py-3 px-5 rounded-2xl hover:bg-red-300"
+            onClick={handleLeaveRoom}>
             나가기
           </button>
         </div>
@@ -165,11 +190,16 @@ const InGame = () => {
               <div className="bg-blue-300 h-[50px] flex items-center justify-center text-2xl w-[80%]">
                 {user.nickname === currentRoomInfo?.nickname ? (
                   <div>
-                    제시어 : <span className="text-4xl">{currentRoomInfo?.question}</span>
+                    제시어 :{" "}
+                    <span className="text-4xl">
+                      {currentRoomInfo?.question}
+                    </span>
                   </div>
                 ) : (
                   <div>
-                    <span className="text-4xl">{currentRoomInfo?.nickname}</span>
+                    <span className="text-4xl">
+                      {currentRoomInfo?.nickname}
+                    </span>
                     님이 그리는 중입니다
                   </div>
                 )}
@@ -218,8 +248,7 @@ const InGame = () => {
               {masterNickname === user.nickname ? (
                 <button
                   className="bg-blue-500 text-white py-5 px-10 rounded-2xl text-2xl hover:bg-blue-300"
-                  onClick={gameStart}
-                >
+                  onClick={gameStart}>
                   게임 시작
                 </button>
               ) : (
