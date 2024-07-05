@@ -234,7 +234,7 @@ module.exports = (server) => {
                         const roomData = {
                             masterNickname: room.masterNickname,
                             roomStatus: room.roomStatus,
-                            rooomId: room.roomId
+                            rooomId: roomId
                         }
         
                         io.to(roomId).emit('changeMaster', roomData);  
