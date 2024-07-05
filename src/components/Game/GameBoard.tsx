@@ -6,20 +6,13 @@ import { userStore } from "../../store/userStore";
 import canvas from "../../asset/img/cursor.png";
 
 interface Props {
-  emitDraw: (
-    x: number,
-    y: number,
-    stopDraw: boolean,
-    color: string,
-    erase: boolean
-  ) => void;
+  emitDraw: (x: number, y: number, stopDraw: boolean, color: string, erase: boolean) => void;
   drawPosition: DrawPosition | undefined;
   currentRoomInfo: currentRoomInfoType | undefined;
-  setGetCtx: Dispatch<
-    SetStateAction<CanvasRenderingContext2D | null | undefined>
-  >;
+  setGetCtx: Dispatch<SetStateAction<CanvasRenderingContext2D | null | undefined>>;
   getCtx: CanvasRenderingContext2D | null | undefined;
   handleClearBoard: () => void;
+  setDrawPosition: Dispatch<SetStateAction<DrawPosition | undefined>>;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   color: string;
   currentDrawer: boolean;
@@ -35,23 +28,18 @@ const GameBoard = ({
   canvasRef,
   color,
   currentDrawer,
+  setDrawPosition,
 }: Props) => {
   const [painting, setPainting] = useState(false);
-  const user = userStore((state) => state.user);
+  const user = userStore(state => state.user);
 
   const handleMouseUp = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const mouseX = e.nativeEvent.offsetX;
     const mouseY = e.nativeEvent.offsetY;
-    if (
-      painting &&
-      currentRoomInfo &&
-      currentRoomInfo.nickname === user.nickname &&
-      canvasRef.current
-    ) {
+    if (painting && currentRoomInfo && currentRoomInfo.nickname === user.nickname && canvasRef.current) {
       //소켓으로 X,Y 좌표 데이터 보낼때 비율로 보냄
       const x = mouseX / canvasRef.current.width;
       const y = mouseY / canvasRef.current.height;
-
       emitDraw(x, y, false, color, false);
       setPainting(false);
       getCtx?.beginPath();
@@ -89,9 +77,7 @@ const GameBoard = ({
       currentRoomInfo.nickname !== user.nickname &&
       getCtx &&
       drawPosition &&
-      canvasRef.current &&
-      drawPosition.x &&
-      drawPosition.y
+      canvasRef.current
     ) {
       //소켓으로 받은 X,Y 좌표 데이터를 현재 canvas 비율만큼 계산후 그리기
       const adjustedX = drawPosition.x * canvasRef.current.width;
@@ -110,13 +96,10 @@ const GameBoard = ({
 
   //그림 그리는 사람이 지우기 했을때
   useEffect(() => {
-    if (
-      drawPosition &&
-      drawPosition.erase &&
-      currentRoomInfo &&
-      currentRoomInfo.nickname !== user.nickname
-    ) {
-      handleClearBoard();
+    if (drawPosition?.erase && currentRoomInfo && currentRoomInfo.nickname !== user.nickname && canvasRef.current) {
+      getCtx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      setDrawPosition(undefined);
+      getCtx?.beginPath();
     }
   }, [drawPosition?.erase]);
 
@@ -124,17 +107,11 @@ const GameBoard = ({
     const mouseX = e.nativeEvent.offsetX;
     const mouseY = e.nativeEvent.offsetY;
 
-    if (
-      painting &&
-      currentRoomInfo &&
-      currentRoomInfo.nickname === user.nickname &&
-      canvasRef.current &&
-      getCtx
-    ) {
+    if (painting && currentRoomInfo && currentRoomInfo.nickname === user.nickname && canvasRef.current && getCtx) {
       //소켓으로 X,Y 좌표 데이터 보낼때 비율로 보냄
       const x = mouseX / canvasRef.current.width;
       const y = mouseY / canvasRef.current.height;
-      console.log(color);
+
       emitDraw(x, y, true, color, false);
       getCtx.strokeStyle = color;
       getCtx.lineTo(mouseX, mouseY);
@@ -147,16 +124,17 @@ const GameBoard = ({
       className="w-full h-[70%] aspect-video mx-auto relative"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onMouseMove={(e) => drawFn(e)}
+      onMouseMove={drawFn}
       onMouseLeave={() => setPainting(false)}
       ref={canvasRef}
       style={{
-        cursor: currentDrawer ? `url(${canvas}), auto` : "none",
+        cursor: currentDrawer ? `url(${canvas}), auto` : "",
         background: `url(${gameBoard})`,
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-      }}></canvas>
+      }}
+    ></canvas>
   );
 };
 
