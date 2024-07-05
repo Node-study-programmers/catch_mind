@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import mainImg from "../asset/img/mainBackground.png";
 import Join from "../components/Join";
 import Login from "../components/Login";
