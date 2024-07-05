@@ -18,7 +18,7 @@ const io = socketIo(server);
 
 connectMongoDB();
 app.use(cors({
-    origin: 'https://6687c55a96539900087603fc--catchmind-program.netlify.app'
+    origin: 'https://catchmind-program.netlify.app'
 }));
 
 // Image 폴더가 없으면 생성
