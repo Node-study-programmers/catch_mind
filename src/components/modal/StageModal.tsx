@@ -1,8 +1,6 @@
-import { Box, Modal, Typography } from "@mui/material";
 import { chatMessageType, currentRoomInfoType } from "../../hooks/useSocket";
 import { RoomUser } from "../../types";
 import { createPortal } from "react-dom";
-import { useEffect } from "react";
 
 interface Props {
   open: boolean;
@@ -13,10 +11,6 @@ interface Props {
 
 const StageModal = ({ open, answerUser, currentRoomInfo, users }: Props) => {
   if (!open) return null;
-
-  // useEffect(() => {
-  //   console.log()
-  // }, []);
 
   return createPortal(
     <div className="fixed w-screen h-screen top-0 left-0 z-50 bg-[rgba(0,0,0,0.6)]">

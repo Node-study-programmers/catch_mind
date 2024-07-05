@@ -118,8 +118,8 @@ const MyPage = () => {
         </div>
 
         <div className="p-5 rounded-3xl flex justify-center items-center flex-col max_950px:my-5">
-          <h2 className="text-3xl">Total Score</h2>
-          <p className="text-5xl font-titleW p-3 underline">{user.score}</p>
+          {/* <h2 className="text-3xl">Total Score</h2>
+          <p className="text-5xl font-titleW p-3 underline">{user.score}</p> */}
         </div>
       </div>
       {/* 이메일, 비밀번호, 닉네임 */}

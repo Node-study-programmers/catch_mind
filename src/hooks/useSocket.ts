@@ -153,6 +153,7 @@ export const useSocket = (roomId: string) => {
 
     return () => {
       socket?.off("sendMessage", handleSendMessage);
+      setChatMessages(null);
     };
   }, [users, socket, setRoom, roomId, chatMessages, currentRoomInfo]);
 
