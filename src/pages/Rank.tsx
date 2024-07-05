@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import RankContainer from "../components/Rank/RankContainer";
 import { RankUsers } from "../types";
 import { fetchRank } from "../api/rank.api";

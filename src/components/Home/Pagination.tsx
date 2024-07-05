@@ -1,4 +1,3 @@
-import React from "react";
 import { BiSolidCircle } from "react-icons/bi";
 import { FaRegCircle } from "react-icons/fa";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";

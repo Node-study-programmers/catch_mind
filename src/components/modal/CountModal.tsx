@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 interface Props {
@@ -11,7 +10,8 @@ const CountModal = ({ countdown }: Props) => {
       <div className="top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/3 rounded-3xl p-5 flex flex-col items-center">
         <div
           style={{ transform: "rotate(-5deg)", fontFamily: "Rubik Mono One" }}
-          className="text-6xl text-white w-full text-center absolute -top-8 left-0">
+          className="text-6xl text-white w-full text-center absolute -top-8 left-0"
+        >
           {countdown}
           <span className="absolute left-0 bottom-[-10px] w-full h-[2px] bg-white animate-underline"></span>
         </div>
