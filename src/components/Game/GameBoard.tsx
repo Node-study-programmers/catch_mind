@@ -124,7 +124,7 @@ const GameBoard = ({
       className="w-full h-[70%] aspect-video mx-auto relative"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onMouseMove={e => drawFn(e)}
+      onMouseMove={drawFn}
       onMouseLeave={() => setPainting(false)}
       ref={canvasRef}
       style={{
