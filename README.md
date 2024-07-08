@@ -51,7 +51,7 @@
 ## < 캐치마인드 >를 만들게 된 계기
 
 node.js 스터디를 하면서 socket 공부를 하게 되었고 , 이를 직접 프로젝트에 적용시켜보기 위해 어떤 프로젝트가 적합할지
-생각하다. 캐치마인드가 적합한 프로젝트라고 생각하게 되었고. 직접 socket을 통해서 구현 시켜보았습니다.
+생각하다. 캐치마인드가 적합한 프로젝트라고 생각하게 되었고. 직접 socket.io을 통해서 구현 시켜보았습니다.
 
 <br />
 
@@ -110,6 +110,8 @@ node app.js
 
 # ⚒️ 기술 스택
 
+<img src="https://img.shields.io/badge/Socket.io-4.7.5-06B6D4?logo=socket.io">
+
 ## Backend
 
 <div align="center">
@@ -135,7 +137,7 @@ node app.js
 <div align="center">
 <img src="https://img.shields.io/badge/TailwindCSS-3.4.3-06B6D4?logo=tailwindcss">
 <img src="https://img.shields.io/badge/Vite-5.2.0-06B6D4?logo=vite">
-<img src="https://img.shields.io/badge/Vite-1.7.2-06B6D4?logo=axios">
+<img src="https://img.shields.io/badge/axios-1.7.2-06B6D4?logo=axios">
 </div>
 
 # 💪🏻 기술적 경험
@@ -228,25 +230,25 @@ node app.js
 
 - 블로그: https://velog.io/@greencloud
 - 깃허브: https://github.com/KimGaeun0806
-- <별 하나에 글 하나>에서의 목표: 프로젝트 과정 하나하나 모두 기록으로 남기기. 기술블로그 열심히 써보기 👻
+
 
 ## 🐧 남용환 (FE)
 
 - 블로그: https://velog.io/@minboykim
 - 깃허브: https://github.com/MinboyKim
-- <별 하나에 글 하나>에서의 목표: 좋은사람들과 좋은시간보내기 ☕️
+
 
 ## 👾 박성률 (BE)
 
 - 블로그: https://velog.io/@qkrwogk
 - 깃허브: https://github.com/qkrwogk
-- <별 하나에 글 하나>에서의 목표: 딥 다이브 경험! 🌊
+
 
 ## ⚽️ 김준서 (BE)
 
 - 블로그: https://velog.io/@songjseop
 - 깃허브: https://github.com/SongJSeop
-- <별 하나에 글 하나>에서의 목표: 팀원들과 후회 없는 시간 보내기
+
 
 <br />
 
