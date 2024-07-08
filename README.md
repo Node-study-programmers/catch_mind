@@ -38,9 +38,7 @@
 
 - [BE](#BE)
 
-
 ### [4. 팀원 소개](#%EF%B8%8F-팀원-소개)
-
 
 ### [5. 팀원 회고](#-팀원-회고)
 
@@ -109,6 +107,7 @@ node app.js
 <br />
 
 # ⚒️ 기술 스택
+
 <div align="center">
 <img src="https://img.shields.io/badge/Socket.io-4.7.5-06B6D4?logo=socket.io">
 </div>
@@ -116,7 +115,7 @@ node app.js
 ## Backend
 
 <div align="center">
-<img src="https://img.shields.io/badge/Node.js-20.10.0-339933?logo=node.js"> <img src="https://img.shields.io/badge/Javascript--3178C6?logo=javascript"> 
+<img src="https://img.shields.io/badge/Node.js-20.10.0-339933?logo=node.js"> <img src="https://img.shields.io/badge/Javascript--3178C6?logo=javascript">
 
 </div>
 <br />
@@ -124,7 +123,6 @@ node app.js
 <img src="https://img.shields.io/badge/Docker-20.10.21-2496ED?logo=docker">
 </div>
 <br />
-
 
 ## Frontend
 
@@ -139,10 +137,16 @@ node app.js
 <img src="https://img.shields.io/badge/axios-1.7.2-06B6D4?logo=axios">
 </div>
 
-## DB 
+## DB
+
 <div align="center">
   <img src="https://img.shields.io/badge/MongoDB-4.4.17-47A248?logo=mongodb"> <img src="https://img.shields.io/badge/Mongoose-8.4.1-47A248?logo=mongodb">
 </div>
+
+<br>
+<br>
+
+<img src="./src/asset/readmeImg/SkillSpec.jpg">
 
 # 💪🏻 기술적 경험
 
@@ -155,6 +159,7 @@ node app.js
 <br />
 
 ### 성능 최적화
+
 <br />
 
 ## BE
@@ -235,24 +240,20 @@ node app.js
 - 블로그: https://velog.io/@greencloud
 - 깃허브: https://github.com/KimGaeun0806
 
-
 ## 🐧 남용환 (FE)
 
 - 블로그: https://velog.io/@minboykim
 - 깃허브: https://github.com/MinboyKim
-
 
 ## 👾 박성률 (BE)
 
 - 블로그: https://velog.io/@qkrwogk
 - 깃허브: https://github.com/qkrwogk
 
-
 ## ⚽️ 김준서 (BE)
 
 - 블로그: https://velog.io/@songjseop
 - 깃허브: https://github.com/SongJSeop
-
 
 <br />
 
