@@ -1,26 +1,22 @@
 <div align="center">
 
-<h1>별 하나에 글 하나 🌟</h1>
+<h1>캐치마인드 👊</h1>
 
-<img src="https://github.com/boostcampwm2023/web16-B1G1/assets/80266418/cb3a01fc-243c-4cdd-bcd8-67aa698a81c3" alt="별 하나에 글 하나 로고">
+<img src="./src/asset/img/mascot.png" alt="캐치마인드">
 
-<h3> "내 삶의 반짝이는 기억들을 우주에 담아보세요" </h3>
-
-3D 기반 웹 추억 저장 서비스
+<h3> "내가 그린 그림 맞춰봐!" </h3>
 
 <br />
 
-남겨두고 싶은 순간을 찍은 사진과, 그 순간을 떠올리며 적은 글을 별에 담습니다.
+친구, 동료 등등 지인분들과 간단한 게임을 통해
 
-기억을 담은 별들이 모여 나만의 은하가 만들어집니다.
+짧은 순간의 재미를 느껴보세요!
 
-추억으로 가득 채워진 나만 우주를 소중한 사람들에게 공유해보세요 ❤️
+한 걸음더 가까워 질 수 있습니다 👨🏿‍🤝‍👨🏿
 
 </br>
 
-[✨ <별 하나에 글 하나> 사용해보기](https://www.xn--bj0b03z.site/)
-
-[🔗 wiki 바로가기](https://github.com/boostcampwm2023/web16-B1G1/wiki)
+[✨ 한게임 하러 가보실까요?](https://catchmind-program.netlify.app/)
 
 </div>
 
@@ -165,7 +161,6 @@ node app.js
 <br />
 
 ### 성능 최적화
-
 <br />
 
 ## BE
@@ -208,80 +203,63 @@ node app.js
 
 # 🏃‍♂️ 팀원 소개
 
-[🔗 wiki 팀원 소개 바로가기](https://github.com/boostcampwm2023/web16-B1G1/wiki/%ED%8C%80%EC%9B%90-%EC%86%8C%EA%B0%9C)
-
 <table >
   <tr height="130px">
     <td align="center" width="130px">
-      <a href="https://github.com/KimGaeun0806"><img src="https://avatars.githubusercontent.com/u/80266418?v=4" style="border-radius:50%"/></a>
+      <a href="https://github.com/kwonsuhyuk"><img src="https://avatars.githubusercontent.com/u/101502480?s=96&v=4" style="border-radius:50%"/></a>
     </td>
     <td align="center" width="130px">
-      <a href="https://github.com/MinboyKim"><img src="https://avatars.githubusercontent.com/u/35567292?v=4" style="border-radius:50%" /></a>
+      <a href="https://github.com/nyh98"><img src="https://avatars.githubusercontent.com/u/148475712?v=4" style="border-radius:50%" /></a>
     </td>
     <td align="center" width="130px">
-      <a href="https://github.com/qkrwogk"><img src="https://avatars.githubusercontent.com/u/138586629?v=4" style="border-radius:50%"/></a>
-    </td>
-    <td align="center" width="130px">
-      <a href="https://github.com/SongJSeop"><img src="https://avatars.githubusercontent.com/u/101378867?v=4" style="border-radius:50%"/></a>
+      <a href="https://github.com/chansik0504"><img src="https://avatars.githubusercontent.com/u/52341609?v=4" style="border-radius:50%"/></a>
     </td>
 <td align="center" width="130px">
-      <a href="https://github.com/bananaba"><img src="https://avatars.githubusercontent.com/u/78800560?v=4" style="border-radius:50%"/></a>
+      <a href="https://github.com/jacknafa"><img src="https://avatars.githubusercontent.com/u/95523110?v=4" style="border-radius:50%"/></a>
     </td>
   </tr>
   <tr height="50px">
     <td align="center" width="130px">
-      <a href="https://github.com/KimGaeun0806">J010 김가은</a>
+      <a href="https://github.com/kwonsuhyuk">권수혁</a>
     </td>
     <td align="center" width="130px">
-      <a href="https://github.com/MinboyKim">J016 김동민</a>
+      <a href="https://github.com/nyh98">남용환</a>
     </td>
     <td align="center" width="130px">
-      <a href="https://github.com/qkrwogk">J053 박재하</a>
+      <a href="https://github.com/chansik0504">박성률</a>
     </td>
     <td align="center" width="130px">
-      <a href="https://github.com/SongJSeop">J073 송준섭</a>
-    </td>
-    <td align="center" width="130px">
-      <a href="https://github.com/bananaba">J098 이백범</a>
+      <a href="https://github.com/jacknafa">김준서</a>
     </td>
   </tr>
 </table>
 
 <br />
 
-## 🐙 J010 김가은 (FE)
+## 🐙 권수혁 (FE)
 
 - 블로그: https://velog.io/@greencloud
 - 깃허브: https://github.com/KimGaeun0806
 - <별 하나에 글 하나>에서의 목표: 프로젝트 과정 하나하나 모두 기록으로 남기기. 기술블로그 열심히 써보기 👻
 
-## 🐧 J016 김동민 (FE)
+## 🐧 남용환 (FE)
 
 - 블로그: https://velog.io/@minboykim
 - 깃허브: https://github.com/MinboyKim
 - <별 하나에 글 하나>에서의 목표: 좋은사람들과 좋은시간보내기 ☕️
 
-## 👾 J053 박재하 (BE)
+## 👾 박성률 (BE)
 
 - 블로그: https://velog.io/@qkrwogk
 - 깃허브: https://github.com/qkrwogk
 - <별 하나에 글 하나>에서의 목표: 딥 다이브 경험! 🌊
 
-## ⚽️ J073 송준섭 (BE)
+## ⚽️ 김준서 (BE)
 
 - 블로그: https://velog.io/@songjseop
 - 깃허브: https://github.com/SongJSeop
 - <별 하나에 글 하나>에서의 목표: 팀원들과 후회 없는 시간 보내기
 
-## 🐰 J098 이백범 (FE)
-
-- 블로그: https://velog.io/@200tiger
-- 깃허브: https://github.com/bananaba
-- <별 하나에 글 하나>에서의 목표: 재미있는 결과물 만들기!
-
 <br />
 
 # 🍡 팀원 회고
-
-- J010 김가은
-  - [부스트캠프 8기를 끝마치며 (Feat. 네트워킹데이 후기)](https://velog.io/@greencloud/%EB%B6%80%EC%8A%A4%ED%8A%B8%EC%BA%A0%ED%94%84-8%EA%B8%B0%EB%A5%BC-%EB%81%9D%EB%A7%88%EC%B9%98%EB%A9%B0-Feat.-%EB%84%A4%ED%8A%B8%EC%9B%8C%ED%82%B9%EB%8D%B0%EC%9D%B4-%ED%9B%84%EA%B8%B0)
