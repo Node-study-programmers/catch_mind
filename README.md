@@ -109,35 +109,39 @@ node app.js
 <br />
 
 # ⚒️ 기술 스택
-
+<div align="center">
 <img src="https://img.shields.io/badge/Socket.io-4.7.5-06B6D4?logo=socket.io">
+</div>
 
 ## Backend
 
 <div align="center">
 <img src="https://img.shields.io/badge/Node.js-20.10.0-339933?logo=node.js"> <img src="https://img.shields.io/badge/Javascript--3178C6?logo=javascript"> 
-<img src="https://img.shields.io/badge/TypeScript-5.2.2-3178C6?logo=typescript"> 
+
 </div>
 <br />
 <div align="center">
 <img src="https://img.shields.io/badge/Docker-20.10.21-2496ED?logo=docker">
 </div>
 <br />
-<div align="center">
-  <img src="https://img.shields.io/badge/MongoDB-4.4.17-47A248?logo=mongodb"> <img src="https://img.shields.io/badge/Mongoose-8.4.1-47A248?logo=mongodb">
-</div>
+
 
 ## Frontend
 
 <div align="center">
   <br />
-  <img src="https://img.shields.io/badge/React-18.2.0-61DBFB?logo=react"> <img src="https://img.shields.io/badge/ReactQuery-3.39.3-FF4154?logo=react-query"><img src="https://img.shields.io/badge/Zustand-4.5.2-7F52FF?logo=redux"> 
+  <img src="https://img.shields.io/badge/React-18.2.0-61DBFB?logo=react"><img src="https://img.shields.io/badge/TypeScript-5.2.2-3178C6?logo=typescript"> <img src="https://img.shields.io/badge/ReactQuery-3.39.3-FF4154?logo=react-query"><img src="https://img.shields.io/badge/Zustand-4.5.2-7F52FF?logo=redux"> 
 </div>
 
 <div align="center">
 <img src="https://img.shields.io/badge/TailwindCSS-3.4.3-06B6D4?logo=tailwindcss">
 <img src="https://img.shields.io/badge/Vite-5.2.0-06B6D4?logo=vite">
 <img src="https://img.shields.io/badge/axios-1.7.2-06B6D4?logo=axios">
+</div>
+
+## DB 
+<div align="center">
+  <img src="https://img.shields.io/badge/MongoDB-4.4.17-47A248?logo=mongodb"> <img src="https://img.shields.io/badge/Mongoose-8.4.1-47A248?logo=mongodb">
 </div>
 
 # 💪🏻 기술적 경험
