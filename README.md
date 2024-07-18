@@ -182,7 +182,7 @@ node app.js
 - react-query를 사용해서 데이터를 캐싱 하여서 최적화 한 구현 경험
    <br />
    
-### 3. 정상적인 소켓 연결 종료
+### 5. 정상적인 소켓 연결 종료
 
 - 방에 유저가 1명도 없을시 방 삭제 로직을 실행시키기 위해 정상적인 소켓 연결 종료 구현 경험
   <br />
@@ -256,24 +256,22 @@ node app.js
 
 ## 🐙 권수혁 (FE)
 
-- 블로그: https://velog.io/@greencloud
-- 깃허브: https://github.com/KimGaeun0806
+- 블로그: https://velog.io/@tngur0716/posts
+- 깃허브: https://github.com/kwonsuhyuk
 
 ## 🐧 남용환 (FE)
 
-- 블로그: https://velog.io/@minboykim
-- 깃허브: https://github.com/MinboyKim
+- 블로그: https://nyh98.tistory.com/
+- 깃허브: https://github.com/nyh98
 
 ## 👾 박성률 (BE)
 
-- 블로그: https://velog.io/@qkrwogk
-- 깃허브: https://github.com/qkrwogk
+- 블로그: https://buyhomeinseoul.tistory.com
+- 깃허브: https://github.com/chansik0504
 
 ## ⚽️ 김준서 (BE)
 
-- 블로그: https://velog.io/@songjseop
-- 깃허브: https://github.com/SongJSeop
+- 블로그: https://velog.io/@nafa21/posts
+- 깃허브: https://github.com/jacknafa
 
 <br />
-
-# 🍡 팀원 회고
