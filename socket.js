@@ -77,8 +77,6 @@ module.exports = (server) => {
                         countdown = null;
                         io.to(roomId).emit('countdown', countdown);
                         clearInterval(countdownInterval);
-        
-                        // 비동기 함수 호출
                         startGame(roomId);
                     }
                 }, 1000);

@@ -3,6 +3,14 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/user');
 
+const generateAccessToken = (userId) => {
+    return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_ACCESS_EXPIRATION });
+}
+
+const generateRefreshToken = (userId) => {
+    return jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRATION });
+}
+
 const join = async (req,res) => {
     const { email, password, nickname } = req.body;
     if (!email || !nickname || !password ) { 
@@ -56,7 +64,7 @@ const login = async (req,res) => {
 
     if (!email || !password ) { 
         return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "공백이 있습니다."
+            message: "아이디 또는 비밀번호를 입력해야합니다."
         })};
         
     try {
@@ -74,16 +82,19 @@ const login = async (req,res) => {
             })
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        const accessToken = generateAccessToken(user._id);
+        const refreshToken = generateRefreshToken(user._id);
 
-        res.cookie("token", token, { httpOnly : true });
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        res.cookie("accessToken", accessToken, { httpOnly : true });
 
         return res.status(StatusCodes.OK).json({
             nickname: user.nickname,
             email: user.email,
             profileImage: user.profileImage,
             score: user.score,
-            token
         });
        
     } catch(err) {

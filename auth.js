@@ -5,7 +5,7 @@ dotenv.config();
 
 const ensureAuthorization = (req, res, next) => {
     try {
-        let receivedJwt = req.headers["authorization"];  // x-auth-token 헤더에서 토큰을 가져옴
+        let receivedJwt = req.headers["authorization"];
         console.log("received jwt : ", receivedJwt);
 
         if (!receivedJwt) {
